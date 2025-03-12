@@ -84,69 +84,93 @@ $bd = Database::getInstance();
                 </div>
             </nav>
             
-        <div class="main-content container-fluid">
+            <div class="main-content container-fluid">
             <div class="page-title">
-                <h3><?=$data['nombre_paciente'];?></h3>
-            </div>
-            <section class="section mt-4">
-
-            <div class="card">
-               <div class="card-body">
-               
-                <div class="row">
-
-                    <div class="col-12 col-sm-6">
-                    <label class="text-light"><small>Fecha Alta:</small></label>
-                    <div class="fs-5"><?=(new DateTime($data['fecha_alta']))->format('d/m/Y');[0];?></div>
-                    </div>
-
-                    <div class="col-12 col-sm-6">
-                    <label class="text-light"><small>Fecha Nacimiento:</small></label>
-                    <div class="fs-5"><?=date("d/m/Y", strtotime($data['fecha_nacimiento']));?></div>
-                    </div>
-
-                    <div class="col-12 col-sm-4">
-                    <label class="text-light"><small>Edad:</small></label>
-                    <div class="fs-5"><?=$data['edad'];?> años</div>
-                    </div>
-
-                    <div class="col-12 col-sm-4">
-                    <label class="text-light"><small>Sexo:</small></label>
-                    <div class="fs-5"><?=($data['sexo'] == 'M')? 'Masculino': 'Femenino';?></div>
-                    </div>
-
-                    <div class="col-12 col-sm-4">
-                    <label class="text-light"><small>Estado civil:</small></label>
-                    <div class="fs-5"><?=$data['estado_civil'];?></div>
-                    </div>
-
-                    <div class="col-12 col-sm-4">
-                    <label class="text-light"><small>CURP:</small></label>
-                    <div class="fs-5"><?=$data['curp'];?></div>
-                    </div>
-
-                    <div class="col-12 col-sm-4">
-                    <label class="text-light"><small>Email:</small></label>
-                    <div class="fs-5"><?=$data['email'];?></div>
-                    </div>
-
-                    <div class="col-12 col-sm-4">
-                    <label class="text-light"><small>Telefono:</small></label>
-                    <div class="fs-5"><?=$data['telefono'];?></div>
-                    </div>
-
-                    <div class="col-12 col-sm-4">
-                    <label class="text-light"><small>Celular:</small></label>
-                    <div class="fs-5"><?=$data['celular'];?></div>
-                    </div>
-
-                </div>
-                
-            
-                </div>
+                <h3><?=$data['title'];?></h3>
             </div>
 
-            </section>
+            <div class="row mt-3">
+                <div class="col-12 col-sm-6">
+                    <div class="card">
+                    <div class="card-header text-light">Información del paciente</div>
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-12 col-sm-12">
+                                <label class="text-primary"><small>Nombre Paciente:</small></label>
+                                <div class="fs-4"><?=$data['nombre_paciente'];?></div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-12 col-sm-4">
+                                <label class="text-primary"><small>Fecha Alta:</small></label>
+                                <div class="fs-5"><?=(new DateTime($data['fecha_alta']))->format('d/m/Y');[0];?></div>
+                                </div>
+
+                                <div class="col-12 col-sm-4">
+                                <label class="text-primary"><small>Fecha Nacimiento:</small></label>
+                                <div class="fs-5"><?=date("d/m/Y", strtotime($data['fecha_nacimiento']));?></div>
+                                </div>
+
+                                <div class="col-12 col-sm-4">
+                                <label class="text-primary"><small>Edad:</small></label>
+                                <div class="fs-5"><?=$data['edad'];?> años</div>
+                                </div>
+
+                            </div>
+
+                            <div class="row mt-2">
+
+                            <div class="col-12 col-sm-4">
+                            <label class="text-primary"><small>Sexo:</small></label>
+                            <div class="fs-5"><?=($data['sexo'] == 'M')? 'Masculino': 'Femenino';?></div>
+                            </div>
+
+                            <div class="col-12 col-sm-4">
+                            <label class="text-primary"><small>Estado Civil:</small></label>
+                            <div class="fs-5"><?=$data['estado_civil'];?></div>
+                            </div>
+
+                            <div class="col-12 col-sm-4">
+                            <label class="text-primary"><small>CURP:</small></label>
+                            <div class="fs-5"><?=$data['curp'];?></div>
+                            </div>
+
+                            </div>
+
+                            <div class="mt-3 fs-6 text-success">Contacto del paciente:</div>
+
+                            <div class="row mt-3">
+
+                            <div class="col-12 col-sm-4">
+                            <label class="text-primary"><small>Email:</small></label>
+                            <div class="fs-5"><?=$data['email'];?></div>
+                            </div>
+
+                            <div class="col-12 col-sm-4">
+                            <label class="text-primary"><small>Telefono:</small></label>
+                            <div class="fs-5"><?=$data['telefono'];?></div>
+                            </div>
+
+                            <div class="col-12 col-sm-4">
+                            <label class="text-primary"><small>Celular:</small></label>
+                            <div class="fs-5"><?=$data['celular'];?></div>
+                            </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <div class="card">
+                    <div class="card-header text-light"></div>
+ 
+                    </div>
+                </div>
+            </div>
+
         </div>
 
             <footer>

@@ -18,7 +18,7 @@ class ClinicaController extends BaseController{
         $authMiddleware->authPermisos();
 
         $sidebar->addItemList('Inicio', '/clinica', 'home');
-        $sidebar->addItemList('Pacientes', 'clinica/pacientes', 'users');
+        $sidebar->addItemList('Pacientes', '/clinica/pacientes', 'users');
         $sidebar->addItemList('Clinica', 'clinica/info', 'zap');
         $sidebar->setActivarItem('Pacientes');
         $sidebarHtml = $sidebar->render();
@@ -162,22 +162,22 @@ class ClinicaController extends BaseController{
 
         if($data['idPaciente'] == 0){
 
-            $result = $model->insertPaciente($data,$result);
+            $resultModelo = $model->insertPaciente($data,$result);
 
-            if ($result['resultado'] == 200) {
-                echo HttpMethod::jsonResponse(200,true,$result['mensaje']);
+            if ($resultModelo['resultado'] == 200) {
+                echo HttpMethod::jsonResponse(200,true,$resultModelo['mensaje']);
             } else {
-                echo HttpMethod::jsonResponse(401, false, $result['mensaje']);
+                echo HttpMethod::jsonResponse(401, false, $resultModelo['mensaje']);
             }
 
         }else{
 
-            $result = $model->editPaciente($data);
+            $resultModelo = $model->editPaciente($data);
 
-            if ($result['resultado'] == 200) {
-                echo HttpMethod::jsonResponse(200,true,$result['mensaje']);
+            if ($resultModelo['resultado'] == 200) {
+                echo HttpMethod::jsonResponse(200,true,$resultModelo['mensaje']);
             } else {
-                echo HttpMethod::jsonResponse(401, false, $result['mensaje']);
+                echo HttpMethod::jsonResponse(401, false, $resultModelo['mensaje']);
             }
 
         }        
@@ -269,6 +269,30 @@ class ClinicaController extends BaseController{
         'celular' => $celular,  
         'sidebar' => $sidebarHtml];
         $this->view('/clinica/paciente-pin.php', $data);
+
+    }
+
+    public function pacienteInsertPin(){
+
+        $authMiddleware = new AuthMiddleware('clinica');
+        $authMiddleware->authPermisos();
+
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo HttpMethod::jsonResponse(405, false, "Método no permitido. Usa POST.");
+            return;
+        }
+
+        $model = new ClinicaModel();
+        $data = json_decode(file_get_contents('php://input'), true);
+        $resultModel = $model->insertPacientePin($data);
+
+            if ($resultModel['resultado'] == 200) {
+                echo HttpMethod::jsonResponse(200,true,$resultModel['mensaje']);
+            } else {
+                echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
+            }
 
     }
 

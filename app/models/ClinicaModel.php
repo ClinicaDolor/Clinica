@@ -1,6 +1,8 @@
 <?php
 namespace App\Models;
+
 use App\Config\Database;
+use App\Core\PasswordHelper;
 class ClinicaModel{
 
     private $bd;
@@ -236,6 +238,44 @@ class ClinicaModel{
         return array('resultado' => 401,'mensaje' => '¡Error al editar la información del paciente!');
     }
 
+
+    }
+
+    public function insertPacientePin($data){
+
+          date_default_timezone_set('America/Mexico_City');
+        $fecha = date('Y-m-d');
+        $hora = date('H:i:s');
+
+        $nuevaFecha = date('Y-m-d', strtotime($fecha . ' +30 days'));
+    
+        $sql = "INSERT INTO pc_paciente_acceso (
+            paciente_id,
+            pin,
+            fecha_expiracion,
+            estatus
+        ) VALUES (
+            :paciente_id,
+            :pin,
+            :fecha_expiracion,
+            :estatus
+        )";
+
+        $stmt = $this->bd->prepare($sql);                    
+        
+        $datos = [
+        ':paciente_id' => $data['idPaciente'],
+        ':pin' => PasswordHelper::hashPassword('cdp'.$data['idPaciente']),
+        ':fecha_expiracion' => $nuevaFecha.' '.$hora,
+        ':estatus' => 0
+        ];
+    
+        if ($stmt->execute($datos)) {
+            return array('resultado' => 200,'mensaje' => '¡Se creo el PIN Correctamente!');
+
+        } else {
+            return array('resultado' => 401,'mensaje' => '¡Error al agregar nuevo paciente a la lista!');
+        }
 
     }
 

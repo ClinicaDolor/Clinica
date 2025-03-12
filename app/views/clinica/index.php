@@ -244,7 +244,7 @@ function showSuggestions(list) {
 
     let listData;
     if (!list.length) {
-        listData = 'No hay resultados';
+        listData = '<li><a href="clinica/paciente/nuevo" class="text-primary">Agregar Paciente</a></li>';
     } else {
         listData = list.join('');
     }

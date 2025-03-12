@@ -11,8 +11,39 @@ $bd = Database::getInstance();
     <title><?=$data['title'];?></title>
     <link rel="stylesheet" href="<?=RUTA_CSS;?>bootstrap.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/simple-datatables/style.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+    <script>
+        function NuevoPin(idPaciente){
+
+            const parametros = {
+            idPaciente : idPaciente
+            };
+
+        fetch('/clinica/paciente/insert-pin', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(parametros)
+        })
+        .then(response => response.json())
+        .then(data => {
+
+        if (data.resultado) {
+            location.reload()
+        } else {
+            document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
+        }
+
+        });
+            
+
+          
+
+        }
+    </script>
  </head>
 <body>
     <div id="app">
@@ -165,7 +196,55 @@ $bd = Database::getInstance();
                 </div>
                 <div class="col-12 col-sm-6">
                     <div class="card">
-                        <div class="card-body"></div>
+                    <div class="card-header text-light">Pin de acceso para pacientes</div>
+                        <div class="card-body">
+
+                        <div class="text-end"><button class="btn icon btn-success" onclick="NuevoPin(<?=$data['idPaciente'];?>)"><i data-feather="plus" width="20"></i> PIN </button></div>
+                        <div id="mensaje" class="text-center text-danger"></div>
+                        <?php
+                        $hoy = new DateTime();
+                        try {
+                            $stmt = $bd->query("SELECT * FROM pc_paciente_acceso WHERE paciente_id = '".$data['idPaciente']."' ");
+                            $registros = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        } catch (PDOException $e) {
+                            die("Error en la consulta: " . $e->getMessage());
+                        }
+                        ?>
+
+                        <table class="table table-striped" id="table1">
+                            <thead>
+                                <tr>
+                                    <th>PIN</th>
+                                    <th>Fecha creación</th>
+                                    <th>Fecha expiración</th>
+                                    <th>Estatus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php 
+                            
+                            foreach ($registros as $registro): 
+                            $fechaExpiracion = new DateTime($registro['fecha_expiracion']);
+                            if ($hoy > $fechaExpiracion){
+                                $pin = '******';
+                                $estatus = '<span class="badge bg-danger">Cancelado</span>';
+                            }else{
+                                $pin = 'cdp'.$data['idPaciente'];
+                                $estatus = '<span class="badge bg-success">Activo</span>';
+                            }
+                                
+                            ?>
+                                <tr>
+                                    <td><?=$pin;?></td>
+                                    <td><?=(new DateTime($registro['fecha_creacion']))->format('d/m/Y');?></td>
+                                    <td><b><?=(new DateTime($registro['fecha_expiracion']))->format('d/m/Y');?></b></td>
+                                    <td><?=$estatus;?></td>
+                                </tr>
+                            <?php endforeach; ?> 
+                            </tbody>
+                        </table>
+                            
+                        </div>
                     </div>
                 </div>
             </div>
@@ -185,7 +264,22 @@ $bd = Database::getInstance();
     <script src="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="<?=RUTA_JS;?>app.js"></script>    
     <script src="<?=RUTA_JS;?>main.js"></script>
+    <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
+    
+    <script>
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1,{
+	searchable: true,
+    fixedHeight: true,
+	columns: [
+	{
+		select: 1, sort: "desc"
+	}
+	]
+});
 
+
+    </script>
 </body>
 </html>
 

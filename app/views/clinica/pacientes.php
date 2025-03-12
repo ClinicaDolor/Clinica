@@ -102,7 +102,7 @@ $bd = Database::getInstance();
             <div class="card-header">
                Lista de pacientes
                <div class="float-end">
-                <a href="paciente/nuevo" class="btn icon btn-success"> <i data-feather="plus" width="20"></i> </a>
+                <a href="paciente/nuevo" class="btn icon btn-success"> <i data-feather="plus" width="20"></i> Nuevo </a>
                </div>
             </div>
             <div class="card-body">
