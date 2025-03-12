@@ -15,12 +15,14 @@ return function(RouteCollector $r) {
                         $r->addRoute('GET', '', ['ClinicaController', 'pacientesIndex']);
                 });
 
-                $r->addRoute('GET', '/modulos/paciente/{idpaciente}', ['ClinicaController', 'pacientesModulos']);
+                $r->addRoute('GET', '/modulos/paciente/{idPaciente}', ['ClinicaController', 'pacientesModulos']);
 
                 $r->addRoute('GET', '/paciente/nuevo', ['ClinicaController', 'pacienteNuevo']);
-                $r->addRoute('POST', '/paciente/insert', ['ClinicaController', 'pacienteInsert']);
+                $r->addRoute('GET', '/paciente/editar/{idPaciente}', ['ClinicaController', 'pacienteEditar']);
+                $r->addRoute('GET', '/paciente/pin/{idPaciente}', ['ClinicaController', 'pacientePin']);
+                $r->addRoute('POST', '/paciente/insert-edit', ['ClinicaController', 'pacienteInsertEdit']);
 
-                $r->addRoute('GET', '/paciente/{idpaciente}', ['ClinicaController', 'pacienteDetalle']);
+                $r->addRoute('GET', '/paciente/{idPaciente}', ['ClinicaController', 'pacienteDetalle']);
 
         });
 
