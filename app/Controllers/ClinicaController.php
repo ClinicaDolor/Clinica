@@ -28,17 +28,17 @@ class ClinicaController extends BaseController{
         $this->view('/clinica/pacientes.php', $data);
     }
 
-    public function pacientesModulos($idpaciente){
+    public function pacientesModulos($idPaciente){
 
         $authMiddleware = new AuthMiddleware('clinica');
-        $paciente = new PacienteModel($idpaciente);
+        $paciente = new PacienteModel($idPaciente);
         $sidebar = new Sidebar();
 
         $authMiddleware->authPermisos();        
         $nombreCompleto = $paciente->getNombreCompleto();
 
         $sidebar->addItemList('Inicio', '/clinica', 'home');
-        $sidebar->addItemList('Historia Clinica', '/clinica/modulos/paciente/'.$idpaciente, 'users');
+        $sidebar->addItemList('Historia Clinica', '/clinica/modulos/paciente/'.$idPaciente, 'users');
         $sidebar->setActivarItem('Historia Clinica');
         $sidebarHtml = $sidebar->render();
         
@@ -57,14 +57,95 @@ class ClinicaController extends BaseController{
         $sidebar->addItemList('Paciente Nuevo', '/clinica/paciente/nuevo', 'users');
         $sidebar->setActivarItem('Paciente Nuevo');
         $sidebarHtml = $sidebar->render();
-
-
-        $data = ['title' => 'Paciente Nuevo', 'idPaciente' => $idPaciente, 'sidebar' => $sidebarHtml];
+  
+        $data = ['title' => 'Paciente Nuevo', 'titulo_boton' => 'Guardar Paciente', 'idPaciente' => $idPaciente, 'sidebar' => $sidebarHtml];
         $this->view('/clinica/paciente-nuevo-editar.php', $data);
 
     }
 
-    public function pacienteInsert(){
+    public function pacienteEditar($idPaciente){
+
+        $authMiddleware = new AuthMiddleware('clinica');
+        $sidebar = new Sidebar();
+        $paciente = new PacienteModel($idPaciente);
+
+        $authMiddleware->authPermisos();
+
+        $nombreCompleto = $paciente->getNombreCompleto();
+        $edad = $paciente->getEdad();
+        $fechaNacimiento = $paciente->getFechaNacimiento();
+        $sexo = $paciente->getSexo();
+        $estado_civil = $paciente->getEstadoCivil();
+        $curp = $paciente->getCurp();
+        $lugar_origen = $paciente->getLugarOrigen();
+        $lugar_residencia = $paciente->getLugarResidencia();
+        $ocupacion = $paciente->getOcupacion();
+        $num_hijos = $paciente->getNumHijos();
+        $edad_hijos = $paciente->getEdadHijos();
+        $quien_recomienda = $paciente->getRecomienda();
+        $redes_sociales = $paciente->getRedesSociales();
+        $motivo_atencion = $paciente->getMotivoAtencion();
+        $calle = $paciente->getCalle();
+        $num_interior = $paciente->getNumInterior();
+        $num_exterior = $paciente->getNumExterior();
+        $colonia = $paciente->getColonia();
+        $delegacion = $paciente->getDelegacion();
+        $cp = $paciente->getCp();
+        $municipio = $paciente->getMunicipio();
+        $distancia = $paciente->getDistancia();
+        $email = $paciente->getEmail();
+        $telefono = $paciente->getTelefono();
+        $celular = $paciente->getCelular();
+        $cuidador = $paciente->getCuidador();
+        $cuidador_telefono = $paciente->getCuidadorTelefono();
+        $res_nombre = $paciente->getResNombre();
+        $res_telefono = $paciente->getResTelefono();
+      
+        $sidebar->addItemList('Inicio', '/clinica', 'home');
+        $sidebar->addItemList('Paciente Editar', '/clinica/paciente/editar/'.$idPaciente, 'users');
+        $sidebar->setActivarItem('Paciente Editar');
+        $sidebarHtml = $sidebar->render();
+       
+        $data = ['title' => 'Paciente Editar', 
+        'titulo_boton' => 'Editar Paciente',
+        'idPaciente' => $idPaciente, 
+
+        'nombre_paciente' => $nombreCompleto, 
+        'fecha_nacimiento' => $fechaNacimiento,
+        'edad' => $edad,
+        'sexo' => $sexo, 
+        'estado_civil' => $estado_civil,
+        'curp' => $curp,  
+        'lugar_origen' => $lugar_origen,
+        'lugar_residencia' => $lugar_residencia,
+        'ocupacion' => $ocupacion,
+        'num_hijos' => $num_hijos,
+        'edad_hijos' => $edad_hijos,
+        'quien_recomienda' => $quien_recomienda,
+        'redes_sociales' => $redes_sociales,
+        'motivo_atencion' => $motivo_atencion,
+        'calle' => $calle,
+        'num_interior' => $num_interior,
+        'num_exterior' => $num_exterior,
+        'colonia' => $colonia,
+        'delegacion' => $delegacion,
+        'cp' => $cp,
+        'municipio' => $municipio,
+        'distancia' => $distancia,
+        'email' => $email,
+        'telefono' => $telefono,
+        'celular' => $celular,  
+        'cuidador' => $cuidador,  
+        'cuidador_telefono' => $cuidador_telefono,  
+        'res_nombre' => $res_nombre, 
+        'res_telefono' => $res_telefono,  
+        
+        'sidebar' => $sidebarHtml];
+        $this->view('/clinica/paciente-nuevo-editar.php', $data);
+
+    }
+
+    public function pacienteInsertEdit(){
 
         $authMiddleware = new AuthMiddleware('clinica');
         $result = $authMiddleware->authPermisos();
@@ -76,22 +157,37 @@ class ClinicaController extends BaseController{
             return;
         }
 
+        $model = new ClinicaModel();
         $data = json_decode(file_get_contents('php://input'), true);
 
-        $model = new ClinicaModel();
-        $result = $model->insertPaciente($data,$result);
+        if($data['idPaciente'] == 0){
 
-        if ($result['resultado'] == 200) {
-            echo HttpMethod::jsonResponse(200,true,$result['mensaje']);
-        } else {
-            echo HttpMethod::jsonResponse(401, false, $result['mensaje']);
-        }
+            $result = $model->insertPaciente($data,$result);
+
+            if ($result['resultado'] == 200) {
+                echo HttpMethod::jsonResponse(200,true,$result['mensaje']);
+            } else {
+                echo HttpMethod::jsonResponse(401, false, $result['mensaje']);
+            }
+
+        }else{
+
+            $result = $model->editPaciente($data);
+
+            if ($result['resultado'] == 200) {
+                echo HttpMethod::jsonResponse(200,true,$result['mensaje']);
+            } else {
+                echo HttpMethod::jsonResponse(401, false, $result['mensaje']);
+            }
+
+        }        
+        
     }
 
-    public function pacienteDetalle($idpaciente){
+    public function pacienteDetalle($idPaciente){
 
         $authMiddleware = new AuthMiddleware('clinica');
-        $paciente = new PacienteModel($idpaciente);
+        $paciente = new PacienteModel($idPaciente);
         $sidebar = new Sidebar();
 
         $authMiddleware->authPermisos();        
@@ -106,16 +202,16 @@ class ClinicaController extends BaseController{
         $telefono = $paciente->getTelefono();
         $celular = $paciente->getCelular();
 
-        $edad = CalculadoraEdad::calcularEdad($fechaNacimiento);
-        
+        $edad = CalculadoraEdad::calcularEdad($fechaNacimiento);        
 
         $sidebar->addItemList('Inicio', '/clinica', 'home');
-        $sidebar->addItemList('Paciente', '/clinica/paciente/'.$idpaciente, 'users');
+        $sidebar->addItemList('Paciente', '/clinica/paciente/'.$idPaciente, 'users');
         $sidebar->setActivarItem('Paciente');
         $sidebarHtml = $sidebar->render();
         
         $data = ['title' => 'Paciente', 
-        'fecha_alta' => $fechaAlta,
+        'idPaciente' => $idPaciente,
+        'fecha_alta' => $fechaAlta, 
         'nombre_paciente' => $nombreCompleto, 
         'fecha_nacimiento' => $fechaNacimiento,
         'edad' => $edad,
@@ -129,6 +225,51 @@ class ClinicaController extends BaseController{
 
         'sidebar' => $sidebarHtml];
         $this->view('/clinica/pacientes-detalle.php', $data);
+    }
+
+    public function pacientePin($idPaciente){
+
+        $authMiddleware = new AuthMiddleware('clinica');
+        $paciente = new PacienteModel($idPaciente);
+        $sidebar = new Sidebar();
+
+        $authMiddleware->authPermisos();
+
+        $fechaAlta = $paciente->getFechaAlta();
+        $nombreCompleto = $paciente->getNombreCompleto();
+        $fechaNacimiento = $paciente->getFechaNacimiento();
+        $sexo = $paciente->getSexo();
+        $estado_civil = $paciente->getEstadoCivil();
+        $curp = $paciente->getCurp();
+
+        $email = $paciente->getEmail();
+        $telefono = $paciente->getTelefono();
+        $celular = $paciente->getCelular();
+
+        $edad = CalculadoraEdad::calcularEdad($fechaNacimiento); 
+
+        $sidebar->addItemList('Inicio', '/clinica', 'home');
+        $sidebar->addItemList('Paciente Pin', '/clinica/paciente/pin/'.$idPaciente, 'users');
+        $sidebar->setActivarItem('Paciente Pin');
+        $sidebarHtml = $sidebar->render();
+
+
+        $data = ['title' => 'Paciente Pin', 
+        'idPaciente' => $idPaciente,
+        'fecha_alta' => $fechaAlta, 
+        'nombre_paciente' => $nombreCompleto, 
+        'fecha_nacimiento' => $fechaNacimiento,
+        'edad' => $edad,
+        'sexo' => $sexo, 
+        'estado_civil' => $estado_civil,
+        'curp' => $curp,  
+        
+        'email' => $email,
+        'telefono' => $telefono,
+        'celular' => $celular,  
+        'sidebar' => $sidebarHtml];
+        $this->view('/clinica/paciente-pin.php', $data);
+
     }
 
 }
