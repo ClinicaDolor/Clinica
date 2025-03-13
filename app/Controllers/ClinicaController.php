@@ -7,6 +7,7 @@ use App\Models\PacienteModel;
 use App\Helpers\Sidebar;
 use App\Core\HttpMethod;
 use App\Helpers\CalculadoraEdad;
+use App\Models\NotaSubsecuenteModel;
 
 class ClinicaController extends BaseController{
 
@@ -414,6 +415,28 @@ class ClinicaController extends BaseController{
 
         'sidebar' => $sidebarHtml];
         $this->view('/clinica/pacientes-nota-subsecuente.php', $data);
+    }
+
+    public function pacienteInsertNotaSubsecuente(){
+        $authMiddleware = new AuthMiddleware('clinica');
+        $authMiddleware->authPermisos();
+
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo HttpMethod::jsonResponse(405, false, "Método no permitido. Usa POST.");
+            return;
+        }
+
+        $model = new NotaSubsecuenteModel();
+        $data = json_decode(file_get_contents('php://input'), true);
+        $resultModel = $model->insertNotaSubsecuente($data);
+
+            if ($resultModel['resultado'] == 200) {
+                echo HttpMethod::jsonResponse(200,true,$resultModel['mensaje']);
+            } else {
+                echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
+            }
     }
 
 }

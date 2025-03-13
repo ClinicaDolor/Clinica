@@ -1,6 +1,6 @@
 <?php 
 use App\Config\Database;
-use App\Models\RecetaModel;
+use App\Models\NotaSubsecuenteModel;
 $bd = Database::getInstance();
 ?>
 <!DOCTYPE html>
@@ -25,17 +25,17 @@ $bd = Database::getInstance();
     <script>
         function AgregarNota(idPaciente){
 
-            const contenidoReceta = document.querySelector('.ql-editor').innerHTML;
+            const contenidoNota = document.querySelector('.ql-editor').innerHTML;
             document.querySelector('.ql-editor').style.border = "";
 
-            if(contenidoReceta != '<p><br></p>'){
+            if(contenidoNota != '<p><br></p>'){
 
             const parametros = {
             idPaciente : idPaciente,
-            contenidoReceta : contenidoReceta
+            contenidoNota : contenidoNota
             };
 
-            fetch('/clinica/paciente/insert-receta', {
+            fetch('/clinica/paciente/insert-nota-subsecuente', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ $bd = Database::getInstance();
 
     function DetalleNota(idNota){
 
-        fetch(`/buscar/notas-subsecuentes/${encodeURIComponent(idNota)}`)
+        fetch(`/buscar/nota-subsecuente/${encodeURIComponent(idNota)}`)
                 .then(response => {
                 if (!response.ok) {
                 throw new Error('Error en la respuesta del servidor: ' + response.status);
@@ -207,14 +207,14 @@ $bd = Database::getInstance();
 
                 <?php
                         try {
-                            $stmt = $bd->query("SELECT * FROM receta_medica WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
+                            $stmt = $bd->query("SELECT * FROM nota_subsecuente WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
                             $registros = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         } catch (PDOException $e) {
                             die("Error en la consulta: " . $e->getMessage());
                         }
                 ?>
 
-                <table class="table table-striped table-hover table-sm mt-0 mb-0 pb-0 pt-0" id="table1">
+                <table class="table table-striped table-hover table-sm pb-0 mb-0" id="table1">
                     <thead>
                         <tr>
                             <th class="text-center">#</th>
@@ -243,7 +243,10 @@ $bd = Database::getInstance();
                     </div>
                     <div class="card-body">
                         <div id="detalleNota">
-                            
+                        <?php
+                            $model = new NotaSubsecuenteModel();
+                            echo $model->ultimaNota($data['idPaciente']);
+                            ?>
                         </div>
                     </div>
                 </div>

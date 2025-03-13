@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Models\BusquedasModel;
 use App\Models\RecetaModel;
+use App\Models\NotaSubsecuenteModel;
 
 class BusquedasController{
 
@@ -19,6 +20,13 @@ class BusquedasController{
     public function buscarReceta($idReceta){
         $model = new RecetaModel();
         echo $model->getReceta($idReceta);
+
+    }
+
+    public function buscarNotaSubsecuente($idNota){
+
+        $model = new NotaSubsecuenteModel();
+        echo $model->getNotaSubsecuente($idNota);
 
     }
 }

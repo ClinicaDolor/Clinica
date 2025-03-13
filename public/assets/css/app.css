@@ -217,19 +217,20 @@ footer{padding:0rem 1.5rem}
     .sidebar-wrapper .sidebar-toggler.x{display:block}
 }
 
-.card{box-shadow:-8px 12px 18px 0 rgba(25,42,70,.13);margin-bottom:2.2rem}
+.card{box-shadow:-8px 12px 18px 0 rgba(25,42,70,.13);margin-bottom:2rem}
 .card.card-statistic{box-shadow:1px 2px 5px rgba(47,170,244,.5);background:linear-gradient(180deg,#25a6f1,#54b9ff);border:none}
 .card.card-statistic .card-title{text-transform:uppercase;color:#fff;letter-spacing:.8px;font-weight:400;font-size:1.3rem;margin-bottom:0;margin-top:5px}
 .card.card-statistic .card-right p{font-size:1.5rem;color:#fff;margin-bottom:0}
 .card.card-statistic .card-right span.green{color:#6fff6f}
 .card.card-statistic .card-right span.red{color:#ff7979}
 .card.card-statistic .chart-wrapper{height:100px}
-.card .card-header{border:none}
+.card .card-header{border:none;padding:1rem 1.4rem}
 .card .card-header h4{font-size:1.2rem}
 .card .card-header~.card-body{padding-top:0}
 .card .card-content{position:relative}
 .card .card-title{font-size:1.2rem}
-.card .card-body{padding:1.4rem 1.4rem}
+.card .card-body{padding:1rem 1.4rem;}
+.card .card-body p{margin-bottom: 0;}
 .card .card-heading{color:#555;font-size:1.5rem}
 .card .card-img-overlay{background-color:rgba(0,0,0,.6)}
 .card .card-img-overlay p{color:#eee}
@@ -368,3 +369,5 @@ footer{padding:0rem 1.5rem}
 .bg-grey{background-color:#ebeff6!important}
 .text-gray-700{color:#4a5568}
 .bg-gray-700{background-color:#4a5568!important}
+
+.table-sm tr td{padding: 7.5px;}
