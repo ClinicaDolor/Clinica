@@ -8,70 +8,67 @@ use App\Helpers\Sidebar;
 use App\Core\HttpMethod;
 use App\Helpers\CalculadoraEdad;
 use App\Models\NotaSubsecuenteModel;
+use App\Controllers\SidebarController;
 
 class ClinicaController extends BaseController{
 
+
     public function pacientesIndex(){
+    $authMiddleware = new AuthMiddleware('clinica');
+    $sidebar = new Sidebar();
+    $sidebarController = new SidebarController();
 
-        $authMiddleware = new AuthMiddleware('clinica');
-        $sidebar = new Sidebar();
+    $authMiddleware->authPermisos();
 
-        $authMiddleware->authPermisos();
+    $sidebarController->configureSidebar('DOCTOR', 'clinica', $sidebar);
+    $sidebar->setActivarItem('Pacientes');
+    $sidebarHtml = $sidebar->render();
 
-        $sidebar->addItemList('Inicio', '/clinica', 'home');
-        $sidebar->addItemList('Pacientes', '/clinica/pacientes', 'users');
-        $sidebar->addItemList('Clinica', 'clinica/info', 'zap');
-        $sidebar->setActivarItem('Pacientes');
-        $sidebarHtml = $sidebar->render();
-
-
-        $data = ['title' => 'Pacientes', 'sidebar' => $sidebarHtml];
-        $this->view('/clinica/pacientes.php', $data);
-        
+    $data = ['title' => 'Pacientes', 'sidebar' => $sidebarHtml];
+    $this->view('/clinica/pacientes.php', $data);
     }
 
     public function pacientesModulos($idPaciente){
 
-        $authMiddleware = new AuthMiddleware('clinica');
-        $paciente = new PacienteModel($idPaciente);
-        $sidebar = new Sidebar();
+    $authMiddleware = new AuthMiddleware('clinica');
+    $paciente = new PacienteModel($idPaciente);
+    $sidebar = new Sidebar();
+    $sidebarController = new SidebarController();
 
-        $authMiddleware->authPermisos();        
-        $nombreCompleto = $paciente->getNombreCompleto();
+    $authMiddleware->authPermisos();        
+    $nombreCompleto = $paciente->getNombreCompleto();
 
-        $sidebar->addItemList('Inicio', '/clinica', 'home');
-        $sidebar->addItemList('Historia Clinica', '/clinica/modulos/paciente/'.$idPaciente, 'users');
-        $sidebar->setActivarItem('Historia Clinica');
-        $sidebarHtml = $sidebar->render();
+    $sidebarController->configureSidebar('DOCTOR', 'clinica-modulos-paciente', $sidebar, $idPaciente);
+    $sidebar->setActivarItem('Historia Clinica');
+    $sidebarHtml = $sidebar->render();
         
-        $data = ['title' => 'Historia Clinica', 'nombre_paciente' => $nombreCompleto, 'sidebar' => $sidebarHtml];
-        $this->view('/clinica/pacientes-modulos.php', $data);
+    $data = ['title' => 'Historia Clinica', 'nombre_paciente' => $nombreCompleto, 'sidebar' => $sidebarHtml];
+    $this->view('/clinica/pacientes-modulos.php', $data);
     }
 
-    public function pacienteNuevo($idPaciente = 0){
-        
-        $authMiddleware = new AuthMiddleware('clinica');
-        $sidebar = new Sidebar();
+    public function pacienteNuevo($idPaciente = 0){ 
+    $authMiddleware = new AuthMiddleware('clinica');
+    $sidebar = new Sidebar();
+    $sidebarController = new SidebarController();
 
-        $authMiddleware->authPermisos();
+    $authMiddleware->authPermisos();
 
-        $sidebar->addItemList('Inicio', '/clinica', 'home');
-        $sidebar->addItemList('Paciente Nuevo', '/clinica/paciente/nuevo', 'users');
-        $sidebar->setActivarItem('Paciente Nuevo');
-        $sidebarHtml = $sidebar->render();
+    $sidebarController->configureSidebar('DOCTOR', 'clinica-paciente-nuevo', $sidebar, $idPaciente);
+    $sidebar->setActivarItem('Paciente Nuevo');
+    $sidebarHtml = $sidebar->render();
   
-        $data = ['title' => 'Paciente Nuevo', 'titulo_boton' => 'Guardar Paciente', 'idPaciente' => $idPaciente, 'sidebar' => $sidebarHtml];
-        $this->view('/clinica/paciente-nuevo-editar.php', $data);
-
+    $data = ['title' => 'Paciente Nuevo', 'titulo_boton' => 'Guardar Paciente', 'idPaciente' => $idPaciente, 'sidebar' => $sidebarHtml];
+    $this->view('/clinica/paciente-nuevo-editar.php', $data);
     }
 
     public function pacienteEditar($idPaciente){
 
-        $authMiddleware = new AuthMiddleware('clinica');
-        $sidebar = new Sidebar();
-        $paciente = new PacienteModel($idPaciente);
+    $authMiddleware = new AuthMiddleware('clinica');
+    $sidebar = new Sidebar();
+    $paciente = new PacienteModel($idPaciente);
+    $sidebarController = new SidebarController();
 
-        $authMiddleware->authPermisos();
+    $authMiddleware->authPermisos();
 
         $nombreCompleto = $paciente->getNombreCompleto();
         $edad = $paciente->getEdad();
@@ -103,8 +100,8 @@ class ClinicaController extends BaseController{
         $res_nombre = $paciente->getResNombre();
         $res_telefono = $paciente->getResTelefono();
       
-        $sidebar->addItemList('Inicio', '/clinica', 'home');
-        $sidebar->addItemList('Paciente Editar', '/clinica/paciente/editar/'.$idPaciente, 'users');
+
+        $sidebarController->configureSidebar('DOCTOR', 'clinica-paciente-editar', $sidebar, $idPaciente);
         $sidebar->setActivarItem('Paciente Editar');
         $sidebarHtml = $sidebar->render();
        
@@ -191,6 +188,7 @@ class ClinicaController extends BaseController{
         $authMiddleware = new AuthMiddleware('clinica');
         $paciente = new PacienteModel($idPaciente);
         $sidebar = new Sidebar();
+        $sidebarController = new SidebarController();
 
         $authMiddleware->authPermisos();        
         $fechaAlta = $paciente->getFechaAlta();
@@ -208,8 +206,7 @@ class ClinicaController extends BaseController{
 
         $motivo_atencion = $paciente->getMotivoAtencion();
 
-        $sidebar->addItemList('Inicio', '/clinica', 'home');
-        $sidebar->addItemList('Paciente', '/clinica/paciente/'.$idPaciente, 'users');
+        $sidebarController->configureSidebar('DOCTOR', 'clinica-paciente-detalle', $sidebar, $idPaciente);
         $sidebar->setActivarItem('Paciente');
         $sidebarHtml = $sidebar->render();
         
@@ -237,6 +234,7 @@ class ClinicaController extends BaseController{
         $authMiddleware = new AuthMiddleware('clinica');
         $paciente = new PacienteModel($idPaciente);
         $sidebar = new Sidebar();
+        $sidebarController = new SidebarController();
 
         $authMiddleware->authPermisos();
 
@@ -253,8 +251,7 @@ class ClinicaController extends BaseController{
 
         $edad = CalculadoraEdad::calcularEdad($fechaNacimiento); 
 
-        $sidebar->addItemList('Inicio', '/clinica', 'home');
-        $sidebar->addItemList('Paciente Pin', '/clinica/paciente/pin/'.$idPaciente, 'users');
+        $sidebarController->configureSidebar('DOCTOR', 'clinica-paciente-pin', $sidebar, $idPaciente);
         $sidebar->setActivarItem('Paciente Pin');
         $sidebarHtml = $sidebar->render();
 
@@ -306,6 +303,7 @@ class ClinicaController extends BaseController{
         $authMiddleware = new AuthMiddleware('clinica');
         $paciente = new PacienteModel($idPaciente);
         $sidebar = new Sidebar();
+        $sidebarController = new SidebarController();
 
         $authMiddleware->authPermisos();        
         $fechaAlta = $paciente->getFechaAlta();
@@ -323,8 +321,7 @@ class ClinicaController extends BaseController{
 
         $motivo_atencion = $paciente->getMotivoAtencion();
 
-        $sidebar->addItemList('Inicio', '/clinica', 'home');
-        $sidebar->addItemList('Paciente Recetas', '/clinica/paciente/'.$idPaciente, 'users');
+        $sidebarController->configureSidebar('DOCTOR', 'clinica-paciente-recetas', $sidebar, $idPaciente);
         $sidebar->setActivarItem('Paciente Recetas');
         $sidebarHtml = $sidebar->render();
         
@@ -373,9 +370,10 @@ class ClinicaController extends BaseController{
     }
 
     public function pacienteNotaSubsecuente($idPaciente){
-        $authMiddleware = new AuthMiddleware('clinica');
-        $paciente = new PacienteModel($idPaciente);
-        $sidebar = new Sidebar();
+    $authMiddleware = new AuthMiddleware('clinica');
+    $paciente = new PacienteModel($idPaciente);
+    $sidebar = new Sidebar();
+    $sidebarController = new SidebarController();
 
         $authMiddleware->authPermisos();        
         $fechaAlta = $paciente->getFechaAlta();
@@ -392,9 +390,8 @@ class ClinicaController extends BaseController{
         $edad = CalculadoraEdad::calcularEdad($fechaNacimiento);        
 
         $motivo_atencion = $paciente->getMotivoAtencion();
-
-        $sidebar->addItemList('Inicio', '/clinica', 'home');
-        $sidebar->addItemList('Paciente Notas', '/clinica/paciente/'.$idPaciente, 'users');
+        
+        $sidebarController->configureSidebar('DOCTOR', 'clinica-paciente-notas', $sidebar, $idPaciente);
         $sidebar->setActivarItem('Paciente Notas');
         $sidebarHtml = $sidebar->render();
         
