@@ -28,6 +28,11 @@ return function(RouteCollector $r) {
 
                 $r->addRoute('GET', '/paciente/{idPaciente}', ['ClinicaController', 'pacienteDetalle']);
 
+                $r->addRoute('GET', '/receta/paciente/{idPaciente}', ['ClinicaController', 'pacienteReceta']);
+                $r->addRoute('POST', '/paciente/insert-receta', ['ClinicaController', 'pacienteInsertReceta']);
+
+                $r->addRoute('GET', '/nota-subsecuente/paciente/{idPaciente}', ['ClinicaController', 'pacienteNotaSubsecuente']);
+
         });
 
         $r->addGroup('/historia-clinica', function (RouteCollector $r) {
@@ -40,6 +45,7 @@ return function(RouteCollector $r) {
         //Ruta para crear las diferentes busquedas
         //----------------------------------------//
         $r->addRoute('GET', '/buscar', ['BusquedasController', 'buscarPacientes']);
+        $r->addRoute('GET', '/buscar/receta/{idReceta}', ['BusquedasController', 'buscarReceta']);
     
 };
 

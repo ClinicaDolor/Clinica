@@ -243,7 +243,7 @@ class ClinicaModel{
 
     public function insertPacientePin($data){
 
-          date_default_timezone_set('America/Mexico_City');
+        date_default_timezone_set('America/Mexico_City');
         $fecha = date('Y-m-d');
         $hora = date('H:i:s');
 
@@ -276,6 +276,32 @@ class ClinicaModel{
         } else {
             return array('resultado' => 401,'mensaje' => '¡Error al agregar nuevo paciente a la lista!');
         }
+
+    }
+
+    public function insertPacienteReceta($data){
+
+        $sql = "INSERT INTO receta_medica (
+            id_paciente,
+            contenido
+        ) VALUES (
+            :id_paciente,
+            :contenido
+        )";
+
+        $stmt = $this->bd->prepare($sql);         
+
+        $datos = [
+            ':id_paciente' => $data['idPaciente'],
+            ':contenido' => $data['contenidoReceta']
+            ];
+        
+            if ($stmt->execute($datos)) {
+                return array('resultado' => 200,'mensaje' => '¡Se creo la receta Correctamente!');
+    
+            } else {
+                return array('resultado' => 401,'mensaje' => '¡Error al agregar nueva receta a la lista!');
+            }
 
     }
 

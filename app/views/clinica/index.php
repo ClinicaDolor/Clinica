@@ -173,7 +173,7 @@ use App\Controllers\ClinicaController;
                 <h3>Tratamientos del dolor y cuidados paleativos</h3>
 
             </div>
-            <section class="section">
+            <section class="section mt-4">
                 <?php 
                 /*print_r($data);
                 echo "</br>".$data['datos']['rol'];*/
@@ -196,6 +196,12 @@ use App\Controllers\ClinicaController;
                         </div>
                     </div>
                 </div>
+
+            </section>
+
+            <section>
+
+                
 
             </section>
         </div>

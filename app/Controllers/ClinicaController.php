@@ -26,6 +26,7 @@ class ClinicaController extends BaseController{
 
         $data = ['title' => 'Pacientes', 'sidebar' => $sidebarHtml];
         $this->view('/clinica/pacientes.php', $data);
+        
     }
 
     public function pacientesModulos($idPaciente){
@@ -204,6 +205,8 @@ class ClinicaController extends BaseController{
 
         $edad = CalculadoraEdad::calcularEdad($fechaNacimiento);        
 
+        $motivo_atencion = $paciente->getMotivoAtencion();
+
         $sidebar->addItemList('Inicio', '/clinica', 'home');
         $sidebar->addItemList('Paciente', '/clinica/paciente/'.$idPaciente, 'users');
         $sidebar->setActivarItem('Paciente');
@@ -217,7 +220,8 @@ class ClinicaController extends BaseController{
         'edad' => $edad,
         'sexo' => $sexo, 
         'estado_civil' => $estado_civil,
-        'curp' => $curp,  
+        'curp' => $curp, 
+        'motivo_atencion' => $motivo_atencion,  
         
         'email' => $email,
         'telefono' => $telefono,
@@ -294,6 +298,122 @@ class ClinicaController extends BaseController{
                 echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
             }
 
+    }
+
+    public function pacienteReceta($idPaciente){
+
+        $authMiddleware = new AuthMiddleware('clinica');
+        $paciente = new PacienteModel($idPaciente);
+        $sidebar = new Sidebar();
+
+        $authMiddleware->authPermisos();        
+        $fechaAlta = $paciente->getFechaAlta();
+        $nombreCompleto = $paciente->getNombreCompleto();
+        $fechaNacimiento = $paciente->getFechaNacimiento();
+        $sexo = $paciente->getSexo();
+        $estado_civil = $paciente->getEstadoCivil();
+        $curp = $paciente->getCurp();
+
+        $email = $paciente->getEmail();
+        $telefono = $paciente->getTelefono();
+        $celular = $paciente->getCelular();
+
+        $edad = CalculadoraEdad::calcularEdad($fechaNacimiento);        
+
+        $motivo_atencion = $paciente->getMotivoAtencion();
+
+        $sidebar->addItemList('Inicio', '/clinica', 'home');
+        $sidebar->addItemList('Paciente Recetas', '/clinica/paciente/'.$idPaciente, 'users');
+        $sidebar->setActivarItem('Paciente Recetas');
+        $sidebarHtml = $sidebar->render();
+        
+        $data = ['title' => 'Recetas', 
+        'idPaciente' => $idPaciente,
+        'fecha_alta' => $fechaAlta, 
+        'nombre_paciente' => $nombreCompleto, 
+        'fecha_nacimiento' => $fechaNacimiento,
+        'edad' => $edad,
+        'sexo' => $sexo, 
+        'estado_civil' => $estado_civil,
+        'curp' => $curp, 
+        'motivo_atencion' => $motivo_atencion,  
+        
+        'email' => $email,
+        'telefono' => $telefono,
+        'celular' => $celular,  
+
+        'sidebar' => $sidebarHtml];
+        $this->view('/clinica/pacientes-recetas.php', $data);
+
+    }
+
+    public function pacienteInsertReceta(){
+
+        $authMiddleware = new AuthMiddleware('clinica');
+        $authMiddleware->authPermisos();
+
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo HttpMethod::jsonResponse(405, false, "Método no permitido. Usa POST.");
+            return;
+        }
+
+        $model = new ClinicaModel();
+        $data = json_decode(file_get_contents('php://input'), true);
+        $resultModel = $model->insertPacienteReceta($data);
+
+            if ($resultModel['resultado'] == 200) {
+                echo HttpMethod::jsonResponse(200,true,$resultModel['mensaje']);
+            } else {
+                echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
+            }
+
+    }
+
+    public function pacienteNotaSubsecuente($idPaciente){
+        $authMiddleware = new AuthMiddleware('clinica');
+        $paciente = new PacienteModel($idPaciente);
+        $sidebar = new Sidebar();
+
+        $authMiddleware->authPermisos();        
+        $fechaAlta = $paciente->getFechaAlta();
+        $nombreCompleto = $paciente->getNombreCompleto();
+        $fechaNacimiento = $paciente->getFechaNacimiento();
+        $sexo = $paciente->getSexo();
+        $estado_civil = $paciente->getEstadoCivil();
+        $curp = $paciente->getCurp();
+
+        $email = $paciente->getEmail();
+        $telefono = $paciente->getTelefono();
+        $celular = $paciente->getCelular();
+
+        $edad = CalculadoraEdad::calcularEdad($fechaNacimiento);        
+
+        $motivo_atencion = $paciente->getMotivoAtencion();
+
+        $sidebar->addItemList('Inicio', '/clinica', 'home');
+        $sidebar->addItemList('Paciente Notas', '/clinica/paciente/'.$idPaciente, 'users');
+        $sidebar->setActivarItem('Paciente Notas');
+        $sidebarHtml = $sidebar->render();
+        
+        $data = ['title' => 'Notas Subsecuentes', 
+        'idPaciente' => $idPaciente,
+        'fecha_alta' => $fechaAlta, 
+        'nombre_paciente' => $nombreCompleto, 
+        'fecha_nacimiento' => $fechaNacimiento,
+        'edad' => $edad,
+        'sexo' => $sexo, 
+        'estado_civil' => $estado_civil,
+        'curp' => $curp, 
+        'motivo_atencion' => $motivo_atencion,  
+        
+        'email' => $email,
+        'telefono' => $telefono,
+        'celular' => $celular,  
+
+        'sidebar' => $sidebarHtml];
+        $this->view('/clinica/pacientes-nota-subsecuente.php', $data);
     }
 
 }
