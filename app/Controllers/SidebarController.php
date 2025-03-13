@@ -21,6 +21,8 @@ class SidebarController extends BaseController {
     'logout' => ['titulo' => 'Cerrar Sesión', 'url' => '', 'icono' => 'log-out']
     ];
 
+    
+    
     //----- Listado de elementos segun el rol y su vista ----- 
     $viewRolElements = [
 
@@ -44,6 +46,16 @@ class SidebarController extends BaseController {
     
     'clinica-paciente-detalle' => [
     ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$idPaciente, 'icono' => 'users']
+    ],
+
+    'clinica-paciente-recetas' => [
+    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$idPaciente, 'icono' => 'users'],
+    ['titulo' => 'Paciente Recetas', 'url' => SERVIDOR . 'clinica/receta/paciente/'.$idPaciente, 'icono' => 'file-text']
+    ],
+    
+    'clinica-paciente-notas' => [
+    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$idPaciente, 'icono' => 'users'],
+    ['titulo' => 'Paciente Notas', 'url' => SERVIDOR . 'clinica/nota-subsecuente/paciente/'.$idPaciente, 'icono' => 'file-text']
     ],
 
     'clinica-paciente-pin' => [
