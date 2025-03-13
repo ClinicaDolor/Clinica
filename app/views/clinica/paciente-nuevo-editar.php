@@ -92,7 +92,7 @@ $bd = Database::getInstance();
     .then(data => {
 
         if (data.resultado) {
-            window.location.href = '/clinica/paciente/pin/' + data.mensaje;
+            window.location.href = '/clinica/paciente/' + data.mensaje;
         } else {
             document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
         }

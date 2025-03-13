@@ -1,5 +1,6 @@
 <?php 
 use App\Config\Database;
+use App\Models\RecetaModel;
 $bd = Database::getInstance();
 ?>
 <!DOCTYPE html>
@@ -13,37 +14,69 @@ $bd = Database::getInstance();
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/simple-datatables/style.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
+    <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/quill/quill.snow.css">
     <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+    <style>
+        .editor{
+            font-size: 20px;
+            height: 250px;
+        }
+    </style>
     <script>
-        function NuevoPin(idPaciente){
+        function AgregarNota(idPaciente){
+
+            const contenidoReceta = document.querySelector('.ql-editor').innerHTML;
+            document.querySelector('.ql-editor').style.border = "";
+
+            if(contenidoReceta != '<p><br></p>'){
 
             const parametros = {
-            idPaciente : idPaciente
+            idPaciente : idPaciente,
+            contenidoReceta : contenidoReceta
             };
 
-        fetch('/clinica/paciente/insert-pin', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(parametros)
-        })
-        .then(response => response.json())
-        .then(data => {
+            fetch('/clinica/paciente/insert-receta', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(parametros)
+            })
+            .then(response => response.json())
+            .then(data => {
 
-        if (data.resultado) {
-            location.reload()
-        } else {
-            document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
-        }
-
-        });
-            
-
+            if (data.resultado) {
+                location.reload()
+            } else {
+                document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
+            }
           
+        });
 
-        }
+    }else{
+        document.querySelector('.ql-editor').style.border = "2px solid #d44e31";
+    }
+    }
+
+    function DetalleNota(idNota){
+
+        fetch(`/buscar/notas-subsecuentes/${encodeURIComponent(idNota)}`)
+                .then(response => {
+                if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor: ' + response.status);
+                }
+                return response.text();
+                })
+                .then(data => {
+
+                    const resultsContainer = document.getElementById('detalleNota');
+                    resultsContainer.innerHTML = data;
+
+                });
+
+    } 
     </script>
+
  </head>
 <body>
     <div id="app">
@@ -115,139 +148,124 @@ $bd = Database::getInstance();
                 </div>
             </nav>
             
-        <div class="main-content container-fluid">
+            <div class="main-content container-fluid">
             <div class="page-title">
                 <h3><?=$data['title'];?></h3>
             </div>
 
+            <section>
             <div class="row mt-3">
-                <div class="col-12 col-sm-6">
+                <div class="col-12 col-sm-12">
                     <div class="card">
-                    <div class="card-header text-light">Información del paciente</div>
                         <div class="card-body">
 
                             <div class="row">
-                                <div class="col-12 col-sm-12">
-                                <label class="text-primary"><small>Nombre Paciente:</small></label>
-                                <div class="fs-4"><?=$data['nombre_paciente'];?></div>
-                                </div>
-                            </div>
-
-                            <div class="row mt-2">
                                 <div class="col-12 col-sm-4">
+                                <label class="text-primary"><small>Nombre Paciente:</small></label>
+                                <div class="fs-5"><?=$data['nombre_paciente'];?></div>
+                                </div>
+                            
+                                <div class="col-12 col-sm-2">
                                 <label class="text-primary"><small>Fecha Alta:</small></label>
                                 <div class="fs-5"><?=(new DateTime($data['fecha_alta']))->format('d/m/Y');[0];?></div>
                                 </div>
 
-                                <div class="col-12 col-sm-4">
+                                <div class="col-12 col-sm-2">
                                 <label class="text-primary"><small>Fecha Nacimiento:</small></label>
                                 <div class="fs-5"><?=date("d/m/Y", strtotime($data['fecha_nacimiento']));?></div>
                                 </div>
 
-                                <div class="col-12 col-sm-4">
+                                <div class="col-12 col-sm-2">
                                 <label class="text-primary"><small>Edad:</small></label>
                                 <div class="fs-5"><?=$data['edad'];?> años</div>
                                 </div>
-
-                            </div>
-
-                            <div class="row mt-2">
-
-                            <div class="col-12 col-sm-4">
+                            
+                            <div class="col-12 col-sm-2">
                             <label class="text-primary"><small>Sexo:</small></label>
                             <div class="fs-5"><?=($data['sexo'] == 'M')? 'Masculino': 'Femenino';?></div>
                             </div>
 
-                            <div class="col-12 col-sm-4">
-                            <label class="text-primary"><small>Estado Civil:</small></label>
-                            <div class="fs-5"><?=$data['estado_civil'];?></div>
-                            </div>
-
-                            <div class="col-12 col-sm-4">
-                            <label class="text-primary"><small>CURP:</small></label>
-                            <div class="fs-5"><?=$data['curp'];?></div>
-                            </div>
-
-                            </div>
-
-                            <div class="mt-3 fs-6 text-success">Contacto del paciente:</div>
-
-                            <div class="row mt-3">
-
-                            <div class="col-12 col-sm-4">
-                            <label class="text-primary"><small>Email:</small></label>
-                            <div class="fs-5"><?=$data['email'];?></div>
-                            </div>
-
-                            <div class="col-12 col-sm-4">
-                            <label class="text-primary"><small>Telefono:</small></label>
-                            <div class="fs-5"><?=$data['telefono'];?></div>
-                            </div>
-
-                            <div class="col-12 col-sm-4">
-                            <label class="text-primary"><small>Celular:</small></label>
-                            <div class="fs-5"><?=$data['celular'];?></div>
-                            </div>
-
-                            </div>
+                            </div>                
 
                         </div>
                     </div>
-                </div>
-                <div class="col-12 col-sm-6">
-                    <div class="card">
-                    <div class="card-header text-light">Pin de acceso para pacientes</div>
-                        <div class="card-body">
 
-                        <div class="text-end"><button class="btn icon btn-success" onclick="NuevoPin(<?=$data['idPaciente'];?>)"><i data-feather="plus" width="20"></i> PIN </button></div>
-                        <div id="mensaje" class="text-center text-danger"></div>
-                        <?php
-                        $hoy = new DateTime();
+                </div>
+            </div>
+            </section>
+
+            <section>
+
+            <div class="row">
+                <div class="col-12 col-sm-5">
+
+                <div class="card">
+                <div class="card-header text-light">
+                <h4 class="card-title">Notas Subsecuentes</h4>
+                </div>
+                <div class="card-body">
+
+                <?php
                         try {
-                            $stmt = $bd->query("SELECT * FROM pc_paciente_acceso WHERE paciente_id = '".$data['idPaciente']."' ");
+                            $stmt = $bd->query("SELECT * FROM receta_medica WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
                             $registros = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         } catch (PDOException $e) {
                             die("Error en la consulta: " . $e->getMessage());
                         }
-                        ?>
+                ?>
 
-                        <table class="table table-striped" id="table1">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">PIN</th>
-                                    <th class="text-center">Fecha creación</th>
-                                    <th class="text-center">Fecha expiración</th>
-                                    <th class="text-center">Estatus</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <?php 
-                            
-                            foreach ($registros as $registro): 
-                            $fechaExpiracion = new DateTime($registro['fecha_expiracion']);
-                            if ($hoy > $fechaExpiracion){
-                                $pin = '******';
-                                $estatus = '<span class="badge bg-danger">Cancelado</span>';
-                            }else{
-                                $pin = 'cdp'.$data['idPaciente'];
-                                $estatus = '<span class="badge bg-success">Activo</span>';
-                            }
-                                
-                            ?>
-                                <tr>
-                                    <td class="text-center align-middle"><?=$pin;?></td>
-                                    <td class="text-center align-middle"><?=(new DateTime($registro['fecha_creacion']))->format('d/m/Y');?></td>
-                                    <td class="text-center align-middle"><b><?=(new DateTime($registro['fecha_expiracion']))->format('d/m/Y');?></b></td>
-                                    <td class="text-center align-middle"><?=$estatus;?></td>
-                                </tr>
-                            <?php endforeach; ?> 
-                            </tbody>
-                        </table>
+                <table class="table table-striped table-hover table-sm mt-0 mb-0 pb-0 pt-0" id="table1">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>Fecha y Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($registros as $registro): ?>
+                        <tr onclick="DetalleNota(<?=$registro['id']?>)">
+                            <td class="text-center"><?=$registro['id']?></td>
+                            <td><?=(new DateTime(datetime: $registro['fecha_hora']))->format('d/m/Y h:i a');?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+
+                </div>
+                </div>
+
+                </div>
+                <div class="col-12 col-sm-7">
+                        
+                <div class="card">
+                    <div class="card-header text-light">
+                    <h4 class="card-title">Detalle de la Nota</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="detalleNota">
                             
                         </div>
                     </div>
                 </div>
+
+                <div class="card">
+                <div class="card-header text-light">
+                <h4 class="card-title">Nueva Nota</h4>
+                </div>
+                <div class="card-body">
+
+                <div id="snow" class="editor"></div>
+                <div class="text-end mt-3"><button class="btn btn-success" onclick="AgregarNota(<?=$data['idPaciente'];?>)">Agregar Nota</button></div>
+                <div id="mensaje"></div>
+                </div>
+                </div>
+
+                </div>
             </div>
+
+                
+            </section>
+
 
         </div>
 
@@ -262,21 +280,38 @@ $bd = Database::getInstance();
     </div>
     <script src="<?=RUTA_JS;?>/feather-icons/feather.min.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-    <script src="<?=RUTA_JS;?>app.js"></script>    
-    <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
+    <script src="<?=RUTA_JS;?>app.js"></script> 
     <script src="<?=RUTA_JS;?>main.js"></script>
+    <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
+    <script src="<?=RUTA_PUBLIC;?>libs/quill/quill.min.js"></script>
     
     <script>
-        let table1 = document.querySelector('#table1');
-        let dataTable = new simpleDatatables.DataTable(table1,{
-	searchable: true,
-    fixedHeight: true,
-	columns: [
-	{
-		select: 1, sort: "desc"
-	}
-	]
-});
+
+    let table1 = document.querySelector('#table1');
+    let dataTable = new simpleDatatables.DataTable(table1,{
+        searchable: true,
+        fixedHeight: true,
+        perPageSelect: false,
+        searchable: false,
+        columns: [
+        {
+            select: 1, sort: "desc"
+        }
+        ]
+    });
+
+        var snow = new Quill('#snow', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                ['bold', 'italic'], 
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+            ],
+        },
+        bounds: '#snow',
+        height: '500px',
+        });
+
     </script>
 </body>
 </html>

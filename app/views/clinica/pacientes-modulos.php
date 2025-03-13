@@ -114,7 +114,7 @@ $bd = Database::getInstance();
                         <tr>
                             <th>Id</th>
                             <th>Nombre del modulo</th>
-                            <th>Estado</th>
+                            <th>Estatus</th>
                             <th class="text-center" width="20"><i data-feather="edit" width="20"></i> </th>
                             <th class="text-center" width="20"><i data-feather="download-cloud" width="20"></i> </th>
                         </tr>

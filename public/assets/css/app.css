@@ -229,7 +229,7 @@ footer{padding:0rem 1.5rem}
 .card .card-header~.card-body{padding-top:0}
 .card .card-content{position:relative}
 .card .card-title{font-size:1.2rem}
-.card .card-body{padding:1.4rem 1.7rem}
+.card .card-body{padding:1.4rem 1.4rem}
 .card .card-heading{color:#555;font-size:1.5rem}
 .card .card-img-overlay{background-color:rgba(0,0,0,.6)}
 .card .card-img-overlay p{color:#eee}
@@ -282,8 +282,9 @@ footer{padding:0rem 1.5rem}
 
 .dataTable-table td,.dataTable-table thead th,.table td,.table thead th{vertical-align:middle}
 .dataTable-table thead th,.table thead th{border-bottom:2px solid #475f7b}
-.dataTable-container{overflow-x:auto}.progress.progress-primary{overflow:visible}
+.dataTable-container{overflow-x:auto}
 
+.progress.progress-primary{overflow:visible}
 .progress.progress-primary .progress-bar{background-color:#5a8dee;border-radius:1rem;box-shadow:0 2px 3px rgba(90,141,238,.8)}
 .progress.progress-secondary{overflow:visible}
 .progress.progress-secondary .progress-bar{background-color:#475f7b;border-radius:1rem;box-shadow:0 2px 3px rgba(71,95,123,.8)}
