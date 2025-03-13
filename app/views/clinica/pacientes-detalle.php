@@ -43,11 +43,19 @@ $bd = Database::getInstance();
         }
 
         function NuevaNotaSubsecuente(idPaciente){
-        window.location.href = '/clinica/nota-subsecuente/paciente/' + idPaciente;
+            window.location.href = '/clinica/nota-subsecuente/paciente/' + idPaciente;
+        }
+
+        function DetalleNota(idNota){
+            window.location.href = '/clinica/nota-subsecuente/' + idNota;
         }
 
         function NuevaReceta(idPaciente){
-        window.location.href = '/clinica/receta/paciente/' + idPaciente;
+            window.location.href = '/clinica/receta/paciente/' + idPaciente;
+        }
+
+        function DetalleReceta(idReceta){
+            window.location.href = '/clinica/receta/' + idReceta;
         }
     </script>
 
@@ -224,7 +232,7 @@ $bd = Database::getInstance();
                         }
                         ?>
 
-                        <table class="table table-sm table-striped pb-0 mb-0" id="table1">
+                        <table class="table table-sm table-striped pb-0 mb-0" id="tablePin">
                             <thead>
                                 <tr>
                                     <th class="text-center">PIN</th>
@@ -245,7 +253,6 @@ $bd = Database::getInstance();
                                 $pin = '<label class="text-primary fw-bold">cdp'.$data['idPaciente'].'</label>';
                                 $estatus = '<span class="badge bg-success">Activo</span>';
                             }
-                                
                             ?>
                                 <tr>
                                     <td class="text-center align-middle"><?=$pin;?></td>
@@ -277,7 +284,7 @@ $bd = Database::getInstance();
                             die("Error en la consulta: " . $e->getMessage());
                         }
                         ?>
-                        <table class='table table-sm table-striped' id="table2">
+                        <table class='table table-sm table-striped pb-0 mb-0' id="table2">
                             <thead>
                                 <tr>
                                     <th>Nombre del modulo</th>
@@ -331,15 +338,28 @@ $bd = Database::getInstance();
                     </div>
                     <div class="card-body">
 
-                    <table class="table table-sm table-striped">
+                    <?php
+                        try {
+                            $query_notas = $bd->query("SELECT * FROM nota_subsecuente WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
+                            $nota_registros = $query_notas->fetchAll(PDO::FETCH_ASSOC);
+                        } catch (PDOException $e) {
+                            die("Error en la consulta: " . $e->getMessage());
+                        }
+                    ?>
+                    <table class="table table-sm table-striped table-hover pb-0 mb-0" id="tableNota">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Fecha</th>
+                                <th class="text-center">#</th>
+                                <th>Fecha y Hora</th>
                             </tr>
                         </thead>
                         <tbody>
-                            
+                            <?php foreach ($nota_registros as $data_nota): ?>
+                            <tr onclick="DetalleNota(<?=$data_nota['id']?>)">
+                                <td class="text-center"><?=$data_nota['id']?></td>
+                                <td><?=(new DateTime(datetime: $data_nota['fecha_hora']))->format('d/m/Y h:i a');?></td>
+                            </tr>
+                            <?php endforeach; ?>    
                         </tbody>
                     </table>
 
@@ -360,8 +380,8 @@ $bd = Database::getInstance();
                         } catch (PDOException $e) {
                             die("Error en la consulta: " . $e->getMessage());
                         }
-                ?>
-                    <table class="table table-sm table-striped">
+                    ?>
+                    <table class="table table-sm table-striped table-hover pb-0 mb-0" id="tableReceta">
                         <thead>
                             <tr>
                                 <th class="text-center">#</th>
@@ -370,14 +390,13 @@ $bd = Database::getInstance();
                         </thead>
                         <tbody>
                             <?php foreach ($receta_registros as $data_receta): ?>
-                            <tr>
+                            <tr onclick="DetalleReceta(<?=$data_receta['id']?>)">
                                 <td class="text-center"><?=$data_receta['id']?></td>
                                 <td><?=(new DateTime(datetime: $data_receta['fecha_hora']))->format('d/m/Y h:i a');?></td>
                             </tr>
                             <?php endforeach; ?>    
                         </tbody>
                     </table>
-
                     </div>                    
                     </div>
 
@@ -400,6 +419,47 @@ $bd = Database::getInstance();
     <script src="<?=RUTA_JS;?>app.js"></script>    
     <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
     <script src="<?=RUTA_JS;?>main.js"></script>
+
+    <script>
+
+let tablePin = document.querySelector('#tablePin');
+let dataTablePin = new simpleDatatables.DataTable(tablePin,{
+    fixedHeight: true,
+    perPageSelect: false,
+    searchable: false,
+    columns: [
+    {
+        select: 1, sort: "desc"
+    }
+    ]
+});
+
+let tableNota = document.querySelector('#tableNota');
+let dataTableNota = new simpleDatatables.DataTable(tableNota,{
+    fixedHeight: true,
+    perPageSelect: false,
+    searchable: false,
+    columns: [
+    {
+        select: 1, sort: "desc"
+    }
+    ]
+});
+
+let tableReceta = document.querySelector('#tableReceta');
+let dataTableReceta = new simpleDatatables.DataTable(tableReceta,{
+    fixedHeight: true,
+    perPageSelect: false,
+    searchable: false,
+    columns: [
+    {
+        select: 1, sort: "desc"
+    }
+    ]
+});
+
+
+</script>
     
 </body>
 </html>

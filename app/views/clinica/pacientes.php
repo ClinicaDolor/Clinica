@@ -123,6 +123,7 @@ $bd = Database::getInstance();
                             <th>Edad</th>
                             <th>Sexo</th>
                             <th>Fecha nacimiento</th>
+                            <th class="text-center" width="20"><i data-feather="clipboard" width="20"></i> </th>
                             <th class="text-center" width="20"><i data-feather="key" width="20"></i> </th>
                             <th class="text-center" width="20"><i data-feather="grid" width="20"></i> </th>
                             <th class="text-center" width="20"><i data-feather="edit" width="20"></i> </th>
@@ -137,6 +138,7 @@ $bd = Database::getInstance();
                     <td><?=$registro['edad']?> años</td>
                     <td><?=$registro['sexo']?></td>
                     <td><?=$registro['fecha_nacimiento']?></td>
+                    <td class="text-center"><a href="<?=SERVIDOR?>clinica/paciente/<?=$registro['id']?>"><i data-feather="clipboard" width="20"></i></a></td>
                     <td class="text-center"><a href="<?=SERVIDOR?>clinica/paciente/pin/<?=$registro['id']?>"><i data-feather="key" width="20"></i></a></td>
                     <td class="text-center"><a href="<?=SERVIDOR?>clinica/modulos/paciente/<?=$registro['id']?>"><i data-feather="grid" width="20"></i></a></td>
                     <td class="text-center"><a href="<?=SERVIDOR?>clinica/paciente/editar/<?=$registro['id']?>"><i data-feather="edit" width="20"></i></a></td>
