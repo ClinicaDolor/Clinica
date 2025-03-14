@@ -90,9 +90,11 @@ class NotaSubsecuenteModel{
 
             $fecha_hora = (new \DateTime($data['fecha_hora']))->format('d/m/Y h:i a');
             $result .= '
-            <label class="text-primary"><small>Fecha y Hora:</small></label>
-            <div class="fs-5">' . $fecha_hora . '</div>
-            <div class="fs-5 mt-3">'.$data['contenido'].'</div>';
+            <div class="text-secondary">Fecha y Hora:</div>
+                                <h5 class="text-secondary">' . $fecha_hora . '</h5>
+                                <h5>'.$data['contenido'].'</h5>
+
+ ';
            
         } else {
             $result = '<div class="text-center p-4 text-light">No se encontró información.</div>';

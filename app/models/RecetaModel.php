@@ -54,7 +54,7 @@ class RecetaModel{
 
         $result = '';
  
-        $sql = "SELECT fecha_hora, contenido FROM receta_medica WHERE id_paciente = :id ORDER BY id DESC LIMIT 1";
+        $sql = "SELECT id, fecha_hora, contenido FROM receta_medica WHERE id_paciente = :id ORDER BY id DESC LIMIT 1";
         $stmt = $this->bd->prepare($sql);
         $stmt->execute([':id' => $idPaciente]);
  
@@ -63,6 +63,7 @@ class RecetaModel{
 
             $fecha_hora = (new \DateTime($data['fecha_hora']))->format('d/m/Y h:i a');
             $result .= '
+            <div class="float-end"><a target="_blank" href="/pdf/receta/'.$data['id'].'" class="btn icon btn-primary"><i data-feather="printer"></i></a></div>
             <label class="text-primary"><small>Fecha y Hora:</small></label>
             <div class="fs-5">' . $fecha_hora . '</div>
             <div class="fs-5 mt-3">'.$data['contenido'].'</div>';
@@ -78,7 +79,7 @@ class RecetaModel{
     public function getReceta($idReceta){
         $result = '';
  
-        $sql = "SELECT fecha_hora, contenido FROM receta_medica WHERE id = :id";
+        $sql = "SELECT id, fecha_hora, contenido FROM receta_medica WHERE id = :id";
         $stmt = $this->bd->prepare($sql);
         $stmt->execute([':id' => $idReceta]);  
 
@@ -86,6 +87,7 @@ class RecetaModel{
             
         $fecha_hora = (new \DateTime($data['fecha_hora']))->format('d/m/Y h:i a');
         $result .= '
+        <div class="float-end"><a target="_blank" href="/pdf/receta/'.$data['id'].'" class="btn icon btn-primary"><i data-feather="printer"></i></a></div>
         <label class="text-primary"><small>Fecha y Hora:</small></label>
         <div class="fs-5">' . $fecha_hora . '</div>
         <div class="fs-5 mt-3">'.$data['contenido'].'</div>';
@@ -95,6 +97,46 @@ class RecetaModel{
         }
        
         return $result;
+    }
+
+    public function getRecetaPdf($idReceta){
+
+        $result = '';
+  
+        $sql = "SELECT id, fecha_hora, contenido FROM receta_medica WHERE id = :id";
+        $stmt = $this->bd->prepare($sql);
+        $stmt->execute([':id' => $idReceta]);  
+
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);                 
+        $fecha_hora = (new \DateTime($data['fecha_hora']))->format('d-m-Y h:i a');
+
+
+        $result .= '
+
+        <table width="100%">
+        <tr>
+        <td height="4cm">
+        <div style="text-align: center;line-height: 55px;">Fecha: ' . $fecha_hora . '</div>
+        </td>
+        </tr>
+        </table>
+
+        <table width="100%">
+        <tr>
+        <td height="8cm">
+
+        '.$data['contenido'].'
+        
+        </td>
+        </tr>
+        </table>
+
+
+        ';
+
+    
+        return $result;
+
     }
 
 }

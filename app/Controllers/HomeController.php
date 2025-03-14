@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Middleware\AuthMiddleware;
 use App\Models\ClinicaModel;
 use App\Helpers\Sidebar;
+use App\Controllers\SidebarController;
 
 class HomeController extends BaseController{
 
@@ -21,13 +22,12 @@ class HomeController extends BaseController{
         $authMiddleware = new AuthMiddleware('clinica');
         $model = new ClinicaModel();
         $sidebar = new Sidebar();
-        
+        $sidebarController = new SidebarController();
+
         $result = $authMiddleware->authPermisos();
         $countPacientes = $model->countPacientes();
-
-        $sidebar->addItemList('Inicio', '', 'home');
-        $sidebar->addItemList('Pacientes', 'clinica/pacientes', 'users');
-        $sidebar->addItemList('Clinica', 'clinica/info', 'zap');
+        
+        $sidebarController->configureSidebar('DOCTOR', 'clinica', $sidebar);
         $sidebar->setActivarItem('Inicio');
         $sidebarHtml = $sidebar->render();
 
@@ -39,10 +39,14 @@ class HomeController extends BaseController{
     public function indexPaciente(){
 
         $authMiddleware = new AuthMiddleware('historia-clinica');
+        $sidebar = new Sidebar();
+        $sidebarController = new SidebarController();
         $result = $authMiddleware->authPermisos();
 
-        $data = ['title' => 'Clinica', 'datos' => $result];
+        $sidebarController->configureSidebar('PACIENTE', 'historia-clinica', $sidebar);
+        $sidebarHtml = $sidebar->render();
+
+        $data = ['title' => 'Clinica', 'datos' => $result, 'sidebar' => $sidebarHtml];
         $this->view('/paciente/index.php', $data);
     }
-
 }
