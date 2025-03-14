@@ -9,17 +9,17 @@ $bd = Database::getInstance();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?=$data['title'];?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="shortcut icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
     <link rel="apple-touch-icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>bootstrap.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/simple-datatables/style.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
-    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
-        
-</head>
-<body>
+    </head>
+
+
+    <body>
+
     <div id="app">
     <?=$data['sidebar'];?>
 
@@ -72,6 +72,7 @@ $bd = Database::getInstance();
     <th class="text-center aling-middle">Edad</th>
     <th class="text-center aling-middle">Sexo</th>
     <th class="text-center aling-middle">Fecha nacimiento</th>
+    <th class="text-center aling-middle" width="20px"><i data-feather="clipboard" width="20"></i> </th>
     <th class="text-center aling-middle" width="20px"><i data-feather="key" width="20px"></i> </th>
     <th class="text-center aling-middle" width="20px"><i data-feather="grid" width="20px"></i> </th>
     <th class="text-center aling-middle" width="20px"><i data-feather="edit" width="20px"></i> </th>
@@ -88,6 +89,7 @@ $bd = Database::getInstance();
     <?=$registro['sexo']?>
     </td>
     <td class="text-center aling-middle"><?=$registro['fecha_nacimiento']?></td>
+    <td class="text-center"><a href="<?=SERVIDOR?>clinica/paciente/<?=$registro['id']?>"><i data-feather="clipboard" width="20"></i></a></td>
     <td class="text-center"><a href="<?=SERVIDOR?>clinica/paciente/pin/<?=$registro['id']?>"><i data-feather="key" width="20"></i></a></td>
     <td class="text-center"><a href="<?=SERVIDOR?>clinica/modulos/paciente/<?=$registro['id']?>"><i data-feather="grid" width="20"></i></a></td>
     <td class="text-center"><a href="<?=SERVIDOR?>clinica/paciente/editar/<?=$registro['id']?>"><i data-feather="edit" width="20"></i></a></td>
@@ -125,6 +127,7 @@ $bd = Database::getInstance();
 		select: 1, sort: "desc"
 	},
     { select: [6,7,8], sortable: false },
+
 	]
     });
 
