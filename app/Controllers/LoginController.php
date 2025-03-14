@@ -3,6 +3,10 @@ namespace App\Controllers;
 use App\Models\LoginModel;
 use App\Core\HttpMethod;
 use App\Middleware\AuthMiddleware;
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
 class LoginController extends BaseController{
 
     //------------------------------------------------------//
@@ -86,6 +90,16 @@ class LoginController extends BaseController{
             echo HttpMethod::jsonResponse(401, false, 'PIN incorrectos.','');
         }
 
+    }
+
+    //-------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------
+
+    public function cerrarSesion(){
+        
+        $decoded = JWT::decode($_COOKIE['CLINICAJWT'], new Key($_ENV['APP_KEY'], 'HS256'));       
+        $authMiddleware = new AuthMiddleware($decoded->vista);
+        $authMiddleware->cerrarSesion();       
     }
 
 }

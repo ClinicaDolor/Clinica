@@ -19,6 +19,7 @@ $bd = Database::getInstance();
 
 
     <body>
+
     <div id="app">
     <?=$data['sidebar'];?>
 
@@ -124,8 +125,10 @@ $bd = Database::getInstance();
 		select: 1, sort: "desc"
 	},
     { select: [6,7,8], sortable: false },
+
 	]
     });
+
     </script>
 
     </body>

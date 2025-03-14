@@ -10,12 +10,16 @@ $bd = Database::getInstance();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?=$data['title'];?></title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
     <link rel="stylesheet" href="<?=RUTA_CSS;?>bootstrap.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/simple-datatables/style.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/quill/quill.snow.css">
     <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+    
     <style>
         .editor{
             font-size: 20px;
@@ -46,7 +50,14 @@ $bd = Database::getInstance();
             .then(data => {
 
             if (data.resultado) {
-                location.reload()
+
+                idReceta = data.mensaje;
+                DetalleReceta(idReceta)
+                document.querySelector('.ql-editor').value = "";
+
+                window.open('/pdf/receta/' + idReceta, '_blank');
+                
+            
             } else {
                 document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
             }
@@ -72,9 +83,11 @@ $bd = Database::getInstance();
                     const resultsContainer = document.getElementById('detalleReceta');
                     resultsContainer.innerHTML = data;
 
-                });
+                    feather.replace();
 
+                });
     } 
+
     </script>
 
  </head>
@@ -242,12 +255,14 @@ $bd = Database::getInstance();
                     <h4 class="card-title">Detalle de la Receta</h4>
                     </div>
                     <div class="card-body">
+
                         <div id="detalleReceta">
                             <?php
                             $model = new RecetaModel();
                             echo $model->ultimaReceta($data['idPaciente']);
                             ?>
                         </div>
+                        
                     </div>
                 </div>
 
@@ -281,13 +296,15 @@ $bd = Database::getInstance();
             </footer>
         </div>
     </div>
+
+
+
     <script src="<?=RUTA_JS;?>/feather-icons/feather.min.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="<?=RUTA_JS;?>app.js"></script> 
     <script src="<?=RUTA_JS;?>main.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/quill/quill.min.js"></script>
-    
     <script>
 
     let table1 = document.querySelector('#table1');
@@ -314,6 +331,15 @@ $bd = Database::getInstance();
         bounds: '#snow',
         height: '500px',
         });
+
+        function Imprimir(){
+
+        var myModal = new bootstrap.Modal(document.getElementById('modalReceta'), {
+        keyboard: false
+        });
+        myModal.show();
+
+        }
 
     </script>
 </body>
