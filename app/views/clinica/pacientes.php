@@ -9,18 +9,17 @@ $bd = Database::getInstance();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?=$data['title'];?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="shortcut icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
     <link rel="apple-touch-icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>bootstrap.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/simple-datatables/style.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
-
-    </head>
-
-
-    <body>
-
+    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+        
+</head>
+<body>
     <div id="app">
     <?=$data['sidebar'];?>
 
@@ -126,7 +125,6 @@ $bd = Database::getInstance();
 		select: 1, sort: "desc"
 	},
     { select: [6,7,8], sortable: false },
-
 	]
     });
 

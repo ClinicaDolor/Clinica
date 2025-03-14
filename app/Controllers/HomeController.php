@@ -49,4 +49,5 @@ class HomeController extends BaseController{
         $data = ['title' => 'Clinica', 'datos' => $result, 'sidebar' => $sidebarHtml];
         $this->view('/paciente/index.php', $data);
     }
+
 }
