@@ -18,7 +18,7 @@ class SidebarController extends BaseController {
     //----- Elementos que siempre estaran presentes -----
     $comunElements = [
     'perfil' => ['titulo' => 'Perfil', 'url' => '', 'icono' => 'user'],
-    'logout' => ['titulo' => 'Cerrar Sesión', 'url' => '', 'icono' => 'log-out']
+    'logout' => ['titulo' => 'Cerrar Sesión', 'url' => SERVIDOR . 'cerrar-sesion', 'icono' => 'log-out']
     ];
 
     

@@ -15,8 +15,6 @@ $bd = Database::getInstance();
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
     
-
- 
 </head>
 <body>
     <div id="app">
@@ -179,7 +177,7 @@ $bd = Database::getInstance();
 		select: 1, sort: "desc"
 	},
     { select: [6,7,8], sortable: false },
-	]
+	],
 });
 
 

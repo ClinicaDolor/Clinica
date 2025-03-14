@@ -49,6 +49,14 @@ return function(RouteCollector $r) {
         $r->addRoute('GET', '/buscar', ['BusquedasController', 'buscarPacientes']);
         $r->addRoute('GET', '/buscar/receta/{idReceta}', ['BusquedasController', 'buscarReceta']);
         $r->addRoute('GET', '/buscar/nota-subsecuente/{idNota}', ['BusquedasController', 'buscarNotaSubsecuente']);
+
+        //-----------------------------------------//
+        //Cerrar sesion
+        //----------------------------------------//
+
+        $r->addRoute('GET', '/cerrar-sesion', ['LoginController', 'cerrarSesion']);
+
+        $r->addRoute('GET', '/pdf/receta/{idReceta}', ['PdfController', 'pdfReceta']);
     
 };
 

@@ -297,7 +297,7 @@ class ClinicaModel{
             ];
         
             if ($stmt->execute($datos)) {
-                return array('resultado' => 200,'mensaje' => '¡Se creo la receta Correctamente!');
+                return array('resultado' => 200,'mensaje' => $this->bd->lastInsertId());
     
             } else {
                 return array('resultado' => 401,'mensaje' => '¡Error al agregar nueva receta a la lista!');
