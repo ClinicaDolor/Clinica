@@ -51,7 +51,8 @@ $bd = Database::getInstance();
     -->
 
     <div class="page-title mb-4">     
-    <h3>Historia Clinica <!--(<?=$data['nombre_paciente'];?>)--></h3>
+    <h8><?= $data['datos']['nombre']; ?></h8>
+    <h3>Historia Clinica</h3>
     </div>
     
     <section class="section">
@@ -83,7 +84,7 @@ $bd = Database::getInstance();
             
     <!-- Imagen centrada -->
     <div class="col-12 mb-3">
-    <img src="<?=RUTA_IMAGES ?>/iconos/<?=$modulo['imagen']?>" class="img-fluid" style="max-height: 120px;">
+    <img src="<?=RUTA_IMAGES ?>/iconos/<?=$modulo['imagen']?>" class="img-fluid" style="max-height: 90px;">
     </div>
 
     <!-- Barra de progreso mejorada -->

@@ -10,12 +10,13 @@ $bd = Database::getInstance();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?=$data['title'];?></title>
+    <link rel="shortcut icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
+    <link rel="apple-touch-icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>bootstrap.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/simple-datatables/style.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/quill/quill.snow.css">
-    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
     <style>
         .editor{
             font-size: 20px;
@@ -84,69 +85,8 @@ $bd = Database::getInstance();
         <?=$data['sidebar'];?>
 
         <div id="main">
-            <nav class="navbar navbar-header navbar-expand navbar-light">
-                <a class="sidebar-toggler" href="#"><span class="navbar-toggler-icon"></span></a>
-                <button class="btn navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav d-flex align-items-center navbar-light ms-auto">
-                        <li class="dropdown nav-icon">
-                            <a href="#" data-bs-toggle="dropdown" class="nav-link  dropdown-toggle nav-link-lg nav-link-user">
-                                <div class="d-lg-inline-block">
-                                    <i data-feather="bell"></i>
-                                </div>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-large">
-                                <h6 class='py-2 px-4'>Notifications</h6>
-                                <ul class="list-group rounded-none">
-                                    <li class="list-group-item border-0 align-items-start">
-                                        <div class="avatar bg-success me-3">
-                                            <span class="avatar-content"><i data-feather="shopping-cart"></i></span>
-                                        </div>
-                                        <div>
-                                            <h6 class='text-bold'>New Order</h6>
-                                            <p class='text-xs'>
-                                                An order made by Ahmad Saugi for product Samsung Galaxy S69
-                                            </p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="dropdown nav-icon me-2">
-                            <a href="" data-bs-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                                <div class="d-lg-inline-block">
-                                    <i data-feather="mail"></i>
-                                </div>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end" >
-                                <a class="dropdown-item" href="#"><i data-feather="user"></i> Account</a>
-                                <a class="dropdown-item active" href="#"><i data-feather="mail"></i> Messages</a>
-                                <a class="dropdown-item" href="#"><i data-feather="settings"></i> Settings</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#"><i data-feather="log-out"></i> Logout</a>
-                            </div>
-                        </li>
-                        <li class="dropdown">
-                            <a href="" data-bs-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                                <div class="avatar me-1">
-                                    <img src="assets/images/avatar/avatar-s-1.png" alt="" srcset="">
-                                </div>
-                                <div class="d-none d-md-block d-lg-inline-block">Hi, Saugi</div>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="#"><i data-feather="user"></i> Account</a>
-                                <a class="dropdown-item active" href="#"><i data-feather="mail"></i> Messages</a>
-                                <a class="dropdown-item" href="#"><i data-feather="settings"></i> Settings</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#"><i data-feather="log-out"></i> Logout</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+    <!----- BUSCADOR DE LA BARRA DE NAVEGACION ---------->
+    <?php include_once __DIR__ . '/../components/search-bar-doctor.php';?>
             
             <div class="main-content container-fluid">
             <div class="page-title">
@@ -157,32 +97,40 @@ $bd = Database::getInstance();
             <div class="row mt-3">
                 <div class="col-12 col-sm-12">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body pb-0">
+
+
+                        <h5 class="fw-bold text-primary mt-2 ">Información del paciente</h5>
 
                             <div class="row">
                                 <div class="col-12 col-sm-4">
-                                <label class="text-primary"><small>Nombre Paciente:</small></label>
-                                <div class="fs-5"><?=$data['nombre_paciente'];?></div>
+                                <div class="text-secondary">Nombre Paciente:</div>
+                                <h4><?=$data['nombre_paciente'];?></h4>
                                 </div>
                             
                                 <div class="col-12 col-sm-2">
-                                <label class="text-primary"><small>Fecha Alta:</small></label>
-                                <div class="fs-5"><?=(new DateTime($data['fecha_alta']))->format('d/m/Y');[0];?></div>
+                                <div class="text-secondary">Fecha Alta:</div>
+                                <h4><?=(new DateTime($data['fecha_alta']))->format('d/m/Y');[0];?></h4>
+
                                 </div>
 
                                 <div class="col-12 col-sm-2">
-                                <label class="text-primary"><small>Fecha Nacimiento:</small></label>
-                                <div class="fs-5"><?=date("d/m/Y", strtotime($data['fecha_nacimiento']));?></div>
+                                <div class="text-secondary">Fecha Nacimiento:</div>
+                                <h4><?=date("d/m/Y", strtotime($data['fecha_nacimiento']));?></h4>
+
+                                <label class="text-primary"><small></small></label>
                                 </div>
 
                                 <div class="col-12 col-sm-2">
-                                <label class="text-primary"><small>Edad:</small></label>
-                                <div class="fs-5"><?=$data['edad'];?> años</div>
+                                <div class="text-secondary">Edad:</div>
+                                <h4><?=$data['edad'];?> años</h4>
+
                                 </div>
                             
                             <div class="col-12 col-sm-2">
-                            <label class="text-primary"><small>Sexo:</small></label>
-                            <div class="fs-5"><?=($data['sexo'] == 'M')? 'Masculino': 'Femenino';?></div>
+                            <div class="text-secondary">Sexo:</div>
+                            <h4><?=($data['sexo'] == 'M')? 'Masculino': 'Femenino';?></h4>
+
                             </div>
 
                             </div>                
@@ -201,7 +149,7 @@ $bd = Database::getInstance();
 
                 <div class="card">
                 <div class="card-header text-light">
-                <h4 class="card-title">Notas Subsecuentes</h4>
+                <h5 class="fw-bold text-primary mt-2 ">Notas Subsecuentes</h5>
                 </div>
                 <div class="card-body">
 
@@ -239,7 +187,8 @@ $bd = Database::getInstance();
                         
                 <div class="card">
                     <div class="card-header text-light">
-                    <h4 class="card-title">Detalle de la Nota</h4>
+                    <h5 class="fw-bold text-primary mt-2 ">Detalle de la Nota</h5>
+
                     </div>
                     <div class="card-body">
                         <div id="detalleNota">
@@ -253,7 +202,7 @@ $bd = Database::getInstance();
 
                 <div class="card">
                 <div class="card-header text-light">
-                <h4 class="card-title">Nueva Nota</h4>
+                <h5 class="fw-bold text-primary mt-2 ">Nueva Nota</h5>
                 </div>
                 <div class="card-body">
 
@@ -272,13 +221,8 @@ $bd = Database::getInstance();
 
         </div>
 
-            <footer>
-                <div class="footer clearfix mb-0 text-muted">
-                    <div class="float-start">
-                        <p>2025 &copy; tratamientosdeldolor.org</p>
-                    </div>
-                </div>
-            </footer>
+    <!----- FOOTER ---------->
+    <?php include_once __DIR__ . '/../components/footer-mvsd.php';?>
         </div>
     </div>
     <script src="<?=RUTA_JS;?>/feather-icons/feather.min.js"></script>
@@ -287,6 +231,9 @@ $bd = Database::getInstance();
     <script src="<?=RUTA_JS;?>main.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/quill/quill.min.js"></script>
+    <script src="<?=RUTA_JS?>search-main.js"></script>
+    <script src="<?=RUTA_JS?>search-main.js"></script>
+
     
     <script>
 
