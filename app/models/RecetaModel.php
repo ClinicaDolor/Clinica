@@ -64,7 +64,6 @@ class RecetaModel{
             $fecha_hora = (new \DateTime($data['fecha_hora']))->format('d/m/Y h:i a');
             $result .= '
             <div class="float-end"><a target="_blank" href="/pdf/receta/'.$data['id'].'" class="btn icon btn-primary"><i data-feather="printer"></i></a></div>
-            <label class="text-primary"><small>Fecha y Hora:</small></label>
             <div class="fs-5">' . $fecha_hora . '</div>
             <div class="fs-5 mt-3">'.$data['contenido'].'</div>';
             

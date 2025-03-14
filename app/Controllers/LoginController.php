@@ -6,7 +6,6 @@ use App\Middleware\AuthMiddleware;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-
 class LoginController extends BaseController{
 
     //------------------------------------------------------//
