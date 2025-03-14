@@ -51,12 +51,13 @@ class AuthMiddleware{
     }
 
     public function validaCookie(){
+
         if (isset($_COOKIE['CLINICAJWT'])) {
             return true;
         }else{
             return false;
         }
-       
+        
     }
 
     public function validaExpCookie($exp){

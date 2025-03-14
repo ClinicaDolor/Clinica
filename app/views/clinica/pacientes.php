@@ -15,10 +15,12 @@ $bd = Database::getInstance();
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/simple-datatables/style.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
+
     </head>
 
 
     <body>
+
     <div id="app">
     <?=$data['sidebar'];?>
 
@@ -124,8 +126,10 @@ $bd = Database::getInstance();
 		select: 1, sort: "desc"
 	},
     { select: [6,7,8], sortable: false },
+
 	]
     });
+
     </script>
 
     </body>
