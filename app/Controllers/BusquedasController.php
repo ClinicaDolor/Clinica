@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Models\BusquedasModel;
 use App\Models\RecetaModel;
 use App\Models\NotaSubsecuenteModel;
+use App\Models\LaboratorioModel;
 
 class BusquedasController{
 
@@ -27,6 +28,13 @@ class BusquedasController{
 
         $model = new NotaSubsecuenteModel();
         echo $model->getNotaSubsecuente($idNota);
+
+    }
+
+    public function buscarLaboratorio($idLaboratorio){
+
+        $model = new LaboratorioModel();
+        echo $model->getLaboratorio($idLaboratorio);
 
     }
 }

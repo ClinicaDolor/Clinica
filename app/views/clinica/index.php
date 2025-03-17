@@ -25,7 +25,7 @@ use App\Controllers\ClinicaController;
     <div class="main-content container-fluid">
 
     <div class="page-title">
-    <h3>Tratamientos del dolor y cuidados paleativos</h3>
+    <h3>Tratamientos del dolor y cuidados paliativos</h3>
     </div>
             
     <section class="section mt-4">
@@ -33,7 +33,6 @@ use App\Controllers\ClinicaController;
     /*print_r($data);
     echo "</br>".$data['datos']['rol'];*/
     ?>
-
     <div class="row">
     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
     <a href="<?=SERVIDOR?>clinica/pacientes">

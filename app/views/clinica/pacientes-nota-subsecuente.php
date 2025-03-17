@@ -72,6 +72,7 @@ $bd = Database::getInstance();
 
                     const resultsContainer = document.getElementById('detalleNota');
                     resultsContainer.innerHTML = data;
+                    feather.replace();
 
                 });
 
@@ -97,43 +98,37 @@ $bd = Database::getInstance();
             <div class="row mt-3">
                 <div class="col-12 col-sm-12">
                     <div class="card">
-                        <div class="card-body pb-0">
+                        <div class="card-body">
 
+                        <h4 class="text-primary mt-2 ">Información del paciente</h4>
 
-                        <h5 class="fw-bold text-primary mt-2 ">Información del paciente</h5>
-
-                            <div class="row">
+                        <div class="row">
                                 <div class="col-12 col-sm-4">
-                                <div class="text-secondary">Nombre Paciente:</div>
-                                <h4><?=$data['nombre_paciente'];?></h4>
+                                <label class="text-primary"><small>Nombre Paciente:</small></label>
+                                <div class="fs-5"><?=$data['nombre_paciente'];?></div>
                                 </div>
                             
                                 <div class="col-12 col-sm-2">
-                                <div class="text-secondary">Fecha Alta:</div>
-                                <h4><?=(new DateTime($data['fecha_alta']))->format('d/m/Y');[0];?></h4>
-
+                                <label class="text-primary"><small>Fecha Alta:</small></label>
+                                <div class="fs-5"><?=(new DateTime($data['fecha_alta']))->format('d/m/Y');[0];?></div>
                                 </div>
 
                                 <div class="col-12 col-sm-2">
-                                <div class="text-secondary">Fecha Nacimiento:</div>
-                                <h4><?=date("d/m/Y", strtotime($data['fecha_nacimiento']));?></h4>
-
-                                <label class="text-primary"><small></small></label>
+                                <label class="text-primary"><small>Fecha Nacimiento:</small></label>
+                                <div class="fs-5"><?=date("d/m/Y", strtotime($data['fecha_nacimiento']));?></div>
                                 </div>
 
                                 <div class="col-12 col-sm-2">
-                                <div class="text-secondary">Edad:</div>
-                                <h4><?=$data['edad'];?> años</h4>
-
+                                <label class="text-primary"><small>Edad:</small></label>
+                                <div class="fs-5"><?=$data['edad'];?> años</div>
                                 </div>
                             
                             <div class="col-12 col-sm-2">
-                            <div class="text-secondary">Sexo:</div>
-                            <h4><?=($data['sexo'] == 'M')? 'Masculino': 'Femenino';?></h4>
-
+                            <label class="text-primary"><small>Sexo:</small></label>
+                            <div class="fs-5"><?=($data['sexo'] == 'M')? 'Masculino': 'Femenino';?></div>
                             </div>
 
-                            </div>                
+                            </div>                       
 
                         </div>
                     </div>

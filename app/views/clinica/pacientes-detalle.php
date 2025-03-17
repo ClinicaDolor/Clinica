@@ -58,6 +58,10 @@ $bd = Database::getInstance();
         function DetalleReceta(idReceta){
             window.location.href = '/clinica/receta/' + idReceta;
         }
+
+        function NuevoLaboratorio(idPaciente){
+            window.location.href = '/clinica/laboratorio/paciente/' + idPaciente;
+        }
     </script>
 
 
@@ -80,7 +84,7 @@ $bd = Database::getInstance();
 
     <div class="row mt-4">
 
-    <div class="col-12">
+    <div class="col-12 col-sm-6">
     <div class="card">
         
     <div class="card-header text-light pb-1">
@@ -149,20 +153,17 @@ $bd = Database::getInstance();
 
     </div>
     </div>
-    </div>
-
-
-                
-    <div class="col-12">
+    
+    <!-- Inicio motivo -->
     <div class="card">
     <div class="card-body">
     <h5 class="fw-bold text-primary mt-2 ">Motivo por el que Solicita Atención en la Clinica de Dolor y Cuidados Paliativos</h5>
     <h5><?=empty($data['motivo_atencion'])? 'S/I': $data['motivo_atencion'];?></h5>
     </div>                    
     </div>
-    </div>
-
-    <div class="col-12">   
+    <!-- Fin motivo -->
+    
+    <!-- Inicio PIN -->
     <div class="card">   
     <div class="card-header">
 
@@ -175,9 +176,7 @@ $bd = Database::getInstance();
     <button class="btn icon btn-success float-end" onclick="NuevoPin(<?=$data['idPaciente'];?>)"> <i data-feather="plus" width="20"></i> </button>
     </div>
     </div>
-
-
-                    
+                   
                     </div>
                         <div class="card-body">
                       
@@ -225,103 +224,154 @@ $bd = Database::getInstance();
                             
                         </div>
     </div>
+    <!-- Fin PIN -->
+
+    </div>
+    <!-- Inicio Clinica -->
+    <div class="col-12 col-sm-6">
+    
+    <div class="card">
+        <div class="card-header">
+
+        <div class="row">
+            <div class="col-10">
+            <h5 class="fw-bold text-primary mt-2 ">Nota Subsecuente</h5>
+            </div>
+
+            <div class="col-2">
+            <button class="btn icon btn-success float-end" onclick="NuevaNotaSubsecuente(<?=$data['idPaciente'];?>)"> <i data-feather="plus" width="20"></i> </button>
+            </div>
+            </div>
+
+        </div>
+        <div class="card-body">
+
+        <?php
+            try {
+                $query_notas = $bd->query("SELECT * FROM nota_subsecuente WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
+                $nota_registros = $query_notas->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                die("Error en la consulta: " . $e->getMessage());
+            }
+        ?>
+        <table class="table table-sm table-striped table-hover pb-0 mb-0" id="tableNota">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Fecha y Hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($nota_registros as $data_nota): ?>
+                <tr onclick="DetalleNota(<?=$data_nota['id']?>)">
+                    <td class="text-center"><?=$data_nota['id']?></td>
+                    <td><?=(new DateTime(datetime: $data_nota['fecha_hora']))->format('d/m/Y h:i a');?></td>
+                </tr>
+                <?php endforeach; ?>    
+            </tbody>
+        </table>
+
+        </div>                    
+        </div>
+
+        <div class="card">
+        <div class="card-header">
+
+        <div class="row">
+            <div class="col-10">
+            <h5 class="fw-bold text-primary mt-2 ">Laboratorio</h5>
+            </div>
+
+            <div class="col-2">
+            <button class="btn icon btn-success float-end" onclick="NuevoLaboratorio(<?=$data['idPaciente'];?>)"> <i data-feather="plus" width="20"></i> </button>
+            </div>
+            </div>
+
+        </div>
+        <div class="card-body">
+
+        <?php
+            try {
+                $query_laboratorio = $bd->query("SELECT * FROM laboratorio WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
+                $laboratorio_registros = $query_laboratorio->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                die("Error en la consulta: " . $e->getMessage());
+            }
+        ?>
+        <table class="table table-sm table-striped table-hover pb-0 mb-0" id="tableLaboratorio">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Fecha y Hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($laboratorio_registros as $data_laboratorio): ?>
+                <tr onclick="DetalleNota(<?=$data_laboratorio['id']?>)">
+                    <td class="text-center"><?=$data_laboratorio['id']?></td>
+                    <td><?=(new DateTime(datetime: $data_laboratorio['fecha_hora']))->format('d/m/Y h:i a');?></td>
+                </tr>
+                <?php endforeach; ?>    
+            </tbody>
+        </table>
+
+        </div>                    
+        </div>
+        
+        <!-- Inicio Recetas -->
+        <div class="card">
+        <div class="card-header">
+
+        <div class="row">
+            <div class="col-10">
+            <h5 class="fw-bold text-primary mt-2 ">Receta Medica</h5>
+            </div>
+
+            <div class="col-2">
+                                <button class="btn icon btn-success float-end" onclick="NuevaReceta(<?=$data['idPaciente'];?>)"> <i data-feather="plus" width="20"></i> </button>
+            </div>
+            </div>
+
+        </div>
+        <div class="card-body">
+        <?php
+            try {
+                $query_receta = $bd->query("SELECT * FROM receta_medica WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
+                $receta_registros = $query_receta->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                die("Error en la consulta: " . $e->getMessage());
+            }
+        ?>
+        <table class="table table-sm table-striped table-hover pb-0 mb-0" id="tableReceta">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Fecha y Hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($receta_registros as $data_receta): ?>
+                <tr onclick="DetalleReceta(<?=$data_receta['id']?>)">
+                    <td class="text-center"><?=$data_receta['id']?></td>
+                    <td><?=(new DateTime(datetime: $data_receta['fecha_hora']))->format('d/m/Y h:i a');?></td>
+                </tr>
+                <?php endforeach; ?>    
+            </tbody>
+        </table>
+        </div>                    
+        </div>
+        <!-- Fin Recetas -->
+
+    </div>
+    <!-- Fin Clinica -->
+
+               
+
+
+    <div class="col-12">   
+    
     </div>
 
-
-
-
-<div class="col-12 col-sm-6">
-<div class="card">
-<div class="card-header">
-
-
-
-<div class="row">
-    <div class="col-10">
-    <h5 class="fw-bold text-primary mt-2 ">Nota Subsecuente</h5>
-    </div>
-
-    <div class="col-2">
-    <button class="btn icon btn-success float-end" onclick="NuevaNotaSubsecuente(<?=$data['idPaciente'];?>)"> <i data-feather="plus" width="20"></i> </button>
-    </div>
-    </div>
-
-</div>
-<div class="card-body">
-
-<?php
-    try {
-        $query_notas = $bd->query("SELECT * FROM nota_subsecuente WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
-        $nota_registros = $query_notas->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        die("Error en la consulta: " . $e->getMessage());
-    }
-?>
-<table class="table table-sm table-striped table-hover pb-0 mb-0" id="tableNota">
-    <thead>
-        <tr>
-            <th class="text-center">#</th>
-            <th>Fecha y Hora</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($nota_registros as $data_nota): ?>
-        <tr onclick="DetalleNota(<?=$data_nota['id']?>)">
-            <td class="text-center"><?=$data_nota['id']?></td>
-            <td><?=(new DateTime(datetime: $data_nota['fecha_hora']))->format('d/m/Y h:i a');?></td>
-        </tr>
-        <?php endforeach; ?>    
-    </tbody>
-</table>
-
-</div>                    
-</div>
-</div>
-
-<div class="col-12 col-sm-6">
-<div class="card">
-<div class="card-header">
-
-<div class="row">
-    <div class="col-10">
-    <h5 class="fw-bold text-primary mt-2 ">Receta Medica</h5>
-    </div>
-
-    <div class="col-2">
-                        <button class="btn icon btn-success float-end" onclick="NuevaReceta(<?=$data['idPaciente'];?>)"> <i data-feather="plus" width="20"></i> </button>
-    </div>
-    </div>
-
-</div>
-<div class="card-body">
-<?php
-    try {
-        $query_receta = $bd->query("SELECT * FROM receta_medica WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
-        $receta_registros = $query_receta->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        die("Error en la consulta: " . $e->getMessage());
-    }
-?>
-<table class="table table-sm table-striped table-hover pb-0 mb-0" id="tableReceta">
-    <thead>
-        <tr>
-            <th class="text-center">#</th>
-            <th>Fecha y Hora</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($receta_registros as $data_receta): ?>
-        <tr onclick="DetalleReceta(<?=$data_receta['id']?>)">
-            <td class="text-center"><?=$data_receta['id']?></td>
-            <td><?=(new DateTime(datetime: $data_receta['fecha_hora']))->format('d/m/Y h:i a');?></td>
-        </tr>
-        <?php endforeach; ?>    
-    </tbody>
-</table>
-</div>                    
-</div>
-
-</div>
 
 
 
@@ -427,6 +477,18 @@ let dataTableNota = new simpleDatatables.DataTable(tableNota,{
 
 let tableReceta = document.querySelector('#tableReceta');
 let dataTableReceta = new simpleDatatables.DataTable(tableReceta,{
+    fixedHeight: true,
+    perPageSelect: false,
+    searchable: false,
+    columns: [
+    {
+        select: 1, sort: "desc"
+    }
+    ]
+});
+
+let tableLaboratorio = document.querySelector('#tableLaboratorio');
+let dataTableLaboratorio = new simpleDatatables.DataTable(tableLaboratorio,{
     fixedHeight: true,
     perPageSelect: false,
     searchable: false,
