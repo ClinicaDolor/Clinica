@@ -9,6 +9,7 @@ use App\Core\HttpMethod;
 use App\Helpers\CalculadoraEdad;
 use App\Models\NotaSubsecuenteModel;
 use App\Controllers\SidebarController;
+use App\Models\LaboratorioModel;
 
 class ClinicaController extends BaseController{
 
@@ -434,6 +435,89 @@ class ClinicaController extends BaseController{
             } else {
                 echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
             }
+    }
+
+    public function pacienteLaboratorio($idPaciente){
+
+        $authMiddleware = new AuthMiddleware('clinica');
+        $paciente = new PacienteModel($idPaciente);
+        $sidebar = new Sidebar();
+        $sidebarController = new SidebarController();
+
+        $authMiddleware->authPermisos();        
+        $fechaAlta = $paciente->getFechaAlta();
+        $nombreCompleto = $paciente->getNombreCompleto();
+        $fechaNacimiento = $paciente->getFechaNacimiento();
+        $sexo = $paciente->getSexo();
+        $estado_civil = $paciente->getEstadoCivil();
+        $curp = $paciente->getCurp();
+
+        $email = $paciente->getEmail();
+        $telefono = $paciente->getTelefono();
+        $celular = $paciente->getCelular();
+
+        $edad = CalculadoraEdad::calcularEdad($fechaNacimiento);        
+
+        $motivo_atencion = $paciente->getMotivoAtencion();
+
+        $sidebarController->configureSidebar('DOCTOR', 'clinica-paciente-laboratorio', $sidebar, $idPaciente);
+        $sidebar->setActivarItem('Paciente Laboratorio');
+        $sidebarHtml = $sidebar->render();
+        
+        $data = ['title' => 'Laboratorio', 
+        'idPaciente' => $idPaciente,
+        'fecha_alta' => $fechaAlta, 
+        'nombre_paciente' => $nombreCompleto, 
+        'fecha_nacimiento' => $fechaNacimiento,
+        'edad' => $edad,
+        'sexo' => $sexo, 
+        'estado_civil' => $estado_civil,
+        'curp' => $curp, 
+        'motivo_atencion' => $motivo_atencion,  
+        
+        'email' => $email,
+        'telefono' => $telefono,
+        'celular' => $celular,  
+
+        'sidebar' => $sidebarHtml];
+        $this->view('/clinica/pacientes-laboratorio.php', $data);
+
+    }
+
+    public function pacienteInsertLaboratorio(){
+
+        $authMiddleware = new AuthMiddleware('clinica');
+        $authMiddleware->authPermisos();
+
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo HttpMethod::jsonResponse(405, false, "Método no permitido. Usa POST.");
+            return;
+        }
+
+        if (isset($_FILES['file'])) {
+
+            $fileName = $_FILES['file']['name'];
+            $fileTmpName = $_FILES['file']['tmp_name'];
+            $fileSize = $_FILES['file']['size'];
+
+            $fileParts = explode('.', $fileName);
+            $fileExtension = strtolower(end($fileParts));
+
+            $model = new LaboratorioModel();
+            $resultModel = $model->insertArchivo($_POST['idPaciente'],$_POST['contenidoLaboratorio'],$fileName, $fileTmpName, $fileSize, $fileExtension);
+
+            if ($resultModel['resultado'] == 200) {
+                echo HttpMethod::jsonResponse(200, true,$resultModel['mensaje']);
+            } else {
+                echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
+            }
+
+        } else {
+            echo HttpMethod::jsonResponse(200,true,'No se recibió ningún archivo');
+        }
+
     }
 
 }

@@ -1,6 +1,6 @@
 <?php 
 use App\Config\Database;
-use App\Models\RecetaModel;
+use App\Models\LaboratorioModel;
 $bd = Database::getInstance();
 ?>
 <!DOCTYPE html>
@@ -23,47 +23,52 @@ $bd = Database::getInstance();
         }
     </style>
     <script>
-        function AgregarReceta(idPaciente){
+    function AgregarLaboratorio(idPaciente) {
+    const fileInput = document.getElementById('Archivo');
+    const file = fileInput.files[0];
+    const contenidoLaboratorio = document.querySelector('.ql-editor').innerHTML;
 
-            const contenidoReceta = document.querySelector('.ql-editor').innerHTML;
-            document.querySelector('.ql-editor').style.border = "";
+    document.getElementById('Archivo').style.border = "";
+    document.querySelector('.ql-editor').style.border = "";
 
-            if(contenidoReceta != '<p><br></p>'){
 
-            const parametros = {
-            idPaciente : idPaciente,
-            contenidoReceta : contenidoReceta
-            };
+    if (file) {
+        if (contenidoLaboratorio !== '<p><br></p>') {
 
-            fetch('/clinica/paciente/insert-receta', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(parametros)
-            })
-            .then(response => response.json())
-            .then(data => {
+            const formData = new FormData();
+            formData.append('idPaciente', idPaciente);
+            formData.append('file', file);
+            formData.append('contenidoLaboratorio', contenidoLaboratorio);
+               
+            fetch('/clinica/laboratorio/insert-laboratorio', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
 
-            if (data.resultado) {
-                idReceta = data.resultado;
-                DetalleReceta(idReceta)
-                document.querySelector('.ql-editor').value = "";
-                window.open('/pdf/receta/' + idReceta, '_blank');
-            } else {
-                document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
-            }
-          
-        });
+                if (data.resultado) {
 
-    }else{
-        document.querySelector('.ql-editor').style.border = "2px solid #d44e31";
+                    location.reload()
+                
+                } else {
+                    document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
+                }
+
+                });
+               
+
+        } else {
+            document.querySelector('.ql-editor').style.border = "2px solid #d44e31";
+        }
+    } else {
+        document.getElementById('Archivo').style.border = "2px solid #d44e31";
     }
-    }
+}
 
-    function DetalleReceta(idReceta){
+    function DetalleLaboratorio(idLaboratorio){
 
-        fetch(`/buscar/receta/${encodeURIComponent(idReceta)}`)
+        fetch(`/buscar/laboratorio/${encodeURIComponent(idLaboratorio)}`)
                 .then(response => {
                 if (!response.ok) {
                 throw new Error('Error en la respuesta del servidor: ' + response.status);
@@ -207,13 +212,13 @@ $bd = Database::getInstance();
 
                 <div class="card">
                 <div class="card-header text-light">
-                <h4 class="card-title">Recetas</h4>
+                <h4 class="card-title">Archivos</h4>
                 </div>
                 <div class="card-body">
 
                 <?php
                         try {
-                            $stmt = $bd->query("SELECT * FROM receta_medica WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
+                            $stmt = $bd->query("SELECT * FROM laboratorio WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
                             $registros = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         } catch (PDOException $e) {
                             die("Error en la consulta: " . $e->getMessage());
@@ -229,7 +234,7 @@ $bd = Database::getInstance();
                     </thead>
                     <tbody>
                     <?php foreach ($registros as $registro): ?>
-                        <tr onclick="DetalleReceta(<?=$registro['id']?>)">
+                        <tr onclick="DetalleLaboratorio(<?=$registro['id']?>)">
                             <td class="text-center"><?=$registro['id']?></td>
                             <td><?=(new DateTime(datetime: $registro['fecha_hora']))->format('d/m/Y h:i a');?></td>
                         </tr>
@@ -245,13 +250,13 @@ $bd = Database::getInstance();
                         
                 <div class="card">
                     <div class="card-header text-light">
-                    <h4 class="card-title">Detalle de la Receta</h4>
+                    <h4 class="card-title">Detalle del Laboratorio</h4>
                     </div>
                     <div class="card-body">
                         <div id="detalleReceta">
                             <?php
-                            $model = new RecetaModel();
-                            echo $model->ultimaReceta($data['idPaciente']);
+                            $model = new LaboratorioModel();
+                            echo $model->ultimoLaboratorio($data['idPaciente']);
                             ?>
                         </div>
                     </div>
@@ -259,12 +264,17 @@ $bd = Database::getInstance();
 
                 <div class="card">
                 <div class="card-header text-light">
-                <h4 class="card-title">Nueva Receta</h4>
+                <h4 class="card-title">Nueva Archivo</h4>
                 </div>
                 <div class="card-body">
+                
+                <label class="text-primary"><small>Archivo:</small></label>
+                <div class="mb-3"><input type="file" class="form-control" id="Archivo"></div>
+                
+                <label class="text-primary"><small>Descripción:</small></label>
 
                 <div id="snow" class="editor"></div>
-                <div class="text-end mt-3"><button class="btn btn-success" onclick="AgregarReceta(<?=$data['idPaciente'];?>)">Agregar Receta</button></div>
+                <div class="text-end mt-3"><button class="btn btn-success" onclick="AgregarLaboratorio(<?=$data['idPaciente'];?>)">Agregar Laboratorio</button></div>
                 <div id="mensaje"></div>
                 </div>
                 </div>
