@@ -57,6 +57,11 @@ class SidebarController extends BaseController {
     ['titulo' => 'Paciente Notas', 'url' => SERVIDOR . 'clinica/nota-subsecuente/paciente/'.$idPaciente, 'icono' => 'file-text']
     ],
 
+    'clinica-paciente-laboratorio' => [
+    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$idPaciente, 'icono' => 'users'],
+    ['titulo' => 'Paciente Laboratorio', 'url' => SERVIDOR . 'clinica/laboratorio/paciente/'.$idPaciente, 'icono' => 'file-text']
+    ],
+
     'clinica-paciente-pin' => [
     ['titulo' => 'Paciente Pin', 'url' => SERVIDOR . 'clinica/paciente/pin/'.$idPaciente, 'icono' => 'users']
     ]
