@@ -25,14 +25,19 @@ $bd = Database::getInstance();
     <script>
         function AgregarReceta(idPaciente){
 
+            const Diagnostico = document.getElementById('Diagnostico').value;
             const contenidoReceta = document.querySelector('.ql-editor').innerHTML;
+            
+            document.querySelector('#Diagnostico').style.border = "";
             document.querySelector('.ql-editor').style.border = "";
 
+            if(Diagnostico != ""){
             if(contenidoReceta != '<p><br></p>'){
 
             const parametros = {
             idPaciente : idPaciente,
-            contenidoReceta : contenidoReceta
+            diagnostico : Diagnostico,
+            medicamento : contenidoReceta
             };
 
             fetch('/clinica/paciente/insert-receta', {
@@ -46,10 +51,17 @@ $bd = Database::getInstance();
             .then(data => {
 
             if (data.resultado) {
-                idReceta = data.resultado;
+
+                idReceta = data.mensaje;
+
+                tableRecetas(idPaciente)
                 DetalleReceta(idReceta)
-                document.querySelector('.ql-editor').value = "";
+                
+                document.getElementById('Diagnostico').value = "";
+                document.querySelector('.ql-editor').innerHTML = "";
+                
                 window.open('/pdf/receta/' + idReceta, '_blank');
+
             } else {
                 document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
             }
@@ -59,6 +71,10 @@ $bd = Database::getInstance();
     }else{
         document.querySelector('.ql-editor').style.border = "2px solid #d44e31";
     }
+    }else{
+        document.querySelector('#Diagnostico').style.border = "2px solid #d44e31";
+    }
+
     }
 
     function DetalleReceta(idReceta){
@@ -77,8 +93,39 @@ $bd = Database::getInstance();
                     feather.replace();
 
                 });
-
     } 
+
+    function tableRecetas(idPaciente){
+
+        fetch(`/buscar/tabla-recetas/${encodeURIComponent(idPaciente)}`)
+                .then(response => {
+                if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor: ' + response.status);
+                }
+                return response.text();
+                })
+                .then(data => {
+
+                    const resultsContainer = document.getElementById('conteRecetas');
+                    resultsContainer.innerHTML = data;
+
+                    const tabla = document.querySelector("#tableRecetas");
+                    if (tabla) {
+                        dataTable = new simpleDatatables.DataTable(tabla,{
+                            searchable: true,
+                            fixedHeight: true,
+                            perPageSelect: false,
+                            searchable: false,
+                            columns: [
+                            {
+                                select: 1, sort: "desc"
+                            }
+                            ]
+                        });
+                    }          
+        });
+    }
+
     </script>
 
  </head>
@@ -88,69 +135,9 @@ $bd = Database::getInstance();
         <?=$data['sidebar'];?>
 
         <div id="main">
-            <nav class="navbar navbar-header navbar-expand navbar-light">
-                <a class="sidebar-toggler" href="#"><span class="navbar-toggler-icon"></span></a>
-                <button class="btn navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav d-flex align-items-center navbar-light ms-auto">
-                        <li class="dropdown nav-icon">
-                            <a href="#" data-bs-toggle="dropdown" class="nav-link  dropdown-toggle nav-link-lg nav-link-user">
-                                <div class="d-lg-inline-block">
-                                    <i data-feather="bell"></i>
-                                </div>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-large">
-                                <h6 class='py-2 px-4'>Notifications</h6>
-                                <ul class="list-group rounded-none">
-                                    <li class="list-group-item border-0 align-items-start">
-                                        <div class="avatar bg-success me-3">
-                                            <span class="avatar-content"><i data-feather="shopping-cart"></i></span>
-                                        </div>
-                                        <div>
-                                            <h6 class='text-bold'>New Order</h6>
-                                            <p class='text-xs'>
-                                                An order made by Ahmad Saugi for product Samsung Galaxy S69
-                                            </p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="dropdown nav-icon me-2">
-                            <a href="" data-bs-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                                <div class="d-lg-inline-block">
-                                    <i data-feather="mail"></i>
-                                </div>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end" >
-                                <a class="dropdown-item" href="#"><i data-feather="user"></i> Account</a>
-                                <a class="dropdown-item active" href="#"><i data-feather="mail"></i> Messages</a>
-                                <a class="dropdown-item" href="#"><i data-feather="settings"></i> Settings</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#"><i data-feather="log-out"></i> Logout</a>
-                            </div>
-                        </li>
-                        <li class="dropdown">
-                            <a href="" data-bs-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                                <div class="avatar me-1">
-                                    <img src="assets/images/avatar/avatar-s-1.png" alt="" srcset="">
-                                </div>
-                                <div class="d-none d-md-block d-lg-inline-block">Hi, Saugi</div>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="#"><i data-feather="user"></i> Account</a>
-                                <a class="dropdown-item active" href="#"><i data-feather="mail"></i> Messages</a>
-                                <a class="dropdown-item" href="#"><i data-feather="settings"></i> Settings</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#"><i data-feather="log-out"></i> Logout</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+            
+            <!----- BUSCADOR DE LA BARRA DE NAVEGACION ---------->
+            <?php include_once __DIR__ . '/../components/search-bar-doctor.php';?>
             
             <div class="main-content container-fluid">
             <div class="page-title">
@@ -161,9 +148,12 @@ $bd = Database::getInstance();
             <div class="row mt-3">
                 <div class="col-12 col-sm-12">
                     <div class="card">
-                        <div class="card-body">
 
-                        <h4 class="text-primary mt-2 ">Información del paciente</h4>
+                        <div class="card-header text-light">
+                        <h4 class="card-title">Información del paciente</h4>
+                        </div>
+
+                        <div class="card-body">
 
                             <div class="row">
                                 <div class="col-12 col-sm-4">
@@ -206,11 +196,12 @@ $bd = Database::getInstance();
                 <div class="col-12 col-sm-5">
 
                 <div class="card">
-                <div class="card-header text-light">
+                <div class="card-header">
                 <h4 class="card-title">Recetas</h4>
                 </div>
                 <div class="card-body">
 
+                <div id="conteRecetas">
                 <?php
                         try {
                             $stmt = $bd->query("SELECT * FROM receta_medica WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
@@ -229,13 +220,14 @@ $bd = Database::getInstance();
                     </thead>
                     <tbody>
                     <?php foreach ($registros as $registro): ?>
-                        <tr onclick="DetalleReceta(<?=$registro['id']?>)">
+                        <tr id="receta<?=$registro['id']?>" onclick="DetalleReceta(<?=$registro['id']?>)">
                             <td class="text-center"><?=$registro['id']?></td>
                             <td><?=(new DateTime(datetime: $registro['fecha_hora']))->format('d/m/Y h:i a');?></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
                 </table>
+                </div>
 
                 </div>
                 </div>
@@ -244,7 +236,7 @@ $bd = Database::getInstance();
                 <div class="col-12 col-sm-7">
                         
                 <div class="card">
-                    <div class="card-header text-light">
+                    <div class="card-header">
                     <h4 class="card-title">Detalle de la Receta</h4>
                     </div>
                     <div class="card-body">
@@ -258,21 +250,25 @@ $bd = Database::getInstance();
                 </div>
 
                 <div class="card">
-                <div class="card-header text-light">
-                <h4 class="card-title">Nueva Receta</h4>
-                </div>
-                <div class="card-body">
+                    <div class="card-header text-primary">
+                    <h4 class="card-title">Nueva Receta</h4>
+                    </div>
+                    <div class="card-body">
 
-                <div id="snow" class="editor"></div>
-                <div class="text-end mt-3"><button class="btn btn-success" onclick="AgregarReceta(<?=$data['idPaciente'];?>)">Agregar Receta</button></div>
-                <div id="mensaje"></div>
-                </div>
+                    <div class="">
+                    <label class="text-primary mb-1"><smallal>Diagnostico:</smallal></label>
+                    <textarea class="form-control fs-5" id="Diagnostico" rows="2"></textarea>
+                    </div>
+                    
+                    <label class="text-primary mt-3 mb-1"><smallal>Medicamento:</smallal></label>
+                    <div id="snow" class="editor"></div>
+                    <div class="text-end mt-3"><button class="btn btn-success" onclick="AgregarReceta(<?=$data['idPaciente'];?>)">Agregar Receta</button></div>
+                    <div id="mensaje"></div>
+                    </div>
                 </div>
 
-                </div>
+                 </div>
             </div>
-
-                
             </section>
 
 

@@ -12,6 +12,7 @@ class RecetaController extends BaseController{
 
         $authMiddleware = new AuthMiddleware('clinica');
         $sidebar = new Sidebar();
+        $sidebarController = new SidebarController();
         $modelNota = new RecetaModel();
 
         $authMiddleware->authPermisos();
@@ -34,16 +35,18 @@ class RecetaController extends BaseController{
 
         $motivo_atencion = $paciente->getMotivoAtencion();
 
-        $sidebar->addItemList('Inicio', '/clinica', 'home');
-        $sidebar->addItemList('Receta', '/clinica/receta/'.$idReceta, 'file-text');
+        $sidebarController->configureSidebar('DOCTOR', 'clinica-receta', $sidebar, $idReceta);
         $sidebar->setActivarItem('Receta');
         $sidebarHtml = $sidebar->render();
 
 
         $data = ['title' => 'Receta', 
 
-        'fecha_hora_nota' => $modelNota->getFechaHora(),
-        'contenido_nota' => $modelNota->getContenido(),
+        'id_receta' => $idReceta,
+        'fecha_receta' => $modelNota->getFecha(),
+        'hora_receta' => $modelNota->getHora(),
+        'diagnostico_receta' => $modelNota->getDiagnostico(),
+        'medicamento_receta' => $modelNota->getMedicamento(),
 
         'fecha_alta' => $fechaAlta, 
         'nombre_paciente' => $nombreCompleto, 

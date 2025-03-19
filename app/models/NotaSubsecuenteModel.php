@@ -48,6 +48,20 @@ class NotaSubsecuenteModel{
         return $this->contenido;
     }
 
+    //-------------------------------------------------------------------------
+    //--------------- PRIMERA NOTA SUBSECUENTE DEL PACIENTE -------------------
+
+    public function primerNota(){
+
+        $query = "SELECT id FROM nota_subsecuente ORDER BY id ASC LIMIT 1";
+        $stmt = $this->bd->prepare($query);
+        $stmt->execute();
+        $registros = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return $registros['id'];
+
+    }
+
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
 

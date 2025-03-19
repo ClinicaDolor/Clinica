@@ -37,4 +37,10 @@ class BusquedasController{
         echo $model->getLaboratorio($idLaboratorio);
 
     }
+
+    public function tableRecetas($idPaciente){
+        $model = new RecetaModel();
+        echo $model->mostrarTablaRecetas($idPaciente);
+
+    }
 }

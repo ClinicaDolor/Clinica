@@ -2,6 +2,7 @@
 use App\Config\Database;
 use App\Models\NotaSubsecuenteModel;
 $bd = Database::getInstance();
+$model = new NotaSubsecuenteModel();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -155,6 +156,7 @@ $bd = Database::getInstance();
                         } catch (PDOException $e) {
                             die("Error en la consulta: " . $e->getMessage());
                         }
+
                 ?>
 
                 <table class="table table-striped table-hover table-sm pb-0 mb-0" id="table1">
@@ -165,10 +167,13 @@ $bd = Database::getInstance();
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($registros as $registro): ?>
+                    <?php 
+                    foreach ($registros as $registro): 
+                    $primer = ($model->primerNota() == $registro['id'])? '<i class="text-info text-end" data-feather="star" width="20"></i>': '';
+                    ?>
                         <tr onclick="DetalleNota(<?=$registro['id']?>)">
                             <td class="text-center"><?=$registro['id']?></td>
-                            <td><?=(new DateTime(datetime: $registro['fecha_hora']))->format('d/m/Y h:i a');?></td>
+                            <td><?=(new DateTime(datetime: $registro['fecha_hora']))->format('d/m/Y h:i a');?> <?=$primer;?> </td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
@@ -188,7 +193,6 @@ $bd = Database::getInstance();
                     <div class="card-body">
                         <div id="detalleNota">
                         <?php
-                            $model = new NotaSubsecuenteModel();
                             echo $model->ultimaNota($data['idPaciente']);
                             ?>
                         </div>

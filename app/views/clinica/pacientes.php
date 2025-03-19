@@ -72,6 +72,7 @@ $bd = Database::getInstance();
     <th class="text-center aling-middle">Edad</th>
     <th class="text-center aling-middle">Sexo</th>
     <th class="text-center aling-middle">Fecha nacimiento</th>
+    <th class="text-center aling-middle" width="20px"><i data-feather="folder" width="20px"></i> </th>
     <th class="text-center aling-middle" width="20px"><i data-feather="key" width="20px"></i> </th>
     <th class="text-center aling-middle" width="20px"><i data-feather="grid" width="20px"></i> </th>
     <th class="text-center aling-middle" width="20px"><i data-feather="edit" width="20px"></i> </th>
@@ -88,6 +89,7 @@ $bd = Database::getInstance();
     <?=$registro['sexo']?>
     </td>
     <td class="text-center aling-middle"><?=$registro['fecha_nacimiento']?></td>
+    <td class="text-center"><a href="<?=SERVIDOR?>clinica/paciente/<?=$registro['id']?>"><i data-feather="folder" width="20"></i></a></td>
     <td class="text-center"><a href="<?=SERVIDOR?>clinica/paciente/pin/<?=$registro['id']?>"><i data-feather="key" width="20"></i></a></td>
     <td class="text-center"><a href="<?=SERVIDOR?>clinica/modulos/paciente/<?=$registro['id']?>"><i data-feather="grid" width="20"></i></a></td>
     <td class="text-center"><a href="<?=SERVIDOR?>clinica/paciente/editar/<?=$registro['id']?>"><i data-feather="edit" width="20"></i></a></td>

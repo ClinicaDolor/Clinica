@@ -15,13 +15,51 @@ $bd = Database::getInstance();
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/simple-datatables/style.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
-
     <script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+        tableRecetas()
+    });
+
+     function tableRecetas(){
+
+        const usuarioDiv = document.getElementById('main');
+        const idPaciente = usuarioDiv.getAttribute('data-paciente');
+
+        fetch(`/buscar/tabla-recetas/${encodeURIComponent(idPaciente)}`)
+            .then(response => {
+            if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor: ' + response.status);
+            }
+            return response.text();
+            })
+            .then(data => {
+
+                const resultsContainer = document.getElementById('conteRecetas');
+                resultsContainer.innerHTML = data;
+
+                const tabla = document.querySelector("#tableRecetas");
+                if (tabla) {
+                    dataTable = new simpleDatatables.DataTable(tabla,{
+                        searchable: true,
+                        fixedHeight: true,
+                        perPageSelect: false,
+                        searchable: false,
+                        columns: [
+                        {
+                            select: 1, sort: "desc"
+                        }
+                        ]
+                    });
+                }          
+    });
+    }
+
         function NuevoPin(idPaciente){
 
-            const parametros = {
-            idPaciente : idPaciente
-            };
+        const parametros = {
+        idPaciente : idPaciente
+        };
 
         fetch('/clinica/paciente/insert-pin', {
         method: 'POST',
@@ -68,11 +106,12 @@ $bd = Database::getInstance();
  </head>
 
     <body>
-    <div id="app">
+
+   <div id="app">
         
     <?=$data['sidebar'];?>
 
-    <div id="main">
+    <div id="main" data-paciente="<?=$data['idPaciente'];?>">
     <!----- BUSCADOR DE LA BARRA DE NAVEGACION ---------->
     <?php include_once __DIR__ . '/../components/search-bar-doctor.php';?>
             
@@ -87,8 +126,8 @@ $bd = Database::getInstance();
     <div class="col-12 col-sm-6">
     <div class="card">
         
-    <div class="card-header text-light pb-1">
-    <h5 class="fw-bold text-primary mt-2 ">Información del paciente</h5>
+    <div class="card-header">
+    <h5 class="card-title">Información del paciente</h5>
     </div>
     <div class="card-body">
 
@@ -130,9 +169,9 @@ $bd = Database::getInstance();
 
     </div>
 
-    <h5 class="fw-bold text-primary mt-2">Contacto del paciente</h5>
+    <h5 class="text-success mt-2">Contacto del paciente</h5>
 
-    <div class="row ">
+    <div class="row">
 
     <div class="col-12 col-sm-4">
     <div class="text-secondary">Email:</div>
@@ -156,8 +195,12 @@ $bd = Database::getInstance();
     
     <!-- Inicio motivo -->
     <div class="card">
+
+        <div class="card-header">
+        <h5 class="card-title">Motivo por el que Solicita Atención en la Clinica de Dolor y Cuidados Paliativos</h5>
+        </div>
+
     <div class="card-body">
-    <h5 class="fw-bold text-primary mt-2 ">Motivo por el que Solicita Atención en la Clinica de Dolor y Cuidados Paliativos</h5>
     <h5><?=empty($data['motivo_atencion'])? 'S/I': $data['motivo_atencion'];?></h5>
     </div>                    
     </div>
@@ -169,7 +212,7 @@ $bd = Database::getInstance();
 
     <div class="row">
     <div class="col-10">
-    <h5 class="fw-bold text-primary mt-2 ">Pin de Acceso para Pacientes</h5>
+    <h5 class="card-title">Pin de Acceso para Pacientes</h5>
     </div>
 
     <div class="col-2">
@@ -177,7 +220,7 @@ $bd = Database::getInstance();
     </div>
     </div>
                    
-                    </div>
+    </div>
                         <div class="card-body">
                       
                         <?php
@@ -235,7 +278,7 @@ $bd = Database::getInstance();
 
         <div class="row">
             <div class="col-10">
-            <h5 class="fw-bold text-primary mt-2 ">Nota Subsecuente</h5>
+            <h5 class="card-title">Nota Subsecuente</h5>
             </div>
 
             <div class="col-2">
@@ -279,7 +322,7 @@ $bd = Database::getInstance();
 
         <div class="row">
             <div class="col-10">
-            <h5 class="fw-bold text-primary mt-2 ">Laboratorio</h5>
+            <h5 class="card-title">Laboratorio</h5>
             </div>
 
             <div class="col-2">
@@ -307,7 +350,7 @@ $bd = Database::getInstance();
             </thead>
             <tbody>
                 <?php foreach ($laboratorio_registros as $data_laboratorio): ?>
-                <tr onclick="DetalleNota(<?=$data_laboratorio['id']?>)">
+                <tr onclick="DetalleLaboratorio(<?=$data_laboratorio['id']?>)">
                     <td class="text-center"><?=$data_laboratorio['id']?></td>
                     <td><?=(new DateTime(datetime: $data_laboratorio['fecha_hora']))->format('d/m/Y h:i a');?></td>
                 </tr>
@@ -324,40 +367,19 @@ $bd = Database::getInstance();
 
         <div class="row">
             <div class="col-10">
-            <h5 class="fw-bold text-primary mt-2 ">Receta Medica</h5>
+            <h5 class="card-title">Receta Medica</h5>
             </div>
 
             <div class="col-2">
-                                <button class="btn icon btn-success float-end" onclick="NuevaReceta(<?=$data['idPaciente'];?>)"> <i data-feather="plus" width="20"></i> </button>
+            <button class="btn icon btn-success float-end" onclick="NuevaReceta(<?=$data['idPaciente'];?>)"> <i data-feather="plus" width="20"></i> </button>
             </div>
             </div>
 
         </div>
         <div class="card-body">
-        <?php
-            try {
-                $query_receta = $bd->query("SELECT * FROM receta_medica WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
-                $receta_registros = $query_receta->fetchAll(PDO::FETCH_ASSOC);
-            } catch (PDOException $e) {
-                die("Error en la consulta: " . $e->getMessage());
-            }
-        ?>
-        <table class="table table-sm table-striped table-hover pb-0 mb-0" id="tableReceta">
-            <thead>
-                <tr>
-                    <th class="text-center">#</th>
-                    <th>Fecha y Hora</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($receta_registros as $data_receta): ?>
-                <tr onclick="DetalleReceta(<?=$data_receta['id']?>)">
-                    <td class="text-center"><?=$data_receta['id']?></td>
-                    <td><?=(new DateTime(datetime: $data_receta['fecha_hora']))->format('d/m/Y h:i a');?></td>
-                </tr>
-                <?php endforeach; ?>    
-            </tbody>
-        </table>
+
+        <div id="conteRecetas"></div>
+
         </div>                    
         </div>
         <!-- Fin Recetas -->
@@ -365,22 +387,16 @@ $bd = Database::getInstance();
     </div>
     <!-- Fin Clinica -->
 
-               
-
-
     <div class="col-12">   
     
     </div>
-
-
-
 
     <div class="col-12">
                     <!-- Card Modulos --->
                     <div class="card">
                     
                     <div class="card-header">
-                    <h5 class="fw-bold text-primary mt-2 ">Historia Clinica</h5>
+                    <h5 class="card-title">Historia Clinica</h5>
                     
                     </div>
                     <div class="card-body">
@@ -424,24 +440,18 @@ $bd = Database::getInstance();
                     </div>
                     </div>
             </div>
-
-                
-        
-        
-        
         
         </div>
 
             </div>
 
-        </div>
-
-    <!----- FOOTER ---------->
-    <?php include_once __DIR__ . '/../components/footer-mvsd.php';?>
-
+        <!----- FOOTER ---------->
+        <?php include_once __DIR__ . '/../components/footer-mvsd.php';?>
 
         </div>
-    </div>
+   
+        </div>
+        
     <script src="<?=RUTA_JS;?>/feather-icons/feather.min.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="<?=RUTA_JS;?>app.js"></script>    
@@ -475,17 +485,6 @@ let dataTableNota = new simpleDatatables.DataTable(tableNota,{
     ]
 });
 
-let tableReceta = document.querySelector('#tableReceta');
-let dataTableReceta = new simpleDatatables.DataTable(tableReceta,{
-    fixedHeight: true,
-    perPageSelect: false,
-    searchable: false,
-    columns: [
-    {
-        select: 1, sort: "desc"
-    }
-    ]
-});
 
 let tableLaboratorio = document.querySelector('#tableLaboratorio');
 let dataTableLaboratorio = new simpleDatatables.DataTable(tableLaboratorio,{
