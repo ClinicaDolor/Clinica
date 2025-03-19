@@ -19,6 +19,7 @@ class BusquedasController{
     }
 
     public function buscarReceta($idReceta){
+        
         $model = new RecetaModel();
         echo $model->getReceta($idReceta);
 
@@ -39,8 +40,16 @@ class BusquedasController{
     }
 
     public function tableRecetas($idPaciente){
+
         $model = new RecetaModel();
         echo $model->mostrarTablaRecetas($idPaciente);
+
+    }
+
+    public function tableLaboratorio($idPaciente){
+
+        $model = new LaboratorioModel();
+        echo $model->mostrarTablaLaboratorio($idPaciente);
 
     }
 }

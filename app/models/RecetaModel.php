@@ -117,7 +117,7 @@ class RecetaModel{
             <div class="fs-5">'.$data['medicamento'].'</div>';
             
         } else {
-            $result = '<div class="text-center p-4 text-primary">No se encontró información.</div>';
+            $result = '<div class="text-center p-4 text-light">No se encontró información.</div>';
         }
        
         return $result;

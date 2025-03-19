@@ -111,18 +111,18 @@
                         
                 <div class="card">
                     <div class="card-header">
-                    <h4 class="card-title">Detalle de la Receta
-                    <div class="float-end"><a target="_blank" href="/pdf/receta/<?=$data['id_receta'];?>" class="btn icon btn-primary"><i data-feather="printer"></i></a></div>
-                    </h4>
+                    <h4 class="card-title">Detalle del Laboratorio
+                    <div class="float-end"><a download="<?=$data['nombre'];?>" href="/storage/public/<?=$data['ruta'];?>/<?=$data['nombre'];?>" class="btn icon btn-primary"><i data-feather="download"></i></a></div>
+                    </h4>    
                     </div>
                     <div class="card-body">
 
-                    <div><small class="text-primary">Fecha: </small> <label class="fs-5"><?=$data['fecha_receta'];?></label>, <small class="text-primary">Hora: </small> <label class="fs-5"><?=$data['hora_receta'];?></label></div>
-                    <div class="mt-3"><small class="text-primary">Diagnostico: </small> <label class="fs-5"><?=$data['diagnostico_receta'];?></label></div>
+                    <div>
+                    <label class="text-primary"><small>Fecha: </small></label> <label class="fs-5"><?=$data['fecha_laboratorio'];?></label>, <label class="text-primary"><small>Hora: </small></label> <label class="fs-5"><?=$data['hora_laboratorio'];?></label>
+                    </div>
 
-                    <label class="mt-4"><small class="text-primary">Medicamento: </small></label>
-                    <div class="fs-5"><?=$data['medicamento_receta'];?></div>
-
+                    <label class="text-primary mt-3"><small>Descripción: </small></label>
+                    <div class="fs-5"><?=$data['descripcion'];?></div>
                                         
                     </div>
                 </div>

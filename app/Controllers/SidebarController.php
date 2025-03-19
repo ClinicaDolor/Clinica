@@ -67,11 +67,16 @@ class SidebarController {
     ],
 
     'clinica-receta' => [
-        ['titulo' => 'Receta', 'url' => SERVIDOR . 'clinica/receta/'.$id, 'icono' => 'users']
-        ]
+    ['titulo' => 'Receta', 'url' => SERVIDOR . 'clinica/receta/'.$id, 'icono' => 'users']
+    ],
+
+    'clinica-laboratorio' => [
+    ['titulo' => 'Laboratorio', 'url' => SERVIDOR . 'clinica/laboratorio/'.$id, 'icono' => 'users']
+    ]
 
     ],
-            
+
+                
     'PACIENTE' => [
     'historia-clinica' => []
     ]

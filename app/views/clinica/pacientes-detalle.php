@@ -18,6 +18,7 @@ $bd = Database::getInstance();
     <script>
 
     document.addEventListener("DOMContentLoaded", function() {
+        tableLaboratorio()
         tableRecetas()
     });
 
@@ -52,7 +53,40 @@ $bd = Database::getInstance();
                         ]
                     });
                 }          
-    });
+        });
+    }
+
+    function tableLaboratorio(){
+        const usuarioDiv = document.getElementById('main');
+        const idPaciente = usuarioDiv.getAttribute('data-paciente');
+
+        fetch(`/buscar/tabla-laboratorio/${encodeURIComponent(idPaciente)}`)
+            .then(response => {
+            if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor: ' + response.status);
+            }
+            return response.text();
+            })
+            .then(data => {
+
+                const resultsContainer = document.getElementById('conteLaboratorio');
+                resultsContainer.innerHTML = data;
+
+                const tabla = document.querySelector("#tableLaboratorio");
+                if (tabla) {
+                    dataTable = new simpleDatatables.DataTable(tabla,{
+                        searchable: true,
+                        fixedHeight: true,
+                        perPageSelect: false,
+                        searchable: false,
+                        columns: [
+                        {
+                            select: 1, sort: "desc"
+                        }
+                        ]
+                    });
+                }          
+        });
     }
 
         function NuevoPin(idPaciente){
@@ -99,6 +133,10 @@ $bd = Database::getInstance();
 
         function NuevoLaboratorio(idPaciente){
             window.location.href = '/clinica/laboratorio/paciente/' + idPaciente;
+        }
+
+        function DetalleLaboratorio(idLaboratorio){
+            window.location.href = '/clinica/laboratorio/' + idLaboratorio;
         }
     </script>
 
@@ -332,32 +370,7 @@ $bd = Database::getInstance();
 
         </div>
         <div class="card-body">
-
-        <?php
-            try {
-                $query_laboratorio = $bd->query("SELECT * FROM laboratorio WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
-                $laboratorio_registros = $query_laboratorio->fetchAll(PDO::FETCH_ASSOC);
-            } catch (PDOException $e) {
-                die("Error en la consulta: " . $e->getMessage());
-            }
-        ?>
-        <table class="table table-sm table-striped table-hover pb-0 mb-0" id="tableLaboratorio">
-            <thead>
-                <tr>
-                    <th class="text-center">#</th>
-                    <th>Fecha y Hora</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($laboratorio_registros as $data_laboratorio): ?>
-                <tr onclick="DetalleLaboratorio(<?=$data_laboratorio['id']?>)">
-                    <td class="text-center"><?=$data_laboratorio['id']?></td>
-                    <td><?=(new DateTime(datetime: $data_laboratorio['fecha_hora']))->format('d/m/Y h:i a');?></td>
-                </tr>
-                <?php endforeach; ?>    
-            </tbody>
-        </table>
-
+        <div id="conteLaboratorio"></div>
         </div>                    
         </div>
         
@@ -486,17 +499,6 @@ let dataTableNota = new simpleDatatables.DataTable(tableNota,{
 });
 
 
-let tableLaboratorio = document.querySelector('#tableLaboratorio');
-let dataTableLaboratorio = new simpleDatatables.DataTable(tableLaboratorio,{
-    fixedHeight: true,
-    perPageSelect: false,
-    searchable: false,
-    columns: [
-    {
-        select: 1, sort: "desc"
-    }
-    ]
-});
 
 
 </script>

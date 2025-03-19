@@ -289,6 +289,7 @@ $bd = Database::getInstance();
     <script src="<?=RUTA_JS;?>main.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/quill/quill.min.js"></script>
+    <script src="<?=RUTA_JS?>search-main.js"></script>
     
     <script>
 
