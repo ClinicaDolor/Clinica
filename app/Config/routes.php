@@ -50,6 +50,7 @@ return function(RouteCollector $r) {
         //Ruta para crear las diferentes busquedas
         //----------------------------------------//
         $r->addRoute('GET', '/buscar', ['BusquedasController', 'buscarPacientes']);
+        $r->addRoute('GET', '/buscar/tabla-recetas/{idPaciente}', ['BusquedasController', 'tableRecetas']);
         $r->addRoute('GET', '/buscar/receta/{idReceta}', ['BusquedasController', 'buscarReceta']);
         $r->addRoute('GET', '/buscar/nota-subsecuente/{idNota}', ['BusquedasController', 'buscarNotaSubsecuente']);
         $r->addRoute('GET', '/buscar/laboratorio/{idLaboratorio}', ['BusquedasController', 'buscarLaboratorio']);

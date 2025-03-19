@@ -1,13 +1,13 @@
 <?php
 namespace App\Controllers;
 
-class SidebarController extends BaseController {
+class SidebarController {
 
     public function __construct() {
         
     }
 
-    public function configureSidebar($role, $view, $sidebar, $idPaciente = null) {
+    public function configureSidebar($role, $view, $sidebar, $id = null) {
         
     //----- Definir menu de inicio segun el rol -----
     $homeElements = [
@@ -32,7 +32,7 @@ class SidebarController extends BaseController {
     ],
                 
     'clinica-modulos-paciente' => [
-    ['titulo' => 'Historia Clinica', 'url' => SERVIDOR . 'clinica/modulos/paciente/' . $idPaciente, 'icono' => 'users']
+    ['titulo' => 'Historia Clinica', 'url' => SERVIDOR . 'clinica/modulos/paciente/' . $id, 'icono' => 'users']
     ],
 
     'clinica-paciente-nuevo' => [
@@ -40,31 +40,35 @@ class SidebarController extends BaseController {
     ],
 
     'clinica-paciente-editar' => [
-    ['titulo' => 'Paciente Editar', 'url' => SERVIDOR . 'clinica/paciente/editar/'.$idPaciente, 'icono' => 'users']
+    ['titulo' => 'Paciente Editar', 'url' => SERVIDOR . 'clinica/paciente/editar/'.$id, 'icono' => 'users']
     ],
     
     'clinica-paciente-detalle' => [
-    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$idPaciente, 'icono' => 'users']
+    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$id, 'icono' => 'users']
     ],
 
     'clinica-paciente-recetas' => [
-    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$idPaciente, 'icono' => 'users'],
-    ['titulo' => 'Paciente Recetas', 'url' => SERVIDOR . 'clinica/receta/paciente/'.$idPaciente, 'icono' => 'file-text']
+    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$id, 'icono' => 'users'],
+    ['titulo' => 'Paciente Recetas', 'url' => SERVIDOR . 'clinica/receta/paciente/'.$id, 'icono' => 'file-text']
     ],
     
     'clinica-paciente-notas' => [
-    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$idPaciente, 'icono' => 'users'],
-    ['titulo' => 'Paciente Notas', 'url' => SERVIDOR . 'clinica/nota-subsecuente/paciente/'.$idPaciente, 'icono' => 'file-text']
+    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$id, 'icono' => 'users'],
+    ['titulo' => 'Paciente Notas', 'url' => SERVIDOR . 'clinica/nota-subsecuente/paciente/'.$id, 'icono' => 'file-text']
     ],
 
     'clinica-paciente-laboratorio' => [
-    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$idPaciente, 'icono' => 'users'],
-    ['titulo' => 'Paciente Laboratorio', 'url' => SERVIDOR . 'clinica/laboratorio/paciente/'.$idPaciente, 'icono' => 'file-text']
+    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$id, 'icono' => 'users'],
+    ['titulo' => 'Paciente Laboratorio', 'url' => SERVIDOR . 'clinica/laboratorio/paciente/'.$id, 'icono' => 'file-text']
     ],
 
     'clinica-paciente-pin' => [
-    ['titulo' => 'Paciente Pin', 'url' => SERVIDOR . 'clinica/paciente/pin/'.$idPaciente, 'icono' => 'users']
-    ]
+    ['titulo' => 'Paciente Pin', 'url' => SERVIDOR . 'clinica/paciente/pin/'.$id, 'icono' => 'users']
+    ],
+
+    'clinica-receta' => [
+        ['titulo' => 'Receta', 'url' => SERVIDOR . 'clinica/receta/'.$id, 'icono' => 'users']
+        ]
 
     ],
             
