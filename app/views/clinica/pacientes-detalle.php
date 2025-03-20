@@ -17,10 +17,55 @@ $bd = Database::getInstance();
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <script>
 
-    document.addEventListener("DOMContentLoaded", function() {
+    window.addEventListener("pageshow", () => {
+        tableNotas()
         tableLaboratorio()
         tableRecetas()
     });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        tableNotas()
+        tableLaboratorio()
+        tableRecetas()
+    });
+
+    function tableNotas(){
+
+        const usuarioDiv = document.getElementById('main');
+        const idPaciente = usuarioDiv.getAttribute('data-paciente');
+        const referencia = 0;
+
+        fetch(`/buscar/tabla-notas-subsecuentes/${encodeURIComponent(idPaciente)}/${encodeURIComponent(referencia)}`)
+            .then(response => {
+            if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor: ' + response.status);
+            }
+            return response.text();
+            })
+            .then(data => {
+
+                const resultsContainer = document.getElementById('conteNotasSubsecuentes');
+                resultsContainer.innerHTML = data;
+
+                const tabla = document.querySelector("#tableNotasSubsecuentes");
+                if (tabla) {
+                    dataTable = new simpleDatatables.DataTable(tabla,{
+                        searchable: true,
+                        fixedHeight: true,
+                        perPageSelect: false,
+                        searchable: false,
+                        columns: [
+                        {
+                            select: 0, sort: "desc"
+                        }
+                        ]
+                    });
+                }       
+                
+                feather.replace();
+        });
+
+    }
 
      function tableRecetas(){
 
@@ -48,7 +93,7 @@ $bd = Database::getInstance();
                         searchable: false,
                         columns: [
                         {
-                            select: 1, sort: "desc"
+                            select: 0, sort: "desc"
                         }
                         ]
                     });
@@ -59,8 +104,9 @@ $bd = Database::getInstance();
     function tableLaboratorio(){
         const usuarioDiv = document.getElementById('main');
         const idPaciente = usuarioDiv.getAttribute('data-paciente');
+        const referencia = 0;
 
-        fetch(`/buscar/tabla-laboratorio/${encodeURIComponent(idPaciente)}`)
+        fetch(`/buscar/tabla-laboratorio/${encodeURIComponent(idPaciente)}/${encodeURIComponent(referencia)}`)
             .then(response => {
             if (!response.ok) {
             throw new Error('Error en la respuesta del servidor: ' + response.status);
@@ -81,7 +127,7 @@ $bd = Database::getInstance();
                         searchable: false,
                         columns: [
                         {
-                            select: 1, sort: "desc"
+                            select: 0, sort: "desc"
                         }
                         ]
                     });
@@ -115,8 +161,8 @@ $bd = Database::getInstance();
 
         }
 
-        function NuevaNotaSubsecuente(idPaciente){
-            window.location.href = '/clinica/nota-subsecuente/paciente/' + idPaciente;
+        function NuevaNotaSubsecuente(idPaciente,referencia){
+            window.location.href = '/clinica/nota-subsecuente/paciente/' + idPaciente + '/referencia/' + referencia;
         }
 
         function DetalleNota(idNota){
@@ -207,9 +253,9 @@ $bd = Database::getInstance();
 
     </div>
 
-    <h5 class="text-success mt-2">Contacto del paciente</h5>
+    <div class="text-success">Contacto del paciente</div>
 
-    <div class="row">
+    <div class="row mt-3">
 
     <div class="col-12 col-sm-4">
     <div class="text-secondary">Email:</div>
@@ -320,38 +366,13 @@ $bd = Database::getInstance();
             </div>
 
             <div class="col-2">
-            <button class="btn icon btn-success float-end" onclick="NuevaNotaSubsecuente(<?=$data['idPaciente'];?>)"> <i data-feather="plus" width="20"></i> </button>
+            <button class="btn icon btn-success float-end" onclick="NuevaNotaSubsecuente(<?=$data['idPaciente'];?>,'<?=$data['referencia'];?>')"> <i data-feather="plus" width="20"></i> </button>
             </div>
             </div>
 
         </div>
         <div class="card-body">
-
-        <?php
-            try {
-                $query_notas = $bd->query("SELECT * FROM nota_subsecuente WHERE id_paciente = '".$data['idPaciente']."' ORDER BY fecha_hora DESC");
-                $nota_registros = $query_notas->fetchAll(PDO::FETCH_ASSOC);
-            } catch (PDOException $e) {
-                die("Error en la consulta: " . $e->getMessage());
-            }
-        ?>
-        <table class="table table-sm table-striped table-hover pb-0 mb-0" id="tableNota">
-            <thead>
-                <tr>
-                    <th class="text-center">#</th>
-                    <th>Fecha y Hora</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($nota_registros as $data_nota): ?>
-                <tr onclick="DetalleNota(<?=$data_nota['id']?>)">
-                    <td class="text-center"><?=$data_nota['id']?></td>
-                    <td><?=(new DateTime(datetime: $data_nota['fecha_hora']))->format('d/m/Y h:i a');?></td>
-                </tr>
-                <?php endforeach; ?>    
-            </tbody>
-        </table>
-
+            <div id="conteNotasSubsecuentes"></div>
         </div>                    
         </div>
 
@@ -440,8 +461,8 @@ $bd = Database::getInstance();
                             <td>
 
                             <div class="progress bg-light rounded-pill" style="height: 15px;">
-    <div class="progress-bar bg-success rounded-pill text-white fw-bold" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
-    </div>
+                            <div class="progress-bar bg-success rounded-pill text-white fw-bold" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
+                            </div>
 
                             </td>
                             <td class="text-center"><a href="<?=$registro['url'].$data['idPaciente']?>"><i data-feather="edit" width="20"></i></a></td>
@@ -485,21 +506,6 @@ let dataTablePin = new simpleDatatables.DataTable(tablePin,{
     }
     ]
 });
-
-let tableNota = document.querySelector('#tableNota');
-let dataTableNota = new simpleDatatables.DataTable(tableNota,{
-    fixedHeight: true,
-    perPageSelect: false,
-    searchable: false,
-    columns: [
-    {
-        select: 1, sort: "desc"
-    }
-    ]
-});
-
-
-
 
 </script>
     

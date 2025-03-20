@@ -10,12 +10,40 @@
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     </head>
+    <script>
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        DetalleNota()
+    });
 
+    function DetalleNota(){
+
+        const usuarioDiv = document.getElementById('main');
+        const idNota = usuarioDiv.getAttribute('data-idnota');
+
+    fetch(`/buscar/nota-subsecuente/${encodeURIComponent(idNota)}`)
+    .then(response => {
+    if (!response.ok) {
+    throw new Error('Error en la respuesta del servidor: ' + response.status);
+    }
+    return response.text();
+    })
+    .then(data => {
+
+        const resultsContainer = document.getElementById('detalleNota');
+        resultsContainer.innerHTML = data;
+        feather.replace();
+
+    });
+
+    }
+
+    </script>
     <body>
     <div id="app">
     <?=$data['sidebar'];?>
 
-    <div id="main">
+    <div id="main" data-idnota="<?=$data['idNota'];?>">
     <!----- BUSCADOR DE LA BARRA DE NAVEGACION ---------->
     <?php include_once __DIR__ . '/../components/search-bar-doctor.php';?>
             <div class="main-content container-fluid">
@@ -26,102 +54,101 @@
             <section class="mt-3">
 
             <div class="row">
-                <div class="col-12 col-sm-7">
+                <div class="col-12 col-sm-6">
 
-                    <div class="card">
-        
-                    <div class="card-header text-light pb-1">
-    <h5 class="fw-bold text-primary mt-2 ">Información del paciente</h5>
-    </div>
-    <div class="card-body">
+                <div class="card">
+                    <div class="card-header">
+                    <h4 class="card-title">Información del Paciente</h4>
+                    </div>
+                        <div class="card-body">
 
-    <div class="row">
-    <div class="col-12 mb-3">
-    <div class="text-secondary">Nombre Paciente:</div>
-    <h4><?=$data['nombre_paciente'];?></h4>
-    </div>
+                        <div class="row">
+                                <div class="col-12 col-sm-12">
+                                <label class="text-primary"><small>Nombre Paciente:</small></label>
+                                <div class="fs-4"><?=$data['nombre_paciente'];?></div>
+                                </div>
+                            </div>
 
-    <div class="col-12 col-sm-4 mb-3">
-    <div class="text-secondary">Fecha Alta:</div>
-    <h5 class=""><?=(new DateTime($data['fecha_alta']))->format('d/m/Y');[0];?></h5>
-    </div>
+                            <div class="row mt-2">
+                                <div class="col-12 col-sm-4">
+                                <label class="text-primary"><small>Fecha Alta:</small></label>
+                                <div class="fs-5"><?=(new DateTime($data['fecha_alta']))->format('d/m/Y');[0];?></div>
+                                </div>
 
-    <div class="col-12 col-sm-4 mb-3">
-    <div class="text-secondary">Fecha Nacimiento:</div>
-    <h5 class=""><?=date("d/m/Y", strtotime($data['fecha_nacimiento']));?></h5>
-    </div>
+                                <div class="col-12 col-sm-4">
+                                <label class="text-primary"><small>Fecha Nacimiento:</small></label>
+                                <div class="fs-5"><?=date("d/m/Y", strtotime($data['fecha_nacimiento']));?></div>
+                                </div>
 
-    <div class="col-12 col-sm-4 mb-3">
-    <div class="text-secondary">Edad:</div>
-    <h5 class=""><?=$data['edad'];?> años</h5>
-    </div>
+                                <div class="col-12 col-sm-4">
+                                <label class="text-primary"><small>Edad:</small></label>
+                                <div class="fs-5"><?=$data['edad'];?> años</div>
+                                </div>
 
-    <div class="col-12 col-sm-4 mb-3">
-    <div class="text-secondary">Sexo:</div>
-    <h5 class=""><?=($data['sexo'] == 'M')? 'Masculino': 'Femenino';?></h5>
-    </div>
+                            </div>
 
-    <div class="col-12 col-sm-4 mb-3">
-    <div class="text-secondary">Estado Civil:</div>
-    <h5 class=""><?=$data['estado_civil'];?></h5>
-    </div>
+                            <div class="row mt-2">
 
-    <div class="col-12 col-sm-4 mb-3">
-    <div class="text-secondary">CURP:</div>
-    <h5 class=""><?=$data['curp'];?></h5>
-    </div>
+                            <div class="col-12 col-sm-4">
+                            <label class="text-primary"><small>Sexo:</small></label>
+                            <div class="fs-5"><?=($data['sexo'] == 'M')? 'Masculino': 'Femenino';?></div>
+                            </div>
 
-    </div>
+                            <div class="col-12 col-sm-4">
+                            <label class="text-primary"><small>Estado Civil:</small></label>
+                            <div class="fs-5"><?=$data['estado_civil'];?></div>
+                            </div>
 
-    <h5 class="fw-bold text-primary mt-2">Contacto del paciente</h5>
+                            <div class="col-12 col-sm-4">
+                            <label class="text-primary"><small>CURP:</small></label>
+                            <div class="fs-5"><?=$data['curp'];?></div>
+                            </div>
 
-    <div class="row ">
+                            </div>
 
-    <div class="col-12 col-sm-4">
-    <div class="text-secondary">Email:</div>
-    <h5 class=""><?=$data['email'];?></h5>
-    </div>
+                            <div class="mt-3 fs-6 text-success">Contacto del paciente:</div>
 
-    <div class="col-12 col-sm-4">
-    <div class="text-secondary">Telefono:</div>
-    <h5 class=""><?=$data['telefono'];?></h5>
-    </div>
+                            <div class="row mt-3">
 
-    <div class="col-12 col-sm-4">
-    <div class="text-secondary">Celular:</div>
-    <h5 class=""><?=$data['celular'];?></h5>
-    </div>
+                            <div class="col-12 col-sm-4">
+                            <label class="text-primary"><small>Email:</small></label>
+                            <div class="fs-5"><?=$data['email'];?></div>
+                            </div>
 
-    </div>
+                            <div class="col-12 col-sm-4">
+                            <label class="text-primary"><small>Telefono:</small></label>
+                            <div class="fs-5"><?=$data['telefono'];?></div>
+                            </div>
 
-    </div>
+                            <div class="col-12 col-sm-4">
+                            <label class="text-primary"><small>Celular:</small></label>
+                            <div class="fs-5"><?=$data['celular'];?></div>
+                            </div>
+
+                            </div>         
+
+                        </div>
+
                 </div>
 
                 </div>
-                <div class="col-12 col-sm-5">
+                <div class="col-12 col-sm-6">
                         
                 <div class="card">
                     <div class="card-header">
-                    <h5 class="fw-bold text-primary mt-2">Detalle de la Nota</h5>
+                    <h4 class="card-title">Detalle de la Nota</h4>
                     </div>
                     <div class="card-body">
 
-                    <div class="text-secondary">Fecha y Hora:</div>
-                    <h5 class="mb-3"><?=(new \DateTime($data['fecha_hora_nota']))->format('d/m/Y h:i a');?></h5>
-
-                    <div class="text-secondary">Nota subsecuente:</div>
-                    <h5 class=""><?=$data['contenido_nota'];?></h5>
+                    <div id="detalleNota"></div>
                        
                     </div>
                 </div>
 
-
                 </div>
             </div>
-
                 
             </section>
-
 
         </div>
 

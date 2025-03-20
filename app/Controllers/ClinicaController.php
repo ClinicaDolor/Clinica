@@ -210,6 +210,8 @@ class ClinicaController extends BaseController{
         $sidebarController->configureSidebar('DOCTOR', 'clinica-paciente-detalle', $sidebar, $idPaciente);
         $sidebar->setActivarItem('Paciente');
         $sidebarHtml = $sidebar->render();
+
+        $referencia = uniqid('', true);
         
         $data = ['title' => 'Paciente', 
         'idPaciente' => $idPaciente,
@@ -225,6 +227,7 @@ class ClinicaController extends BaseController{
         'email' => $email,
         'telefono' => $telefono,
         'celular' => $celular,  
+        'referencia' => $referencia,  
 
         'sidebar' => $sidebarHtml];
         $this->view('/clinica/pacientes-detalle.php', $data);
@@ -370,7 +373,7 @@ class ClinicaController extends BaseController{
 
     }
 
-    public function pacienteNotaSubsecuente($idPaciente){
+    public function pacienteNotaSubsecuente($idPaciente,$referencia){
     $authMiddleware = new AuthMiddleware('clinica');
     $paciente = new PacienteModel($idPaciente);
     $sidebar = new Sidebar();
@@ -392,10 +395,11 @@ class ClinicaController extends BaseController{
 
         $motivo_atencion = $paciente->getMotivoAtencion();
         
-        $sidebarController->configureSidebar('DOCTOR', 'clinica-paciente-notas', $sidebar, $idPaciente);
+        $sidebarController->configureSidebar('DOCTOR', 'clinica-paciente-notas', $sidebar, $idPaciente, $referencia);
         $sidebar->setActivarItem('Paciente Notas');
         $sidebarHtml = $sidebar->render();
-        
+
+                
         $data = ['title' => 'Notas Subsecuentes', 
         'idPaciente' => $idPaciente,
         'fecha_alta' => $fechaAlta, 
@@ -409,7 +413,8 @@ class ClinicaController extends BaseController{
         
         'email' => $email,
         'telefono' => $telefono,
-        'celular' => $celular,  
+        'celular' => $celular, 
+        'referencia' => $referencia,  
 
         'sidebar' => $sidebarHtml];
         $this->view('/clinica/pacientes-nota-subsecuente.php', $data);
@@ -506,7 +511,7 @@ class ClinicaController extends BaseController{
             $fileExtension = strtolower(end($fileParts));
 
             $model = new LaboratorioModel();
-            $resultModel = $model->insertArchivo($_POST['idPaciente'],$_POST['contenidoLaboratorio'],$fileName, $fileTmpName, $fileSize, $fileExtension);
+            $resultModel = $model->insertArchivo($_POST['idPaciente'],$_POST['contenidoLaboratorio'],$fileName, $fileTmpName, $fileSize, $fileExtension,$_POST['referencia']);
 
             if ($resultModel['resultado'] == 200) {
                 echo HttpMethod::jsonResponse(200, true,$resultModel['mensaje']);
