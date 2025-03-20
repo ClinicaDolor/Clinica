@@ -1,5 +1,4 @@
 <?php
-
 use FastRoute\RouteCollector;
 
 return function(RouteCollector $r) {
@@ -44,6 +43,23 @@ return function(RouteCollector $r) {
                 $r->addRoute('GET', '', ['HomeController', 'indexPaciente']);
                 $r->addRoute('GET', '/acceso', ['LoginController', 'accesoPaciente']);
                 $r->addRoute('POST', '/login', ['LoginController', 'loginPaciente']);
+
+                $r->addRoute('GET', '/{modulo}/paciente/{idPaciente}', ['ModulosController', 'moduloPaciente']);
+
+                //---------- 1. ANTECEDENTES FAMILIARES ----------
+                $r->addRoute('POST', '/paciente/agregar-enfermedad-antecedentes', ['ModulosController', 'pacienteInsertEnfermedad']);
+                $r->addRoute('POST', '/paciente/editar-enfermedad-antecedentes', ['ModulosController', 'pacienteEditEnfermedad']);
+                $r->addRoute('POST', '/paciente/eliminar-enfermedad-antecedentes', ['ModulosController', 'pacienteDeleteEnfermedad']);
+
+
+                //---------- COMENTARIOS MODULOS ----------
+                $r->addRoute('POST', '/paciente/agregar-comentario-modulo', ['ModulosController', 'pacienteComentarioModulo']);
+                $r->addRoute('POST', '/paciente/eliminar-comentario-modulo', ['ModulosController', 'pacienteDeleteComentario']);
+
+                //---------- FINALIZACION DE MODULOS ----------
+                $r->addRoute('POST', '/paciente/finalizar-modulo-paciente', ['ModulosController', 'pacienteFinalizarModulo']);
+
+                
         });
 
         //-----------------------------------------//

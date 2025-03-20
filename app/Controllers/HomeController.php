@@ -44,6 +44,7 @@ class HomeController extends BaseController{
         $result = $authMiddleware->authPermisos();
 
         $sidebarController->configureSidebar('PACIENTE', 'historia-clinica', $sidebar);
+        $sidebar->setActivarItem('Inicio');
         $sidebarHtml = $sidebar->render();
 
         $data = ['title' => 'Clinica', 'datos' => $result, 'sidebar' => $sidebarHtml];

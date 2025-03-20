@@ -18,15 +18,14 @@ $bd = Database::getInstance();
     <script src="<?=RUTA_JS;?>loader.js"></script>
     </head>
 
-    <body> 
+    <body>
     <div class="LoaderPage"></div>
     <div id="app">
         
     <!---------- SIDEBAR ---------->
     <?=$data['sidebar'];?>
     
-    <div id="main">
-            
+    <div id="main"> 
     <nav class="navbar navbar-header navbar-expand navbar-light">
     <a class="sidebar-toggler"><span class="navbar-toggler-icon"></span></a>
     <button class="btn navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,82 +37,37 @@ $bd = Database::getInstance();
     </ul>
     </div>
     </nav>
-        
+
     <!---------- CONTENIDO DE LA PAGINA ---------->
     <div class="main-content container-fluid">
 
-    <!--
-    <div class="search float-end">
-    <div class="search-input">
-    <a href="" target="_blank" hidden></a>
-    <input type="text" class="form-control round" placeholder="Buscar...">
-    <div class="autocom-box"></div>
-    <div class="icon"><i data-feather="search"></i></div>
-    </div>
-    </div>
-    -->
-
     <div class="page-title mb-4">     
-    <h8><?= $data['datos']['nombre']?></h8>
-    <h3>Historia Clinica</h3>
+    <h8><?=$data['nombre'];?></h8>
+    <h3>Antecedentes Personales Patológicos</h3>
     </div>
     
     <section class="section">
+    <div class="card">
+    <div class="card-body">
+    <h8><b>Mencione si usted tiene alguna de las siguientes características:</b></h8>
 
-    <?php
-    try {
-    $stmt = $bd->query("SELECT * FROM historia_clinica_modulos ORDER BY id ASC");
-    $modulos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-    die("Error en la consulta: " . $e->getMessage());
-    }
-    ?>
+    <div class="row mt-3">
+    <div class="col-12">
 
-    <div class="row">
-    <?php foreach ($modulos as $modulo): ?>
-        
-    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-    <a href="<?=SERVIDOR?>historia-clinica/<?=$modulo['url']?>/paciente/<?= $data['datos']['id_usuario']?>">
-    <div class="card border-0 rounded-4 position-relative card-mvsd text-center">  
 
-    <!-- Badge en la esquina superior izquierda -->
-    <div class="position-absolute top-0 start-0 m-4">
-    <span class="badge bg-primary "> <?=$modulo['id']?> </span>
-    </div>
 
-    <div class="card-body pt-5 pb-0">
-    <!-- Nombre del módulo -->
-    <h5 class="fw-bold text-primary mb-3"><?=$modulo['nombre']?></h5>
-
-    <!-- Imagen centrada -->
-    <div class="d-flex justify-content-center">
-    <img src="<?=RUTA_IMAGES ?>/iconos/<?=$modulo['imagen']?>" class="img-fluid" style="max-height: 90px;">
-    </div>
-    </div>
-
-    <!-- Footer con barra de progreso -->
-    <div class="card-footer pt-0">
-    <h6 class="fw-bold text-secondary">Porcentaje de cumplimiento:</h6>
-            
-    <div class="progress bg-light rounded-pill" style="height: 15px;">
-    <div class="progress-bar bg-success rounded-pill text-white fw-bold text-center" 
-    role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"> 50% </div>
-    </div>
     </div>
 
     </div>
-    </a>
-    </div>
-
-    <?php endforeach; ?>
-    </div>
-
     </section>
+
     </div>
- 
+    </div>
+    </div>
+
     <!----- FOOTER ---------->
     <?php include_once __DIR__ . '/../components/footer-mvsd.php';?>
-    
+
     </div>
     </div>
 
