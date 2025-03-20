@@ -84,7 +84,7 @@ class SidebarController {
     'historia-clinica' => [],
 
     'antecedentes-familiares' => [
-    ['titulo' => 'Antecedentes familiares', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$idPaciente, 'icono' => 'file-text']
+    ['titulo' => 'Antecedentes familiares', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ]
 
     ]
