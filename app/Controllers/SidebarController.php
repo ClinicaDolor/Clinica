@@ -80,11 +80,14 @@ class SidebarController {
 
     ],
 
-                
     'PACIENTE' => [
-    'historia-clinica' => []
+    'historia-clinica' => [],
+
+    'antecedentes-familiares' => [
+    ['titulo' => 'Antecedentes familiares', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$idPaciente, 'icono' => 'file-text']
     ]
 
+    ]
     ];
 
     //----- Configuracion de listado de elementos ----------

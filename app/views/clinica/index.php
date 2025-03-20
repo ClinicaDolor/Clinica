@@ -13,7 +13,7 @@ use App\Controllers\ClinicaController;
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     </head>
-  
+
     <body>
     <div id="app">
     <?=$data['sidebar'];?>
@@ -34,7 +34,8 @@ use App\Controllers\ClinicaController;
     echo "</br>".$data['datos']['rol'];*/
     ?>
     <div class="row">
-    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+        
+    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
     <a href="<?=SERVIDOR?>clinica/pacientes">
     <div class="card border-0 rounded-4 position-relative card-mvsd">               
     <div class="card-body text-center">                   
@@ -50,8 +51,8 @@ use App\Controllers\ClinicaController;
     </div>
     </a>
     </div>
-
-    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+ 
+    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
     <a href="<?=SERVIDOR?>clinica/paciente/nuevo">
     <div class="card border-0 rounded-4 position-relative card-mvsd-disabled">
     <div class="card-body text-center">

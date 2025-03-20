@@ -41,7 +41,10 @@ a,button{outline:0}
 .feather,i{font-size:14px;height:1rem}
 footer{padding:0rem 1.5rem}
 
-
+.pointer:hover{
+  cursor: pointer;
+  }
+  
 .search{
     max-width: 300px;
     }
@@ -115,11 +118,12 @@ footer{padding:0rem 1.5rem}
   }
 
   .card-mvsd {
-    min-height: 100%; /* Permite que ambas tarjetas sean iguales */
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    cursor: pointer !important; /* Asegura que el cursor se muestre */
   }
 
   .card-mvsd .card-body {
@@ -130,8 +134,11 @@ footer{padding:0rem 1.5rem}
       flex-grow: 1;
   }
 
+  .card-mvsd .position-absolute {
+    pointer-events: none; /* Evita que el badge bloquee el cursor */
+  }
 
-  
+
   .card-mvsd-disabled {
     min-height: 100%; /* Permite que ambas tarjetas sean iguales */
     display: flex;
@@ -178,6 +185,18 @@ footer{padding:0rem 1.5rem}
     opacity: 1; 
     box-shadow: 0 10px 30px rgba(0, 123, 255, 0.25); /* Sombra azul */
     border-color: #007bff; 
+}
+
+
+.LoaderPage {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 999999999;
+  background: url('../../assets/images/logo-clinica-loader.gif') center center no-repeat rgb(249,249,249);
+  background-size: 250px 250px; /* Cambia el tamaño de la imagen */
 }
 
 
