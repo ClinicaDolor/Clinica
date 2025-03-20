@@ -283,17 +283,23 @@ class ClinicaModel{
 
         $sql = "INSERT INTO receta_medica (
             id_paciente,
-            contenido
+            diagnostico,
+            medicamento,
+            codigo_referencia
         ) VALUES (
             :id_paciente,
-            :contenido
+            :diagnostico,
+            :medicamento,
+            :codigo_referencia
         )";
 
         $stmt = $this->bd->prepare($sql);         
 
         $datos = [
             ':id_paciente' => $data['idPaciente'],
-            ':contenido' => $data['contenidoReceta']
+            ':diagnostico' => $data['diagnostico'],
+            ':medicamento' => $data['medicamento'],
+            ':codigo_referencia' => $data['referencia']
             ];
         
             if ($stmt->execute($datos)) {

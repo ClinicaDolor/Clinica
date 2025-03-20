@@ -14,6 +14,7 @@ class NotaSubsecuenteController extends BaseController{
         $authMiddleware = new AuthMiddleware('clinica');
         $sidebar = new Sidebar();
         $modelNota = new NotaSubsecuenteModel();
+        $sidebarController = new SidebarController();
 
         $authMiddleware->authPermisos();
         $modelNota->NotaSubsecuente($idNota);
@@ -35,13 +36,13 @@ class NotaSubsecuenteController extends BaseController{
 
         $motivo_atencion = $paciente->getMotivoAtencion();
 
-        $sidebar->addItemList('Inicio', '/clinica', 'home');
-        $sidebar->addItemList('Nota Subsecuente', '/clinica/nota-subsecuente/'.$idNota, 'file-text');
+        $sidebarController->configureSidebar('DOCTOR', 'nota-subsecuente', $sidebar, $idNota);
         $sidebar->setActivarItem('Nota Subsecuente');
         $sidebarHtml = $sidebar->render();
 
 
         $data = ['title' => 'Nota Subsecuente', 
+        'idNota' => $idNota,
 
         'fecha_hora_nota' => $modelNota->getFechaHora(),
         'contenido_nota' => $modelNota->getContenido(),

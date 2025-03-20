@@ -1,24 +1,25 @@
 <?php
+
 namespace App\Controllers;
 use App\Middleware\AuthMiddleware;
 use App\Helpers\Sidebar;
-use App\Models\RecetaModel;
+use App\Models\LaboratorioModel;
 use App\Models\PacienteModel;
 use App\Helpers\CalculadoraEdad;
 
-class RecetaController extends BaseController{
+class LaboratorioController extends BaseController{
 
-    public function receta($idReceta){
+    public function laboratorio($idLaboratorio){
 
         $authMiddleware = new AuthMiddleware('clinica');
         $sidebar = new Sidebar();
         $sidebarController = new SidebarController();
-        $modelNota = new RecetaModel();
+        $model = new LaboratorioModel();
 
         $authMiddleware->authPermisos();
-        $modelNota->receta($idReceta);
+        $model->laboratorio($idLaboratorio);
         
-        $paciente = new PacienteModel($modelNota->getIdPaciente());
+        $paciente = new PacienteModel($model->getIdPaciente());
 
         $fechaAlta = $paciente->getFechaAlta();
         $nombreCompleto = $paciente->getNombreCompleto();
@@ -35,18 +36,19 @@ class RecetaController extends BaseController{
 
         $motivo_atencion = $paciente->getMotivoAtencion();
 
-        $sidebarController->configureSidebar('DOCTOR', 'clinica-receta', $sidebar, $idReceta);
-        $sidebar->setActivarItem('Receta');
+        $sidebarController->configureSidebar('DOCTOR', 'clinica-laboratorio', $sidebar, $idLaboratorio);
+        $sidebar->setActivarItem('Laboratorio');
         $sidebarHtml = $sidebar->render();
 
 
-        $data = ['title' => 'Receta', 
+        $data = ['title' => 'Laboratorio', 
 
-        'id_receta' => $idReceta,
-        'fecha_receta' => $modelNota->getFecha(),
-        'hora_receta' => $modelNota->getHora(),
-        'diagnostico_receta' => $modelNota->getDiagnostico(),
-        'medicamento_receta' => $modelNota->getMedicamento(),
+        'id_laboratorio' => $idLaboratorio,
+        'fecha_laboratorio' => $model->getFecha(),
+        'hora_laboratorio' => $model->getFecha(),
+        'ruta' => $model->getRuta(),
+        'nombre' => $model->getNombre(),
+        'descripcion' => $model->getDescripcion(),
 
         'fecha_alta' => $fechaAlta, 
         'nombre_paciente' => $nombreCompleto, 
@@ -60,8 +62,9 @@ class RecetaController extends BaseController{
         'celular' => $celular,  
 
         'sidebar' => $sidebarHtml];
-        $this->view('/clinica/receta.php', $data);
+        $this->view('/clinica/laboratorio.php', $data);
 
     }
+    
 
 }
