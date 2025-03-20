@@ -1,51 +1,26 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?=$data['title'];?></title>
-    <link rel="shortcut icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
-    <link rel="apple-touch-icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>bootstrap.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
-    </head>
-    <script>
-    
-    document.addEventListener("DOMContentLoaded", function() {
-        DetalleNota()
-    });
+    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
 
-    function DetalleNota(){
-
-        const usuarioDiv = document.getElementById('main');
-        const idNota = usuarioDiv.getAttribute('data-idnota');
-
-    fetch(`/buscar/nota-subsecuente/${encodeURIComponent(idNota)}`)
-    .then(response => {
-    if (!response.ok) {
-    throw new Error('Error en la respuesta del servidor: ' + response.status);
-    }
-    return response.text();
-    })
-    .then(data => {
-
-        const resultsContainer = document.getElementById('detalleNota');
-        resultsContainer.innerHTML = data;
-        feather.replace();
-
-    });
-
-    }
-
-    </script>
-    <body>
+ </head>
+<body>
     <div id="app">
-    <?=$data['sidebar'];?>
+        
+        <?=$data['sidebar'];?>
 
-    <div id="main" data-idnota="<?=$data['idNota'];?>">
-    <!----- BUSCADOR DE LA BARRA DE NAVEGACION ---------->
-    <?php include_once __DIR__ . '/../components/search-bar-doctor.php';?>
+        <div id="main">
+            
+            <!----- BUSCADOR DE LA BARRA DE NAVEGACION ---------->
+            <?php include_once __DIR__ . '/../components/search-bar-doctor.php';?>
+            
             <div class="main-content container-fluid">
             <div class="page-title">
                 <h3><?=$data['title'];?></h3>
@@ -56,7 +31,7 @@
             <div class="row">
                 <div class="col-12 col-sm-6">
 
-                <div class="card">
+                    <div class="card">
                     <div class="card-header">
                     <h4 class="card-title">Información del Paciente</h4>
                     </div>
@@ -136,12 +111,19 @@
                         
                 <div class="card">
                     <div class="card-header">
-                    <h4 class="card-title">Detalle de la Nota</h4>
+                    <h4 class="card-title">Detalle del Laboratorio
+                    <div class="float-end"><a download="<?=$data['nombre'];?>" href="/storage/public/<?=$data['ruta'];?>/<?=$data['nombre'];?>" class="btn icon btn-primary"><i data-feather="download"></i></a></div>
+                    </h4>    
                     </div>
                     <div class="card-body">
 
-                    <div id="detalleNota"></div>
-                       
+                    <div>
+                    <label class="text-primary"><small>Fecha: </small></label> <label class="fs-5"><?=$data['fecha_laboratorio'];?></label>, <label class="text-primary"><small>Hora: </small></label> <label class="fs-5"><?=$data['hora_laboratorio'];?></label>
+                    </div>
+
+                    <label class="text-primary mt-3"><small>Descripción: </small></label>
+                    <div class="fs-5"><?=$data['descripcion'];?></div>
+                                        
                     </div>
                 </div>
 
@@ -152,17 +134,23 @@
 
         </div>
 
- 
-    <!----- FOOTER ---------->
-    <?php include_once __DIR__ . '/../components/footer-mvsd.php';?>
+            <footer>
+                <div class="footer clearfix mb-0 text-muted">
+                    <div class="float-start">
+                        <p>2025 &copy; tratamientosdeldolor.org</p>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
     </div>
-    </div>
+    
     <script src="<?=RUTA_JS;?>/feather-icons/feather.min.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="<?=RUTA_JS;?>app.js"></script> 
     <script src="<?=RUTA_JS;?>main.js"></script>
     <script src="<?=RUTA_JS?>search-main.js"></script>
-
+    
 </body>
 </html>
 
