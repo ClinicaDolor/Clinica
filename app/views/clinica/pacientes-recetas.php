@@ -25,6 +25,7 @@ $bd = Database::getInstance();
     <script>
         function AgregarReceta(idPaciente){
 
+            const referencia = 0;
             const Diagnostico = document.getElementById('Diagnostico').value;
             const contenidoReceta = document.querySelector('.ql-editor').innerHTML;
             
@@ -37,7 +38,8 @@ $bd = Database::getInstance();
             const parametros = {
             idPaciente : idPaciente,
             diagnostico : Diagnostico,
-            medicamento : contenidoReceta
+            medicamento : contenidoReceta,
+            referencia : referencia
             };
 
             fetch('/clinica/paciente/insert-receta', {

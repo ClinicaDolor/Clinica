@@ -7,7 +7,7 @@ class SidebarController {
         
     }
 
-    public function configureSidebar($role, $view, $sidebar, $id = null) {
+    public function configureSidebar($role, $view, $sidebar, $id = null, $referencia = null) {
         
     //----- Definir menu de inicio segun el rol -----
     $homeElements = [
@@ -54,7 +54,7 @@ class SidebarController {
     
     'clinica-paciente-notas' => [
     ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$id, 'icono' => 'users'],
-    ['titulo' => 'Paciente Notas', 'url' => SERVIDOR . 'clinica/nota-subsecuente/paciente/'.$id, 'icono' => 'file-text']
+    ['titulo' => 'Paciente Notas', 'url' => SERVIDOR . 'clinica/nota-subsecuente/paciente/'.$id.'/referencia/'.$referencia, 'icono' => 'file-text']
     ],
 
     'clinica-paciente-laboratorio' => [
@@ -72,6 +72,10 @@ class SidebarController {
 
     'clinica-laboratorio' => [
     ['titulo' => 'Laboratorio', 'url' => SERVIDOR . 'clinica/laboratorio/'.$id, 'icono' => 'users']
+    ],
+
+    'nota-subsecuente' => [
+    ['titulo' => 'Nota Subsecuente', 'url' => SERVIDOR . 'clinica/nota-subsecuente/'.$id, 'icono' => 'users']
     ]
 
     ],

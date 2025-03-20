@@ -28,7 +28,7 @@ return function(RouteCollector $r) {
                 $r->addRoute('GET', '/paciente/{idPaciente}', ['ClinicaController', 'pacienteDetalle']);
 
                 $r->addRoute('GET', '/nota-subsecuente/{idNota}', ['NotaSubsecuenteController', 'notaSubsecuente']);
-                $r->addRoute('GET', '/nota-subsecuente/paciente/{idPaciente}', ['ClinicaController', 'pacienteNotaSubsecuente']);
+                $r->addRoute('GET', '/nota-subsecuente/paciente/{idPaciente}/referencia/{referencia}', ['ClinicaController', 'pacienteNotaSubsecuente']);
                 $r->addRoute('POST', '/paciente/insert-nota-subsecuente', ['ClinicaController', 'pacienteInsertNotaSubsecuente']);
 
                 $r->addRoute('GET', '/receta/{idReceta}', ['RecetaController', 'receta']);
@@ -55,7 +55,8 @@ return function(RouteCollector $r) {
         $r->addRoute('GET', '/buscar/receta/{idReceta}', ['BusquedasController', 'buscarReceta']);
         $r->addRoute('GET', '/buscar/nota-subsecuente/{idNota}', ['BusquedasController', 'buscarNotaSubsecuente']);
         $r->addRoute('GET', '/buscar/laboratorio/{idLaboratorio}', ['BusquedasController', 'buscarLaboratorio']);
-        $r->addRoute('GET', '/buscar/tabla-laboratorio/{idPaciente}', ['BusquedasController', 'tableLaboratorio']);
+        $r->addRoute('GET', '/buscar/tabla-laboratorio/{idPaciente}/{referencia}', ['BusquedasController', 'tableLaboratorio']);
+        $r->addRoute('GET', '/buscar/tabla-notas-subsecuentes/{idPaciente}/{referencia}', ['BusquedasController', 'tableNotasSubsecuentes']);
     
         //-----------------------------------------//
         //Cerrar sesion

@@ -46,10 +46,17 @@ class BusquedasController{
 
     }
 
-    public function tableLaboratorio($idPaciente){
+    public function tableLaboratorio($idPaciente,$referencia){
 
         $model = new LaboratorioModel();
-        echo $model->mostrarTablaLaboratorio($idPaciente);
+        echo $model->mostrarTablaLaboratorio($idPaciente,$referencia);
+
+    }
+
+    public function tableNotasSubsecuentes($idPaciente,$referencia){
+
+        $model = new NotaSubsecuenteModel();
+        echo $model->mostrarTablaNotas($idPaciente,$referencia);
 
     }
 }

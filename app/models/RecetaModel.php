@@ -18,6 +18,17 @@ class RecetaModel{
 
     }
 
+    public function idRecetaReferencia($idPaciente,$referencia){
+
+        $query = "SELECT id FROM receta_medica WHERE id_paciente = '".$idPaciente."' AND codigo_referencia = '".$referencia."' ";
+        $stmt = $this->bd->prepare($query);
+        $stmt->execute();
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return $data['id'];
+
+    }
+
     public function receta($idReceta){
 
         $query = "SELECT * FROM receta_medica WHERE id = :id";
@@ -100,31 +111,19 @@ class RecetaModel{
 
         $result = '';
  
-        $sql = "SELECT id, fecha_hora, diagnostico, medicamento FROM receta_medica WHERE id_paciente = :id ORDER BY id DESC LIMIT 1";
+        $sql = "SELECT id FROM receta_medica WHERE id_paciente = :id ORDER BY id DESC LIMIT 1";
         $stmt = $this->bd->prepare($sql);
         $stmt->execute([':id' => $idPaciente]);
  
-        if ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-
-            $fecha = (new \DateTime($data['fecha_hora']))->format('d/m/Y');
-            $hora = (new \DateTime($data['fecha_hora']))->format('h:i a');
-            $result .= '
-            <div class="float-end"><a target="_blank" href="/pdf/receta/'.$data['id'].'" class="btn icon btn-primary"><i data-feather="printer"></i></a></div>
-            <div><small class="text-primary">Fecha: </small> <label class="fs-5">' . $fecha . '</label>, <small class="text-primary">Hora: </small> <label class="fs-5">' . $hora . '</label></div>
-            <div class="mt-3"><small class="text-primary">Diagnostico:</small> <label class="fs-5">' . $data['diagnostico'] . '</label></div>
-
-            <label class="mt-3"><small class="text-primary">Medicamento: </small></label>
-            <div class="fs-5">'.$data['medicamento'].'</div>';
-            
-        } else {
-            $result = '<div class="text-center p-4 text-light">No se encontró información.</div>';
-        }
-       
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $idReceta = isset($data['id']) && !empty($data['id']) ? $data['id'] : 0;
+        $result = $this->getReceta($idReceta);
+          
         return $result;
 
     }
 
-    public function getReceta($idReceta){
+    public function getReceta($idReceta, $fecha_hora = true){
         $result = '';
  
         $sql = "SELECT id, fecha_hora, diagnostico, medicamento FROM receta_medica WHERE id = :id";
@@ -135,16 +134,22 @@ class RecetaModel{
 
             $fecha = (new \DateTime($data['fecha_hora']))->format('d/m/Y');
             $hora = (new \DateTime($data['fecha_hora']))->format('h:i a');
-            $result .= '
-            <div class="float-end"><a target="_blank" href="/pdf/receta/'.$data['id'].'" class="btn icon btn-primary"><i data-feather="printer"></i></a></div>
-            <div><small class="text-primary">Fecha: </small> <label class="fs-5">' . $fecha . '</label>, <small class="text-primary">Hora: </small> <label class="fs-5">' . $hora . '</label></div>
-            <div class="mt-3"><small class="text-primary">Diagnostico:</small> <label class="fs-5">' . $data['diagnostico'] . '</label></div>
+
+            $result .= '<div class="float-end"><a target="_blank" href="/pdf/receta/'.$data['id'].'" class="btn icon btn-primary"><i data-feather="printer"></i></a></div>';
+            
+            if($fecha_hora){
+
+                $result .= '<div><small class="text-primary">Fecha: </small> <label class="fs-5">' . $fecha . '</label>, <small class="text-primary">Hora: </small> <label class="fs-5">' . $hora . '</label></div>';   
+            
+            }
+            
+            $result .= '<div class="mt-3"><small class="text-primary">Diagnostico:</small> <label class="fs-5">' . $data['diagnostico'] . '</label></div>
 
             <label class="mt-3"><small class="text-primary">Medicamento: </small></label>
             <div class="fs-5">'.$data['medicamento'].'</div>';
             
         } else {
-            $result = '<div class="text-center p-4 text-primary">No se encontró información.</div>';
+            $result = '<div class="text-center p-4 text-light">No se encontró información.</div>';
         }
        
         return $result;

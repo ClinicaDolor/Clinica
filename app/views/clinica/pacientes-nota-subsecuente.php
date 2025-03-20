@@ -19,22 +19,99 @@ $model = new NotaSubsecuenteModel();
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/quill/quill.snow.css">
     <style>
-        .editor{
+        .editor1{
+            font-size: 20px;
+            height: 393px;
+        }
+
+        .editor2{
             font-size: 20px;
             height: 250px;
         }
     </style>
     <script>
-        function AgregarNota(idPaciente){
 
-            const contenidoNota = document.querySelector('.ql-editor').innerHTML;
-            document.querySelector('.ql-editor').style.border = "";
+document.addEventListener("DOMContentLoaded", function() {
+        tableLaboratorio()
+    });
+
+function tableLaboratorio(){
+        const usuarioDiv = document.getElementById('main');
+        const idPaciente = usuarioDiv.getAttribute('data-paciente');
+        const referencia = usuarioDiv.getAttribute('data-referencia');
+
+        fetch(`/buscar/tabla-laboratorio/${encodeURIComponent(idPaciente)}/${encodeURIComponent(referencia)}`)
+            .then(response => {
+            if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor: ' + response.status);
+            }
+            return response.text();
+            })
+            .then(data => {
+
+                const resultsContainer = document.getElementById('conteLaboratorio');
+                resultsContainer.innerHTML = data;
+
+                const tabla = document.querySelector("#tableLaboratorio");
+                if (tabla) {
+                    dataTable = new simpleDatatables.DataTable(tabla,{
+                        searchable: true,
+                        fixedHeight: true,
+                        perPageSelect: false,
+                        searchable: false,
+                        columns: [
+                        {
+                            select: 1, sort: "desc"
+                        }
+                        ]
+                    });
+                }          
+        });
+    }
+
+    function DetalleLaboratorio(idLaboratorio){
+
+        fetch(`/buscar/laboratorio/${encodeURIComponent(idLaboratorio)}`)
+        .then(response => {
+        if (!response.ok) {
+        throw new Error('Error en la respuesta del servidor: ' + response.status);
+        }
+        return response.text();
+        })
+        .then(data => {
+
+            const resultsContainer = document.getElementById('detalleLaboratorio');
+            resultsContainer.innerHTML = data;
+            feather.replace();
+
+        });
+
+        } 
+
+        function AgregarNota(){
+
+            const usuarioDiv = document.getElementById('main');
+            const idPaciente = usuarioDiv.getAttribute('data-paciente');
+            const referencia = usuarioDiv.getAttribute('data-referencia');
+
+            const contenidoNota = document.querySelector('#snow1 .ql-editor').innerHTML;
+            const Diagnostico = document.getElementById('Diagnostico').value;
+            const contenidoReceta = document.querySelector('#snow2 .ql-editor').innerHTML;
+
+            document.querySelector('#snow1 .ql-editor').style.border = "";
+            document.querySelector('#Diagnostico').style.border = "";
+            document.querySelector('#snow2 .ql-editor').style.border = "";
 
             if(contenidoNota != '<p><br></p>'){
+                if(Diagnostico != ""){
+                    if(contenidoReceta != '<p><br></p>'){
 
             const parametros = {
             idPaciente : idPaciente,
-            contenidoNota : contenidoNota
+            referencia : referencia,
+            contenidoNota : contenidoNota,
+            diagnostico : Diagnostico,
+            medicamento : contenidoReceta
             };
 
             fetch('/clinica/paciente/insert-nota-subsecuente', {
@@ -48,17 +125,88 @@ $model = new NotaSubsecuenteModel();
             .then(data => {
 
             if (data.resultado) {
-                location.reload()
+
+                idReceta = data.mensaje.idReceta;
+                idNota = data.mensaje.idNota;
+
+                document.getElementById('Diagnostico').value = "";
+                document.querySelector('#snow1 .ql-editor').innerHTML = "";
+                document.querySelector('#snow2 .ql-editor').innerHTML = "";
+                
+                window.open('/pdf/receta/' + idReceta, '_blank');
+                window.location.href = '/clinica/nota-subsecuente/' + idNota;
+                
             } else {
                 document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
             }
           
         });
 
+            }else{
+                document.querySelector('#snow2 .ql-editor').style.border = "2px solid #d44e31";
+            }
+
+        }else{
+            document.querySelector('#Diagnostico').style.border = "2px solid #d44e31";
+        }
     }else{
-        document.querySelector('.ql-editor').style.border = "2px solid #d44e31";
+        document.querySelector('#snow1 .ql-editor').style.border = "2px solid #d44e31";
     }
+
     }
+
+    function AgregarLaboratorio() {
+    
+    const usuarioDiv = document.getElementById('main');
+    const idPaciente = usuarioDiv.getAttribute('data-paciente');
+    const referencia = usuarioDiv.getAttribute('data-referencia');
+
+    const fileInput = document.getElementById('Archivo');
+    const file = fileInput.files[0];
+    const contenidoLaboratorio = document.querySelector('#snow3 .ql-editor').innerHTML;
+
+    document.getElementById('Archivo').style.border = "";
+    document.querySelector('#snow3 .ql-editor').style.border = "";
+
+
+    if (file) {
+        if (contenidoLaboratorio !== '<p><br></p>') {
+
+            const formData = new FormData();
+            formData.append('idPaciente', idPaciente);
+            formData.append('file', file);
+            formData.append('contenidoLaboratorio', contenidoLaboratorio);
+            formData.append('referencia', referencia);
+               
+            fetch('/clinica/laboratorio/insert-laboratorio', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+
+                if (data.resultado) {
+
+                    document.getElementById('Archivo').value = "";
+                    document.querySelector('#snow3 .ql-editor').innerHTML = "";
+
+                    tableLaboratorio()
+                            
+                } else {
+                    
+                    document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
+                }
+
+                });
+               
+
+        } else {
+            document.querySelector('#snow3 .ql-editor').style.border = "2px solid #d44e31";
+        }
+    } else {
+        document.getElementById('Archivo').style.border = "2px solid #d44e31";
+    }
+}
 
     function DetalleNota(idNota){
 
@@ -77,7 +225,7 @@ $model = new NotaSubsecuenteModel();
 
                 });
 
-    } 
+    }
     </script>
 
  </head>
@@ -86,7 +234,7 @@ $model = new NotaSubsecuenteModel();
         
         <?=$data['sidebar'];?>
 
-        <div id="main">
+    <div id="main" data-referencia="<?=$data['referencia'];?>" data-paciente="<?=$data['idPaciente'];?>">
     <!----- BUSCADOR DE LA BARRA DE NAVEGACION ---------->
     <?php include_once __DIR__ . '/../components/search-bar-doctor.php';?>
             
@@ -99,12 +247,14 @@ $model = new NotaSubsecuenteModel();
             <div class="row mt-3">
                 <div class="col-12 col-sm-12">
                     <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Información del paciente</h4>
+                        </div>
                         <div class="card-body">
 
-                        <h4 class="text-primary mt-2 ">Información del paciente</h4>
-
                         <div class="row">
-                                <div class="col-12 col-sm-4">
+
+                        <div class="col-12 col-sm-4">
                                 <label class="text-primary"><small>Nombre Paciente:</small></label>
                                 <div class="fs-5"><?=$data['nombre_paciente'];?></div>
                                 </div>
@@ -141,11 +291,11 @@ $model = new NotaSubsecuenteModel();
             <section>
 
             <div class="row">
-                <div class="col-12 col-sm-5">
+                <div class="col-12 col-sm-4">
 
                 <div class="card">
-                <div class="card-header text-light">
-                <h5 class="fw-bold text-primary mt-2 ">Notas Subsecuentes</h5>
+                <div class="card-header">
+                <h4 class="card-title">Notas Subsecuentes</h4>
                 </div>
                 <div class="card-body">
 
@@ -183,11 +333,11 @@ $model = new NotaSubsecuenteModel();
                 </div>
 
                 </div>
-                <div class="col-12 col-sm-7">
+                <div class="col-12 col-sm-8">
                         
                 <div class="card">
-                    <div class="card-header text-light">
-                    <h5 class="fw-bold text-primary mt-2 ">Detalle de la Nota</h5>
+                    <div class="card-header">
+                    <h4 class="card-title">Detalle Nota Subsecuente</h4>
 
                     </div>
                     <div class="card-body">
@@ -199,22 +349,80 @@ $model = new NotaSubsecuenteModel();
                     </div>
                 </div>
 
-                <div class="card">
-                <div class="card-header text-light">
-                <h5 class="fw-bold text-primary mt-2 ">Nueva Nota</h5>
-                </div>
-                <div class="card-body">
-
-                <div id="snow" class="editor"></div>
-                <div class="text-end mt-3"><button class="btn btn-success" onclick="AgregarNota(<?=$data['idPaciente'];?>)">Agregar Nota</button></div>
-                <div id="mensaje"></div>
-                </div>
-                </div>
-
-                </div>
+               </div>
             </div>
 
                 
+            </section>
+
+            <hr>
+
+            <small class="text-light">Crear nueva Nota Subsecuente</small>
+
+            <section class="mt-3">
+
+            <div class="row">
+            <div class="col-12 col-sm-6">
+
+            <div class="card">
+                <div class="card-header">
+                <h4 class="card-title">Agregar Nota Subsecuente</h4>
+                </div>
+                <div class="card-body">
+
+                <div id="snow1" class="editor1"></div>
+                </div>
+                </div>
+
+                <div class="card">
+                <div class="card-header text-primary">
+                <h4 class="card-title">Agregar Receta</h4>
+                </div>
+                <div class="card-body">
+                <div class="">
+                <label class="text-primary mb-1"><smallal>Diagnostico:</smallal></label>
+                <textarea class="form-control fs-5" id="Diagnostico" rows="2"></textarea>
+                </div>
+                    
+                <label class="text-primary mt-3 mb-1"><smallal>Medicamento:</smallal></label>
+                <div id="snow2" class="editor2"></div>
+                </div>
+                </div>
+                <div id="mensaje"></div>
+                <div class="text-end"><button class="btn btn-success fs-5" onclick="AgregarNota()">Guardar Nota Subsecuente <i data-feather="arrow-right"></i> </button></div>
+
+            </div>
+            <div class="col-12 col-sm-6">
+
+            <div class="card">
+                <div class="card-header">
+                <h4 class="card-title">Laboratorio</h4>
+                </div>
+                <div class="card-body">
+
+                <div id="conteLaboratorio"></div>
+                <div class="p-2 border">
+                    <div id="detalleLaboratorio">
+                        <div class="text-center text-light">No se encontro información</div>
+                    </div>
+                </div>
+                
+                <hr>
+
+                <label class="text-primary"><small>Archivo:</small></label>
+                <div class="mb-3"><input type="file" class="form-control" id="Archivo"></div>
+                
+                <label class="text-primary"><small>Descripción:</small></label>
+
+                <div id="snow3" class="editor2"></div>
+                <div class="text-end mt-3"><button class="btn btn-primary" onclick="AgregarLaboratorio()">Agregar</button></div>
+
+                </div>
+                </div>
+
+            </div>
+            </div>
+
             </section>
 
 
@@ -230,7 +438,6 @@ $model = new NotaSubsecuenteModel();
     <script src="<?=RUTA_JS;?>main.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/quill/quill.min.js"></script>
-    <script src="<?=RUTA_JS?>search-main.js"></script>
     <script src="<?=RUTA_JS?>search-main.js"></script>
 
     
@@ -249,7 +456,7 @@ $model = new NotaSubsecuenteModel();
         ]
     });
 
-        var snow = new Quill('#snow', {
+        var snow = new Quill('#snow1', {
         theme: 'snow',
         modules: {
             toolbar: [
@@ -257,7 +464,31 @@ $model = new NotaSubsecuenteModel();
                 [{ 'list': 'ordered'}, { 'list': 'bullet' }]
             ],
         },
-        bounds: '#snow',
+        bounds: '#snow1',
+        height: '500px',
+        });
+
+        var snow2 = new Quill('#snow2', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                ['bold', 'italic'], 
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+            ],
+        },
+        bounds: '#snow2',
+        height: '500px',
+        });
+
+        var snow3 = new Quill('#snow3', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                ['bold', 'italic'], 
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+            ],
+        },
+        bounds: '#snow3',
         height: '500px',
         });
 

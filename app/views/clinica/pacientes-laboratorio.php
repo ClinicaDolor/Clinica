@@ -24,6 +24,8 @@ $bd = Database::getInstance();
     </style>
     <script>
     function AgregarLaboratorio(idPaciente) {
+    
+    const referencia = 0;
     const fileInput = document.getElementById('Archivo');
     const file = fileInput.files[0];
     const contenidoLaboratorio = document.querySelector('.ql-editor').innerHTML;
@@ -39,6 +41,7 @@ $bd = Database::getInstance();
             formData.append('idPaciente', idPaciente);
             formData.append('file', file);
             formData.append('contenidoLaboratorio', contenidoLaboratorio);
+            formData.append('referencia', referencia);
                
             fetch('/clinica/laboratorio/insert-laboratorio', {
                     method: 'POST',
