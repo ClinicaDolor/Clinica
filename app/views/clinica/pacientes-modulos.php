@@ -16,9 +16,12 @@ $bd = Database::getInstance();
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/simple-datatables/style.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="<?=RUTA_JS;?>loader.js"></script>
     </head>
 
     <body>
+    <div class="LoaderPage"></div>
     <div id="app">
     <?=$data['sidebar'];?>
 

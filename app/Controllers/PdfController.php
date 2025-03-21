@@ -78,11 +78,11 @@ class PdfController{
         $pdf->Ln(2);
 
         $pdf->SetFont('courier', '', 11);
-        $pdf->MultiCell(0, 10, $model->getDiagnostico());
+        $pdf->MultiCell(0, 5, $model->getDiagnostico(), 0, 'L', 0);
         $pdf->Ln(5);
 
         $pdf->SetFont('courier', '', 11);
-        $pdf->MultiCell(0, 10, $textoFormateado);
+        $pdf->MultiCell(0, 1, $textoFormateado);
 
         $pdf->Output($paciente->getNombreCompleto().' '.$model->getFecha().'.pdf', 'I');
 
