@@ -8,13 +8,16 @@ $bd = Database::getInstance();
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
+    <link rel="apple-touch-icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
     <title><?=$data['title'];?></title>
     <link rel="shortcut icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
     <link rel="apple-touch-icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>bootstrap.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
-    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="<?=RUTA_JS;?>loader.js"></script>
 
     <script>
         
@@ -107,6 +110,7 @@ $bd = Database::getInstance();
     </head>
 
     <body>
+    <div class="LoaderPage"></div>
     <div id="app">
     <?=$data['sidebar'];?>
 
