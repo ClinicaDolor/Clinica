@@ -43,7 +43,7 @@ class ClinicaController extends BaseController{
     $sidebar->setActivarItem('Historia Clinica');
     $sidebarHtml = $sidebar->render();
         
-    $data = ['title' => 'Historia Clinica', 'nombre_paciente' => $nombreCompleto, 'sidebar' => $sidebarHtml];
+    $data = ['title' => 'Historia Clinica', 'id_paciente' => $idPaciente, 'nombre_paciente' => $nombreCompleto, 'sidebar' => $sidebarHtml];
     $this->view('/clinica/pacientes-modulos.php', $data);
     }
 
