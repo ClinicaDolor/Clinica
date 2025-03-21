@@ -13,7 +13,6 @@ use App\Models\LaboratorioModel;
 
 class ClinicaController extends BaseController{
 
-
     public function pacientesIndex(){
     $authMiddleware = new AuthMiddleware('clinica');
     $sidebar = new Sidebar();
@@ -191,7 +190,8 @@ class ClinicaController extends BaseController{
         $sidebar = new Sidebar();
         $sidebarController = new SidebarController();
 
-        $authMiddleware->authPermisos();        
+        $authMiddleware->authPermisos();      
+             
         $fechaAlta = $paciente->getFechaAlta();
         $nombreCompleto = $paciente->getNombreCompleto();
         $fechaNacimiento = $paciente->getFechaNacimiento();
@@ -230,7 +230,13 @@ class ClinicaController extends BaseController{
         'referencia' => $referencia,  
 
         'sidebar' => $sidebarHtml];
-        $this->view('/clinica/pacientes-detalle.php', $data);
+
+        if (is_null($fechaAlta)) {
+            $this->view('/errors/404.php');
+        }else{
+            $this->view('/clinica/pacientes-detalle.php', $data);
+        }
+
     }
 
     public function pacientePin($idPaciente){
