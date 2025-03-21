@@ -65,7 +65,7 @@ class SidebarController {
     'clinica-paciente-pin' => [
     ['titulo' => 'Paciente Pin', 'url' => SERVIDOR . 'clinica/paciente/pin/'.$id, 'icono' => 'users']
     ],
-
+ 
     'clinica-receta' => [
     ['titulo' => 'Receta', 'url' => SERVIDOR . 'clinica/receta/'.$id, 'icono' => 'users']
     ],
@@ -76,6 +76,11 @@ class SidebarController {
 
     'nota-subsecuente' => [
     ['titulo' => 'Nota Subsecuente', 'url' => SERVIDOR . 'clinica/nota-subsecuente/'.$id, 'icono' => 'users']
+    ],
+
+    //---------- MODULOS DE HISTORIA CLINICA ----------
+    'antecedentes-familiares' => [
+    ['titulo' => 'Antecedentes familiares', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ]
 
     ],
@@ -85,10 +90,14 @@ class SidebarController {
 
     'antecedentes-familiares' => [
     ['titulo' => 'Antecedentes familiares', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ],
+
+    'antecedentes-personales-quirurgicos' => [
+    ['titulo' => 'Antecedentes Personales Quirúrgicos', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ]
 
     ]
-    ];
+    ]; 
 
     //----- Configuracion de listado de elementos ----------
     $finalItems = array_merge(

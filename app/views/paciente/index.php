@@ -59,22 +59,39 @@ $bd = Database::getInstance();
     </div>
     
     <section class="section">
-
     <?php
     try {
     $stmt = $bd->query("SELECT * FROM historia_clinica_modulos ORDER BY id ASC");
     $modulos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Obtener registros finalizados para el paciente específico
+    $id_paciente = $data['datos']['id_usuario'];
+    $stmtFinalizados = $bd->prepare("SELECT id_modulo FROM pac_historia_clinica_finalizar WHERE id_paciente = ?");
+    $stmtFinalizados->execute([$id_paciente]);
+    $modulosFinalizados = $stmtFinalizados->fetchAll(PDO::FETCH_COLUMN);    
+
     } catch (PDOException $e) {
     die("Error en la consulta: " . $e->getMessage());
     }
     ?>
 
     <div class="row">
-    <?php foreach ($modulos as $modulo): ?>
+    <?php foreach ($modulos as $modulo): 
+
+    // Verificar si el módulo está finalizado
+    $deshabilitado = in_array($modulo['id'], $modulosFinalizados);
+
+    $referenciaCard = '';
+    $classCard = "card-mvsd-disabled";
+    if (!$deshabilitado):
+    $referenciaCard = 'href="'.SERVIDOR.'historia-clinica/'.$modulo['url'].'/paciente/'.$data['datos']['id_usuario'].'"';
+    $classCard = "card-mvsd";
+    endif;
+    ?>
         
     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-    <a href="<?=SERVIDOR?>historia-clinica/<?=$modulo['url']?>/paciente/<?= $data['datos']['id_usuario']?>">
-    <div class="card border-0 rounded-4 position-relative card-mvsd text-center">  
+    <a <?=$referenciaCard?>>
+    <div class="card border-0 rounded-4 position-relative <?=$classCard?> text-center">  
 
     <!-- Badge en la esquina superior izquierda -->
     <div class="position-absolute top-0 start-0 m-4">
@@ -82,6 +99,9 @@ $bd = Database::getInstance();
     </div>
 
     <div class="card-body pt-5 pb-0">
+
+    <div class="row">
+    <div class="col-12">
     <!-- Nombre del módulo -->
     <h5 class="fw-bold text-primary mb-3"><?=$modulo['nombre']?></h5>
 
@@ -91,15 +111,19 @@ $bd = Database::getInstance();
     </div>
     </div>
 
-    <!-- Footer con barra de progreso -->
-    <div class="card-footer pt-0">
-    <h6 class="fw-bold text-secondary">Porcentaje de cumplimiento:</h6>
+    <div class="col-12">
+    <h6 class="fw-bold text-secondary mt-4">Porcentaje de cumplimiento:</h6>
             
     <div class="progress bg-light rounded-pill" style="height: 15px;">
     <div class="progress-bar bg-success rounded-pill text-white fw-bold text-center" 
     role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"> 50% </div>
     </div>
     </div>
+
+    </div>
+
+    </div>
+
 
     </div>
     </a>

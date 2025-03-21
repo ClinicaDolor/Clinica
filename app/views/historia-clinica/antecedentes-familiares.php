@@ -2,26 +2,25 @@
 use App\Config\Database;
 $bd = Database::getInstance();
 
-function antecedentesFamiliares($idPaciente, $enfermedad, $pdo) {
-$sql = "SELECT COUNT(*) FROM pc_antecedentes_familiares WHERE id_paciente = ? AND enfermedad = ?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$idPaciente, $enfermedad]);
-$numero = $stmt->fetchColumn();
+    function antecedentesFamiliares($idPaciente, $enfermedad, $pdo) {
+    $sql = "SELECT COUNT(*) FROM pc_antecedentes_familiares WHERE id_paciente = ? AND enfermedad = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$idPaciente, $enfermedad]);
+    $numero = $stmt->fetchColumn();
 
-if ($numero == 0) {
-$sql_insert = "INSERT INTO pc_antecedentes_familiares (id_paciente, enfermedad, tipo, detalle, especificar) 
-                       VALUES (?, ?, '', '', '')";
-$stmt_insert = $pdo->prepare($sql_insert);
-$stmt_insert->execute([$idPaciente, $enfermedad]);
-}
-}
+    if ($numero == 0) {
+    $sql_insert = "INSERT INTO pc_antecedentes_familiares (id_paciente, enfermedad, tipo, detalle, especificar) 
+                        VALUES (?, ?, '', '', '')";
+    $stmt_insert = $pdo->prepare($sql_insert);
+    $stmt_insert->execute([$idPaciente, $enfermedad]);
+    }
+    }
 
-
-antecedentesFamiliares($data['idPaciente'],"Enfermedades del corazón",$bd);
-antecedentesFamiliares($data['idPaciente'],"Hipertensión arterial sistémica",$bd);
-antecedentesFamiliares($data['idPaciente'],"Enfermedad cerebrovascular",$bd);
-antecedentesFamiliares($data['idPaciente'],"Diabetes Mellitus",$bd);
-antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
+    antecedentesFamiliares($data['idPaciente'],"Enfermedades del corazón",$bd);
+    antecedentesFamiliares($data['idPaciente'],"Hipertensión arterial sistémica",$bd);
+    antecedentesFamiliares($data['idPaciente'],"Enfermedad cerebrovascular",$bd);
+    antecedentesFamiliares($data['idPaciente'],"Diabetes Mellitus",$bd);
+    antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
 
 ?>
 
@@ -53,13 +52,16 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
     }
     }
 
-    function agregarEnfermedadPaciente(idPaciente){
- 
+    function agregarEnfermedadPaciente(idPaciente,idRol){
+
+    const val = (idRol == "Paciente") ? "historia-clinica" : "clinica";
+
     const parametros = {
-    idPaciente : idPaciente
+    idPaciente : idPaciente,
+    idRol : idRol
     };
 
-    fetch('/historia-clinica/paciente/agregar-enfermedad-antecedentes', {
+    fetch('/' + val + '/paciente/agregar-enfermedad-antecedentes', {
     method: 'POST',
     headers: {
     'Content-Type': 'application/json'
@@ -79,13 +81,15 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
             
     }
 
-    function eliminarEnfermedadPaciente(idEnfermedad){
-    
+    function eliminarEnfermedadPaciente(idEnfermedad,idRol){
+    const val = (idRol == "Paciente") ? "historia-clinica" : "clinica";
+
     const parametros = {
-    idEnfermedad : idEnfermedad
+    idEnfermedad : idEnfermedad,
+    idRol : idRol
     };
 
-    fetch('/historia-clinica/paciente/eliminar-enfermedad-antecedentes', {
+    fetch('/' + val + '/paciente/eliminar-enfermedad-antecedentes', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
@@ -105,16 +109,18 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
         
     }
 
-    function editarEnfermedad(idEnfermedad, elemento, parametro) {
+    function editarEnfermedad(idEnfermedad, elemento, parametro, idRol) {
     let valor = elemento.value; 
+    const val = (idRol == "Paciente") ? "historia-clinica" : "clinica";
 
     const parametros = {
     idEnfermedad : idEnfermedad,
     detalle : valor,
-    edicion : parametro
+    edicion : parametro,
+    idRol : idRol
     };
 
-    fetch('/historia-clinica/paciente/editar-enfermedad-antecedentes', {
+    fetch('/' + val + '/paciente/editar-enfermedad-antecedentes', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
@@ -134,20 +140,22 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
 
     }
 
-    function agregarComentario(idModulo, idPaciente){
+    function agregarComentario(idModulo, idPaciente, idRol){
     const comentarioModulos = document.getElementById('comentarioModulos').value;
+    const val = (idRol == "Paciente") ? "historia-clinica" : "clinica";
 
     const parametros = {
     idModulo : idModulo,
     idPaciente : idPaciente,
-    comentarioModulos : comentarioModulos
+    comentarioModulos : comentarioModulos,
+    idRol : idRol
     };
 
-    
+
     if(comentarioModulos != ""){
     $('#comentarioModulos').css('border',''); 
-
-    fetch('/historia-clinica/paciente/agregar-comentario-modulo', {
+    
+    fetch('/' + val + '/paciente/agregar-comentario-modulo', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
@@ -173,13 +181,15 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
     }
 
 
-    function eliminarComentario(idComentario){
+    function eliminarComentario(idComentario, idRol){
+    const val = (idRol == "Paciente") ? "historia-clinica" : "clinica";
 
     const parametros = {
-    idComentario : idComentario
+    idComentario : idComentario,
+    idRol : idRol
     };
 
-    fetch('/historia-clinica/paciente/eliminar-comentario-modulo', {
+    fetch('/' + val + '/paciente/eliminar-comentario-modulo', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
@@ -201,7 +211,6 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
 
 
     //---------- FINALIZAR MODULOS ----------//
-
     function FinalizarModuloPaciente(idModulo, idPaciente){
 
     const parametros = {
@@ -271,9 +280,9 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
     <b>A continuación, le preguntaremos si existen antecedentes familiares de alguna de las siguientes enfermedades. <br>Por favor, mencione si alguno de sus familiares cercanos, como abuelos, padres, hermanos, etc., ha padecido alguna de ellas:</b>
     </h8>
     </div>
-
+ 
     <div class="col-1">
-    <button onclick="agregarEnfermedadPaciente(<?=$data['idPaciente'];?>)" class="btn icon btn-success float-end"> <i data-feather="plus" width="20"></i> </button>
+    <button onclick="agregarEnfermedadPaciente(<?=$data['idPaciente'];?>,'<?=$data['idRol'];?>')" class="btn icon btn-success float-end"> <i data-feather="plus" width="20"></i> </button>
     </div>
 
     <div class="col-12">
@@ -328,12 +337,12 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
     <?php if (in_array($enfermedad, $enfermedades_fijas)): ?>
     <?= $enfermedad; ?>
     <?php else: ?>
-    <input onchange="editarEnfermedad(<?=$idEnfermedad?>, this, 1)" class="form-control nombre-enfermedad" value="<?= $enfermedad ?? '' ?>" placeholder="Escribe la enfermedad...">
+    <input onchange="editarEnfermedad(<?=$idEnfermedad?>, this, 1,'<?=$data['idRol'];?>')" class="form-control nombre-enfermedad" value="<?= $enfermedad ?? '' ?>" placeholder="Escribe la enfermedad...">
     <?php endif; ?>
     </td>
 
     <td class="text-center align-middle">
-    <select class="form-select tipo-enfermedad" onchange="editarEnfermedad(<?=$idEnfermedad?>, this, 2)" <?= in_array($enfermedad, $enfermedades_fijas) ? '' : 'disabled'; ?>>
+    <select class="form-select tipo-enfermedad" onchange="editarEnfermedad(<?=$idEnfermedad?>, this, 2,'<?=$data['idRol'];?>')" <?= in_array($enfermedad, $enfermedades_fijas) ? '' : 'disabled'; ?>>
     <option value="" disabled selected <?php if ($detalle === '') echo 'selected'; ?>>Selecciona una opción...</option>
     <option value="Si" <?php if ($detalle == 'Si') echo 'selected'; ?>>Sí</option>
     <option value="No" <?php if ($detalle == 'No') echo 'selected'; ?>>No</option>
@@ -342,7 +351,7 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
     </td>
 
     <td class="text-center align-middle tipo-detalle">
-    <select class="form-select detalle-enfermedad" onchange="editarEnfermedad(<?=$idEnfermedad?>, this, 3)" <?= ($enfermedad == "Diabetes Mellitus" && $detalle == "Si") ? '' : 'disabled'; ?>>
+    <select class="form-select detalle-enfermedad" onchange="editarEnfermedad(<?=$idEnfermedad?>, this, 3,'<?=$data['idRol'];?>')" <?= ($enfermedad == "Diabetes Mellitus" && $detalle == "Si") ? '' : 'disabled'; ?>>
     <option value="" disabled selected <?php if($tipo === '') echo 'selected'; ?>>Selecciona una opción...</option>
     <option value="Tipo 1" <?php if($tipo === 'Tipo 1') echo 'selected'; ?>>Tipo 1</option>
     <option value="Tipo 2" <?php if($tipo === 'Tipo 2') echo 'selected'; ?>>Tipo 2</option>
@@ -352,7 +361,7 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
     </td>
 
     <td class="text-center align-middle">
-    <input class="form-control especificar-enfermedad" onchange="editarEnfermedad(<?=$idEnfermedad?>, this, 4)" value="<?=$especificar ?? ''?>" placeholder="Especifica aquí la enfermedad..." <?= ($detalle == 'Si') ? '' : 'disabled'; ?>>
+    <input class="form-control especificar-enfermedad" onchange="editarEnfermedad(<?=$idEnfermedad?>, this, 4,'<?=$data['idRol'];?>')" value="<?=$especificar ?? ''?>" placeholder="Especifica aquí la enfermedad..." <?= ($detalle == 'Si') ? '' : 'disabled'; ?>>
     </td>
 
 
@@ -360,7 +369,7 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
     <?php if (in_array($enfermedad, $enfermedades_fijas)): ?>
         
     <?php else: ?>
-    <i data-feather="trash-2" class="pointer" onclick="eliminarEnfermedadPaciente(<?=$idEnfermedad?>)"></i>
+    <i data-feather="trash-2" class="pointer" onclick="eliminarEnfermedadPaciente(<?=$idEnfermedad?>,'<?=$data['idRol'];?>')"></i>
     <?php endif; ?>
     </td>
 
@@ -376,7 +385,7 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
 
     <div class="input-group mb-3">
     <input type="text" class="form-control" id="comentarioModulos" placeholder="Ingresa aquí tu información o comentario...">
-    <button class="btn btn-outline-secondary" type="button" onclick="agregarComentario(2,<?=$data['idPaciente']?>)">Agregar comentario</button>
+    <button class="btn btn-outline-secondary" type="button" onclick="agregarComentario(2,<?=$data['idPaciente']?>,'<?=$data['idRol'];?>')">Agregar comentario</button>
     </div>
 
     <div class="table-responsive">
@@ -406,7 +415,7 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
     <tr>
     <td class="text-center align-middle"><?=$num?></td>
     <td class="text-start align-middle"><?=$moduloComentario?></td>
-    <th class="text-center align-middle"><i class="pointer" data-feather="trash-2" onclick="eliminarComentario(<?=$idComentario?>)"></i></th>
+    <th class="text-center align-middle"><i class="pointer" data-feather="trash-2" onclick="eliminarComentario(<?=$idComentario?>,'<?=$data['idRol'];?>')"></i></th>
     </tr>
     <?php 
     $num++;
@@ -421,6 +430,7 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
     </div>
 
     <?php
+    if($data['idRol'] == "Paciente"){
     try {
     $stmt = $bd->query("SELECT * FROM pac_historia_clinica_finalizar WHERE id_modulo = 2 AND id_paciente = '".$data['idPaciente']."'");
     $modulos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -435,16 +445,22 @@ antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
     <div class="card-footer">
     <button class="btn btn-success float-end fs-5" onclick="FinalizarModuloPaciente(2, <?=$data['idPaciente'];?>)">Finalizar</button>
     </div>
-    <?php endif; ?>
+    <?php endif; 
+    }
+    ?>
 
     </div>
+
+
     </section>
-    </div>
-    </div>
-    </div>
 
+    </div>
     <!----- FOOTER ---------->
     <?php include_once __DIR__ . '/../components/footer-mvsd.php';?>
+    </div>
+    </div>
+
+
 
     </div>
     </div>
