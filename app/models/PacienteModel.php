@@ -46,36 +46,18 @@ class PacienteModel{
         $stmt->execute();
         $registros = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        $this->fecha_alta = $registros['fecha_alta'];
-        $this->nombre_completo = $registros['nombre_completo'];
-        $this->edad = $registros['edad'];
-        $this->fecha_nacimiento = $registros['fecha_nacimiento'];
-        $this->sexo = $registros['sexo'];
-        $this->estado_civil = $registros['estado_civil'];
-        $this->curp = $registros['curp'];
-        $this->lugar_origen = $registros['lugar_origen'];
-        $this->lugar_residencia = $registros['lugar_residencia'];
-        $this->ocupacion = $registros['ocupacion'];
-        $this->num_hijos = $registros['num_hijos'];
-        $this->edad_hijos = $registros['edad_hijos'];
-        $this->quien_recomienda = $registros['quien_recomienda'];
-        $this->redes_sociales = $registros['redes_sociales'];
-        $this->motivo_atencion = $registros['motivo_atencion'];
-        $this->calle = $registros['calle'];
-        $this->num_interior = $registros['num_interior'];
-        $this->num_exterior = $registros['num_exterior'];
-        $this->colonia = $registros['colonia'];
-        $this->delegacion = $registros['delegacion'];
-        $this->cp = $registros['cp'];
-        $this->municipio = $registros['municipio'];
-        $this->distancia = $registros['distancia'];       
-        $this->email = $registros['email'];
-        $this->telefono = $registros['telefono'];
-        $this->celular = $registros['celular'];
-        $this->cuidador = $registros['cuidador'];
-        $this->cuidador_telefono = $registros['cuidador_telefono'];
-        $this->res_nombre = $registros['res_nombre'];
-        $this->res_telefono = $registros['res_telefono'];
+        $campos = [
+            'fecha_alta', 'nombre_completo', 'edad', 'fecha_nacimiento', 'sexo', 
+            'estado_civil', 'curp', 'lugar_origen', 'lugar_residencia', 'ocupacion', 
+            'num_hijos', 'edad_hijos', 'quien_recomienda', 'redes_sociales', 
+            'motivo_atencion', 'calle', 'num_interior', 'num_exterior', 'colonia', 
+            'delegacion', 'cp', 'municipio', 'distancia', 'email', 'telefono', 
+            'celular', 'cuidador', 'cuidador_telefono', 'res_nombre', 'res_telefono'
+        ];
+        
+        foreach ($campos as $campo) {
+            $this->$campo = $registros[$campo] ?? null;
+        }
 
     }
 

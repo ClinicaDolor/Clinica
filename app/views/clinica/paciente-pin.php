@@ -67,7 +67,7 @@ $bd = Database::getInstance();
     <div class="card">
         
     <div class="card-header text-light pb-1">
-    <h5 class="fw-bold text-primary mt-2 ">Información del paciente</h5>
+    <h5 class="card-title">Información del paciente</h5>
     </div>
     <div class="card-body">
 
@@ -109,7 +109,7 @@ $bd = Database::getInstance();
 
     </div>
 
-    <h5 class="fw-bold text-primary mt-2">Contacto del paciente</h5>
+    <h5 class="text-success mt-2">Contacto del paciente</h5>
 
     <div class="row ">
 
@@ -140,7 +140,7 @@ $bd = Database::getInstance();
     <div class="card-header text-light">    
     <div class="row">
     <div class="col-10">     
-    <h5 class="fw-bold text-primary mt-2 ">Pin de acceso para pacientes</h5> 
+    <h4 class="card-title">Pin de acceso para pacientes</h4> 
     </div>
 
     <div class="col-2">     
