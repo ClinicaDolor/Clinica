@@ -44,7 +44,7 @@ $bd = Database::getInstance();
     <div class="card-header">
     <div class="row">
     <div class="col-10">
-    <h5 class="fw-bold text-primary">Lista de Pacientes</h5>
+    <h4 class="card-title">Lista de Pacientes</h4>
     </div>
 
     <div class="col-2">

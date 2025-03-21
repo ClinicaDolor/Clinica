@@ -37,8 +37,8 @@ $bd = Database::getInstance();
     <section class="section mt-4">
    
     <div class="card">
-    <div class="card-header text-light pb-1">
-    <h5 class="fw-bold text-primary mt-2 "><?=$data['nombre_paciente'];?></h5>
+    <div class="card-header">
+    <h4 class="card-title"><?=$data['nombre_paciente'];?></h4>
     </div>
 
 

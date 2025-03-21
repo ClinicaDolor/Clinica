@@ -3,11 +3,14 @@ namespace App\Middleware;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use App\Config\Database;
 
 class AuthMiddleware{
     private $vista;
+    private $bd;
     public function __construct($vistas){
         $this->vista = $vistas;
+        $this->bd = Database::getInstance();
     }
 
     public function authPermisos(){
