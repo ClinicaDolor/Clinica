@@ -18,6 +18,8 @@ $model = new NotaSubsecuenteModel();
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/simple-datatables/style.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/quill/quill.snow.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="<?=RUTA_JS;?>loader.js"></script>
     <style>
         .editor1{
             font-size: 20px;
@@ -230,6 +232,7 @@ function tableLaboratorio(){
 
  </head>
 <body>
+<div class="LoaderPage"></div>
     <div id="app">
         
         <?=$data['sidebar'];?>
