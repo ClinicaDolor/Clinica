@@ -1,6 +1,7 @@
 <?php 
 use App\Config\Database;
 $bd = Database::getInstance();
+
 ?>
 
     <!DOCTYPE html>

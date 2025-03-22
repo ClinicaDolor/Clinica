@@ -42,13 +42,13 @@ use App\Controllers\ClinicaController;
     <a href="<?=SERVIDOR?>clinica/pacientes">
     <div class="card border-0 rounded-4 position-relative card-mvsd">               
     <div class="card-body text-center">                   
-    <h5 class="fw-bold text-primary mb-3 mt-2">Lista de Pacientes</h5>
+    <h5 class="text-primary mb-3 mt-2">Lista de Pacientes</h5>
     <div class="col-12 mb-3">
     <img src="<?=RUTA_IMAGES ?>/iconos/paciente.png" class="img-fluid" style="max-height: 90px;">
     </div>
     <div class="col-12">
-    <h6 class="fw-bold text-secondary">No. total de pacientes:</h6>
-    <h2 class="fw-bold text-success"><?=$data['total_pacientes'];?></h2>
+    <h6 class="text-secondary">No. total de pacientes:</h6>
+    <h2 class="text-success"><?=$data['total_pacientes'];?></h2>
     </div>
     </div>
     </div>
@@ -59,7 +59,7 @@ use App\Controllers\ClinicaController;
     <a href="<?=SERVIDOR?>clinica/paciente/nuevo">
     <div class="card border-0 rounded-4 position-relative card-mvsd-disabled">
     <div class="card-body text-center">
-    <h5 class="fw-bold text-primary mb-3 mt-2">Agregar Nuevo Paciente</h5>
+    <h5 class="text-primary mb-3 mt-2">Agregar Nuevo Paciente</h5>
     <div class="col-12 mb-3">
     <img src="<?=RUTA_IMAGES ?>/iconos/agregar-icon.png" class="img-fluid" style="max-height: 90px;">
     </div>

@@ -227,7 +227,7 @@ $bd = Database::getInstance();
             <textarea class="form-control" id="motivoAtencionClinica"><?=$data['motivo_atencion'] ?? '' ?></textarea>
             </div>
 
-            <div class="fw-bold text-success mt-4">Dirección actual</div>
+            <div class="text-success mt-4">Dirección actual</div>
 
             <div class="row mt-3">
             <div class="col-12 col-sm-8">
@@ -271,7 +271,7 @@ $bd = Database::getInstance();
    
             </div>
 
-            <div class="fw-bold text-success mt-4">Contacto:</div>
+            <div class="text-success mt-4">Contacto:</div>
 
             <div class="row mt-3">
             <div class="col-12 col-sm-4">
