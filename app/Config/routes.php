@@ -17,6 +17,13 @@ return function(RouteCollector $r) {
         $r->addRoute('POST', '/paciente/editar-cirugia-antecedentes', ['ModulosController', 'pacienteEditCirugia']);
         $r->addRoute('POST', '/paciente/eliminar-cirugia-antecedentes', ['ModulosController', 'pacienteDeleteCirugia']);
 
+        //----- 8. AGREGAR PROCEDIMIENTO DOLOR
+        $r->addRoute('POST', '/paciente/agregar-procedimiento-dolor', ['ModulosController', 'pacienteInsertProcedimientos']);
+        $r->addRoute('POST', '/paciente/editar-procedimiento-dolor', ['ModulosController', 'pacienteEditProcedimiento']);
+        $r->addRoute('POST', '/paciente/eliminar-procedimiento-dolor', ['ModulosController', 'pacienteDeleteProcedimiento']);
+        
+        $r->addRoute('POST', '/paciente/editar-tratamientos-pacientes', ['ModulosController', 'pacienteEditTratamiento']);
+
         //----- COMENTARIOS MODULOS
         $r->addRoute('POST', '/paciente/agregar-comentario-modulo', ['ModulosController', 'pacienteComentarioModulo']);
         $r->addRoute('POST', '/paciente/eliminar-comentario-modulo', ['ModulosController', 'pacienteDeleteComentario']);
@@ -74,7 +81,7 @@ return function(RouteCollector $r) {
         //----- FUNCIONALIDADES MODULOS PACIENTE 
         $registrarRutasComunes($r);
         });
-
+  
         //-----------------------------------------//
         //Ruta para crear las diferentes busquedas
         //----------------------------------------//
