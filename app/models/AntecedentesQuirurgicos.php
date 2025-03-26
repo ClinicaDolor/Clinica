@@ -23,7 +23,6 @@ class AntecedentesQuirurgicos{
         
     $datos = [
     ':id_paciente' => $data['idPaciente']
-    
     ];
     
     if ($stmt->execute($datos)) {
