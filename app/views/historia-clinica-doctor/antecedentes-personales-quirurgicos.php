@@ -28,7 +28,7 @@ $bd = Database::getInstance();
     idRol : idRol
     };
 
-    fetch('/' + val + '/historia-clinica/paciente/agregar-cirugia-antecedentes', {
+    fetch('/' + val + '/paciente/agregar-cirugia-antecedentes', {
     method: 'POST',
     headers: {
     'Content-Type': 'application/json'
@@ -49,7 +49,7 @@ $bd = Database::getInstance();
     }
 
 
-    function editarCirugia(idCirugia, elemento, parametro) {
+    function editarCirugia(idCirugia, elemento, parametro, idRol) {
     let valor = elemento.value; 
     const val = (idRol == "Paciente") ? "historia-clinica" : "clinica";
 
@@ -81,7 +81,7 @@ $bd = Database::getInstance();
     }
 
 
-    function eliminarCirugiaPaciente(idQuirurgico){
+    function eliminarCirugiaPaciente(idQuirurgico, idRol){
     const val = (idRol == "Paciente") ? "historia-clinica" : "clinica";
 
     const parametros = {

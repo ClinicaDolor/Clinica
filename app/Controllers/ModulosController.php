@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Middleware\AuthMiddleware;
 use App\Models\AntecedenteFamiliarModel;
 use App\Models\AntecedentesQuirurgicos;
+use App\Models\ProcedimientosDolorModel;
 use App\Models\PacienteModulosModelo;
 use App\Models\PacienteModel;
 use App\Helpers\Sidebar;
@@ -75,7 +76,7 @@ class ModulosController extends BaseController {
     'sidebar' => $sidebarHtml
     ];
     
-    $this->view("/historia-clinica/$modulo.php", $data);
+    $this->view("/historia-clinica-doctor/$modulo.php", $data);
     }
 
     //---------- VISTA DEL PACIENTE ----------
@@ -101,7 +102,7 @@ class ModulosController extends BaseController {
     'sidebar' => $sidebarHtml
     ];
 
-    $this->view("/historia-clinica/$modulo.php", $data);
+    $this->view("/historia-clinica-paciente/$modulo.php", $data);
     }
 
  
@@ -181,7 +182,6 @@ class ModulosController extends BaseController {
     
     }
 
-
     //---------- 4. ANTECEDENTES PERSONALES QUIRURGICOS ----------
     public function pacienteInsertCirugia(){
     $data = json_decode(file_get_contents('php://input'), true);
@@ -232,8 +232,7 @@ class ModulosController extends BaseController {
     }
             
     }
-    
-
+ 
     public function pacienteDeleteCirugia(){
     $data = json_decode(file_get_contents('php://input'), true);
     $idRol = $data['idRol'];  // Obtener el idRol
@@ -259,6 +258,111 @@ class ModulosController extends BaseController {
         
     }
 
+
+    //---------- 8. PROCEFIMIENTOS PARA CONTROLAR EL DOLOR ----------
+    public function pacienteInsertProcedimientos(){
+
+    $data = json_decode(file_get_contents('php://input'), true);
+    $idRol = $data['idRol'];  // Obtener el idRol
+    $idRol == "Paciente" ? $view = "historia-clinica" : $view = "clinica";
+                    
+    $authMiddleware = new AuthMiddleware($view);
+    $authMiddleware->authPermisos();
+    header('Content-Type: application/json');
+        
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo HttpMethod::jsonResponse(405, false, "Método no permitido. Usa POST.");
+    return;
+    }
+          
+    $model = new ProcedimientosDolorModel();
+    $resultModel = $model->agregarProcedimientosPaciente($data);
+        
+     if ($resultModel['resultado'] == 200) {
+    echo HttpMethod::jsonResponse(200,true,$resultModel['mensaje']);
+    } else {
+    echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
+    }
+       
+    }
+
+    
+    public function pacienteEditProcedimiento(){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $idRol = $data['idRol'];  // Obtener el idRol
+    $idRol == "Paciente" ? $view = "historia-clinica" : $view = "clinica";
+                            
+    $authMiddleware = new AuthMiddleware($view);
+    $authMiddleware->authPermisos();
+    header('Content-Type: application/json');
+                
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo HttpMethod::jsonResponse(405, false, "Método no permitido. Usa POST.");
+    return;
+    }
+                
+    $model = new ProcedimientosDolorModel();
+    $resultModel = $model->editarProcedimientoPaciente($data);
+                
+    if ($resultModel['resultado'] == 200) {
+    echo HttpMethod::jsonResponse(200,true,$resultModel['mensaje']);
+    } else {
+    echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
+    }
+                
+    }
+
+    public function pacienteDeleteProcedimiento(){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $idRol = $data['idRol'];  // Obtener el idRol
+    $idRol == "Paciente" ? $view = "historia-clinica" : $view = "clinica";
+                        
+    $authMiddleware = new AuthMiddleware($view);
+    $authMiddleware->authPermisos();
+    header('Content-Type: application/json');
+            
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo HttpMethod::jsonResponse(405, false, "Método no permitido. Usa POST.");
+    return;
+    }
+
+    $model = new ProcedimientosDolorModel();
+    $resultModel = $model->eliminarProcedimientoPaciente($data);
+            
+    if ($resultModel['resultado'] == 200) {
+    echo HttpMethod::jsonResponse(200,true,$resultModel['mensaje']);
+    } else {
+    echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
+    }
+            
+    }
+
+    
+
+    public function pacienteEditTratamiento(){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $idRol = $data['idRol'];  // Obtener el idRol
+    $idRol == "Paciente" ? $view = "historia-clinica" : $view = "clinica";
+                                
+    $authMiddleware = new AuthMiddleware($view);
+    $authMiddleware->authPermisos();
+    header('Content-Type: application/json');
+                    
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo HttpMethod::jsonResponse(405, false, "Método no permitido. Usa POST.");
+    return;
+    }
+                    
+    $model = new ProcedimientosDolorModel();
+    $resultModel = $model->editarTratamientoPaciente($data);
+                    
+    if ($resultModel['resultado'] == 200) {
+    echo HttpMethod::jsonResponse(200,true,$resultModel['mensaje']);
+    } else {
+    echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
+    }
+                    
+    }
 
     //---------- COMENTARIOS MODULO ----------
     public function pacienteComentarioModulo(){

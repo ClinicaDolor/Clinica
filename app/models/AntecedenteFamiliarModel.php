@@ -91,5 +91,20 @@ $this->bd = Database::getInstance();
     
     }
 
+    //---------- AGREGA ENFERMEDADES AL INICIAR ----------//
+    public function antecedentesFamiliares($idPaciente, $enfermedad) {
+    $sql = "SELECT COUNT(*) FROM pc_antecedentes_familiares WHERE id_paciente = ? AND enfermedad = ?";
+    $stmt = $this->bd->prepare($sql);
+    $stmt->execute([$idPaciente, $enfermedad]);
+    $numero = $stmt->fetchColumn();
+    
+    if ($numero == 0) {
+    $sql_insert = "INSERT INTO pc_antecedentes_familiares (id_paciente, enfermedad, tipo, detalle, especificar) 
+    VALUES (?, ?, '', '', '')";
+    $stmt_insert = $this->bd->prepare($sql_insert);
+    $stmt_insert->execute([$idPaciente, $enfermedad]);
+    }
+    }
+
 
 }
