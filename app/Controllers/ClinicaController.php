@@ -531,4 +531,22 @@ class ClinicaController extends BaseController{
 
     }
 
+    public function perfil(){
+
+    $authMiddleware = new AuthMiddleware('clinica');
+    $sidebar = new Sidebar();
+    $sidebarController = new SidebarController();
+
+    $permisos = $authMiddleware->authPermisos();
+    $idClinica = $permisos['id_clinica'];
+
+    $sidebarController->configureSidebar('DOCTOR', 'perfil', $sidebar);
+    $sidebar->setActivarItem('Perfil');
+    $sidebarHtml = $sidebar->render();
+        
+    $data = ['title' => 'Perfil', 'sidebar' => $sidebarHtml, 'idClinica' => $idClinica];
+    $this->view('/clinica/perfil.php', $data);
+
+    }
+
 }
