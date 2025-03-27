@@ -1,26 +1,20 @@
 <?php 
 use App\Config\Database;
+use App\Models\AntecedenteFamiliarModel;
 $bd = Database::getInstance();
 
-    function antecedentesFamiliares($idPaciente, $enfermedad, $pdo) {
-    $sql = "SELECT COUNT(*) FROM pc_antecedentes_familiares WHERE id_paciente = ? AND enfermedad = ?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$idPaciente, $enfermedad]);
-    $numero = $stmt->fetchColumn();
+$enfermedades_fijas = [
+    "Enfermedades del corazón",
+    "Hipertensión arterial sistémica",
+    "Enfermedad cerebrovascular",
+    "Diabetes Mellitus",
+    "Cáncer"
+];
 
-    if ($numero == 0) {
-    $sql_insert = "INSERT INTO pc_antecedentes_familiares (id_paciente, enfermedad, tipo, detalle, especificar) 
-                        VALUES (?, ?, '', '', '')";
-    $stmt_insert = $pdo->prepare($sql_insert);
-    $stmt_insert->execute([$idPaciente, $enfermedad]);
-    }
-    }
-
-    antecedentesFamiliares($data['idPaciente'],"Enfermedades del corazón",$bd);
-    antecedentesFamiliares($data['idPaciente'],"Hipertensión arterial sistémica",$bd);
-    antecedentesFamiliares($data['idPaciente'],"Enfermedad cerebrovascular",$bd);
-    antecedentesFamiliares($data['idPaciente'],"Diabetes Mellitus",$bd);
-    antecedentesFamiliares($data['idPaciente'],"Cáncer",$bd);
+$model = new AntecedenteFamiliarModel();
+foreach ($enfermedades_fijas as $enf) {
+echo $model->antecedentesFamiliares($data['idPaciente'], $enf);
+}
 
 ?>
 
@@ -316,14 +310,6 @@ $bd = Database::getInstance();
     } catch (PDOException $e) {
     die("Error en la consulta: " . $e->getMessage());
     }
-
-    $enfermedades_fijas = [
-    "Enfermedades del corazón",
-    "Hipertensión arterial sistémica",
-    "Enfermedad cerebrovascular",
-    "Diabetes Mellitus",
-    "Cáncer"
-    ];
 
     foreach ($preguntas as $pregunta): 
     $idEnfermedad = $pregunta['id'];
