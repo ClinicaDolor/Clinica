@@ -32,6 +32,7 @@ return function(RouteCollector $r) {
         $r->addRoute('POST', '/paciente/finalizar-modulo-paciente', ['ModulosController', 'pacienteFinalizarModulo']);
         };
 
+        //-------------------- VISTAS DEL DOCTOR --------------------
         $r->addGroup('/clinica', function (RouteCollector $r) use ($registrarRutasComunes) {
         $r->addRoute('GET', '', ['HomeController', 'indexClinica']);
         $r->addRoute('GET', '/acceso', ['LoginController', 'accesoClinica']);
@@ -62,7 +63,7 @@ return function(RouteCollector $r) {
         $r->addRoute('GET', '/laboratorio/paciente/{idPaciente}', ['ClinicaController', 'pacienteLaboratorio']);
         $r->addRoute('POST', '/laboratorio/insert-laboratorio', ['ClinicaController', 'pacienteInsertLaboratorio']);
              
-        //---------- VISTAS DE LOS 9 MODULOS ----------//
+        //----- VISTAS DE LOS 9 MODULOS
         $r->addRoute('GET', '/modulos/paciente/{idPaciente}', ['ClinicaController', 'pacientesModulos']);
         $r->addRoute('GET', '/{modulo}/paciente/{idPaciente}', ['ModulosController', 'moduloVistaDoctor']);
 
@@ -71,13 +72,15 @@ return function(RouteCollector $r) {
 
         });
 
+
+        //-------------------- VISTAS DEL PACIENTE --------------------
         $r->addGroup('/historia-clinica', function (RouteCollector $r) use ($registrarRutasComunes) {
         $r->addRoute('GET', '', ['HomeController', 'indexPaciente']);
         $r->addRoute('GET', '/acceso', ['LoginController', 'accesoPaciente']);
         $r->addRoute('POST', '/login', ['LoginController', 'loginPaciente']);
 
-        //----- VISTAS DE LOS 9 MODULOS 
-        $r->addRoute('GET', '/{modulo}/paciente/{idPaciente}', handler: ['ModulosController', 'moduloVistaPaciente']);
+        //----- VISTAS DE LOS 9 MODULOS
+        $r->addRoute('GET', '/{modulo}/paciente/{idPaciente}', ['ModulosController', 'moduloVistaPaciente']);
         //----- FUNCIONALIDADES MODULOS PACIENTE 
         $registrarRutasComunes($r);
         });

@@ -76,7 +76,7 @@ class ModulosController extends BaseController {
     'sidebar' => $sidebarHtml
     ];
     
-    $this->view("/historia-clinica/$modulo.php", $data);
+    $this->view("/historia-clinica-doctor/$modulo.php", $data);
     }
 
     //---------- VISTA DEL PACIENTE ----------
@@ -102,7 +102,7 @@ class ModulosController extends BaseController {
     'sidebar' => $sidebarHtml
     ];
 
-    $this->view("/historia-clinica/$modulo.php", $data);
+    $this->view("/historia-clinica-paciente/$modulo.php", $data);
     }
 
  
