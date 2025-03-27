@@ -23,7 +23,8 @@ class AuthMiddleware{
         $this->validaExpCookie($decoded->exp);
 
             if($decoded->vista == $this->vista){
-                $array = array(     
+
+                $array = array(   
                     'id_clinica' => $decoded->id_clinica,               
                     'id_usuario' => $decoded->id_usuario, 
                     'nombre' => $decoded->nombre,
@@ -31,6 +32,7 @@ class AuthMiddleware{
                     'rol' => $decoded->rol, 
                     'token' => $_COOKIE['CLINICAJWT']
                 );
+                
                 return $array;
 
             }else{
@@ -54,12 +56,13 @@ class AuthMiddleware{
     }
 
     public function validaCookie(){
+
         if (isset($_COOKIE['CLINICAJWT'])) {
             return true;
         }else{
             return false;
         }
-       
+
     }
 
     public function validaExpCookie($exp){
@@ -74,9 +77,11 @@ class AuthMiddleware{
     }
 
     public function cerrarSesion(){
+
         setcookie('CLINICAJWT', '', time() - 1, '/');
         $this->getLocationAcceso();
         die(); 
+        
     }
 
 }
