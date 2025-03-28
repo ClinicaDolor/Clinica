@@ -11,12 +11,7 @@ class HomeController extends BaseController{
     public function __construct(){
 
     }
-
-    public function index(){
-        $data = ['title' => 'Tratamientos del dolor y cuidados paleativos'];
-        $this->view('/home/index.php', $data);
-    }
-    
+   
     public function indexClinica(){
 
         $authMiddleware = new AuthMiddleware('clinica');
