@@ -5,6 +5,8 @@ use App\Models\BusquedasModel;
 use App\Models\RecetaModel;
 use App\Models\NotaSubsecuenteModel;
 use App\Models\LaboratorioModel;
+use App\Models\AntecedenteFamiliarModel;
+use App\Models\PacienteModulosModelo;
 
 class BusquedasController{
 
@@ -54,9 +56,21 @@ class BusquedasController{
     }
 
     public function tableNotasSubsecuentes($idPaciente,$referencia){
-
         $model = new NotaSubsecuenteModel();
         echo $model->mostrarTablaNotas($idPaciente,$referencia);
-
     }
+
+    //---------- CONTENIDO DE LOS MODULOS ----------
+    public function contenidoPreguntasAF($idPaciente,$idRol){
+        $model = new AntecedenteFamiliarModel();
+        echo $model->mostrarPreguntasAF($idPaciente,$idRol);
+    }
+
+
+    public function contenidoComentariosModulo($idPaciente,$idRol,$idModulo){
+        $model = new PacienteModulosModelo();
+        echo $model->mostrarComentariosModulo($idPaciente,$idRol,$idModulo);
+    }
+
+
 }

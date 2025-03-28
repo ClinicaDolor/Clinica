@@ -128,22 +128,3 @@
     document.querySelectorAll('.sectionQuestion').forEach(section => {
       observer.observe(section);
     });
-
-
-  // Función para navegar a la siguiente pregunta
-  function siguientePregunta() {
-    if (indiceActual < preguntas.length - 1) {
-        preguntas[indiceActual].classList.remove("active");
-        indiceActual++;
-        preguntas[indiceActual].classList.add("active");
-    }
-  }
-
-  // Función para volver a la pregunta anterior
-  function anteriorPregunta() {
-    if (indiceActual > 0) {
-        preguntas[indiceActual].classList.remove("active");
-        indiceActual--;
-        preguntas[indiceActual].classList.add("active");
-    }
-  }

@@ -97,6 +97,13 @@ return function(RouteCollector $r) {
         $r->addRoute('GET', '/buscar/tabla-notas-subsecuentes/{idPaciente}/{referencia}', ['BusquedasController', 'tableNotasSubsecuentes']);
     
         //-----------------------------------------//
+        //Ruta para crear las diferentes busquedas de los Modulos
+        //----------------------------------------//
+        $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-2/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasAF']);
+
+        $r->addRoute('GET', '/buscar/contenido-comentarios-modulos/{idPaciente}/{idRol}/{idModulo}', ['BusquedasController', 'contenidoComentariosModulo']);
+
+        //-----------------------------------------//
         //Cerrar sesion
         //----------------------------------------//
 
