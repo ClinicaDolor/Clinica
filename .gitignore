@@ -1,5 +1,5 @@
 /src
 /vendor
-/storage
+**/storage/
 .env
 composer.lock
