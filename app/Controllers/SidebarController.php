@@ -17,7 +17,7 @@ class SidebarController {
 
     //----- Elementos que siempre estaran presentes -----
     $comunElements = [
-    'perfil' => ['titulo' => 'Perfil', 'url' => '', 'icono' => 'user'],
+    'perfil' => ['titulo' => 'Perfil', 'url' => SERVIDOR . 'clinica/perfil', 'icono' => 'user'],
     'logout' => ['titulo' => 'Cerrar Sesión', 'url' => SERVIDOR . 'cerrar-sesion', 'icono' => 'log-out']
     ];
 
@@ -27,8 +27,7 @@ class SidebarController {
 
     'DOCTOR' => [
     'clinica' => [
-    ['titulo' => 'Pacientes', 'url' => SERVIDOR . 'clinica/pacientes', 'icono' => 'users'],
-    ['titulo' => 'Clinica', 'url' => SERVIDOR .  'clinica/info', 'icono' => 'zap']
+    ['titulo' => 'Pacientes', 'url' => SERVIDOR . 'clinica/pacientes', 'icono' => 'users']
     ],
                 
     'clinica-modulos-paciente' => [
@@ -81,6 +80,10 @@ class SidebarController {
     //---------- MODULOS DE HISTORIA CLINICA ----------
    'antecedentes-familiares' => [
     ['titulo' => 'Antecedentes familiares', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ],
+
+    'perfil' => [
+    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/pacientes', 'icono' => 'users']
     ],
 
     'antecedentes-personales-quirurgicos' => [

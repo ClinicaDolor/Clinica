@@ -3,7 +3,40 @@ use FastRoute\RouteCollector;
 
 return function(RouteCollector $r) {
 
-        $r->addRoute('GET', '/', ['HomeController', 'index']);
+        
+        //-----------------------------------------------------------------------------------
+        //--- Inicio Configuración de Rutas para la pagina web ------------------------------
+
+        $r->addRoute('GET', '/', ['WebController', 'index']);
+        $r->addRoute('GET', '/quienes-somos', ['WebController', 'quienesSomos']);
+        $r->addRoute('GET', '/cursos', ['WebController', 'cursos']);
+
+        $r->addRoute('GET', '/que-es-dolor', ['WebController', 'queEsDolor']);
+        $r->addRoute('GET', '/tipos-dolor', ['WebController', 'tiposDolor']);
+        $r->addRoute('GET', '/dolor-agudo', ['WebController', 'dolorAgudo']);
+        $r->addRoute('GET', '/dolor-cronico', ['WebController', 'dolorCronico']);
+        $r->addRoute('GET', '/dolor-perioperatorio', ['WebController', 'dolorPerioperatorio']);
+        $r->addRoute('GET', '/dolor-cancer', ['WebController', 'dolorCancer']);
+        $r->addRoute('GET', '/dolor-cancer-frecuencia', ['WebController', 'dolorCancerFrecuencia']);
+        $r->addRoute('GET', '/dolor-cancer-causas', ['WebController', 'dolorCancerCausas']);
+        $r->addRoute('GET', '/dolor-cancer-preguntas-medico-decidir-tratamiento', ['WebController', 'dolorCancerPreguntasMedicoDecidirTratamiento']);
+        $r->addRoute('GET', '/seguimiento-tratamiento-dolor', ['WebController', 'seguimientoTratamientoDolor']);
+        $r->addRoute('GET', '/dolor-cancer-cinco-prioridades', ['WebController', 'dolorCancerCincoPrioridades']);
+        $r->addRoute('GET', '/dolor-cancer-endoscopia-paliativa', ['WebController', 'dolorCancerEndoscopiaPaliativa']);
+        $r->addRoute('GET', '/neuralgia-postherpetica', ['WebController', 'neuralgiaPostherpetica']);
+
+        $r->addRoute('GET', '/evaluacion-dolor', ['WebController', 'evaluacionDolor']);
+        $r->addRoute('GET', '/cuidadores', ['WebController', 'cuidadores']);
+        $r->addRoute('GET', '/inyeccion-epidural', ['WebController', 'inyeccionEpidural']);
+        $r->addRoute('GET', '/neuroestimulacion', ['WebController', 'neuroestimulacion']);
+        $r->addRoute('GET', '/como-se-inicia-un-tratamiento-con-opioides', ['WebController', 'comoIniciaTratamientoOpioides']);
+
+        //-----------------------------------------------------------------------------------
+        //--- Fin Configuración de Rutas para la pagina web ---------------------------------
+
+        
+
+
 
         //---------- FUNCION PARA AGREGAR LAS RUTAS EN LOS DOS GRUPOS ----------
         $registrarRutasComunes = function (RouteCollector $r) {
@@ -34,13 +67,15 @@ return function(RouteCollector $r) {
 
         //-------------------- VISTAS DEL DOCTOR --------------------
         $r->addGroup('/clinica', function (RouteCollector $r) use ($registrarRutasComunes) {
+
         $r->addRoute('GET', '', ['HomeController', 'indexClinica']);
         $r->addRoute('GET', '/acceso', ['LoginController', 'accesoClinica']);
         $r->addRoute('POST', '/login', ['LoginController', 'loginClinica']);
                 
         $r->addGroup('/pacientes', function (RouteCollector $r) {
         $r->addRoute('GET', '', ['ClinicaController', 'pacientesIndex']);
-        });
+        }
+        );
 
         $r->addRoute('GET', '/paciente/nuevo', ['ClinicaController', 'pacienteNuevo']);
         $r->addRoute('GET', '/paciente/editar/{idPaciente}', ['ClinicaController', 'pacienteEditar']);
@@ -66,8 +101,11 @@ return function(RouteCollector $r) {
         //----- VISTAS DE LOS 9 MODULOS
         $r->addRoute('GET', '/modulos/paciente/{idPaciente}', ['ClinicaController', 'pacientesModulos']);
         $r->addRoute('GET', '/{modulo}/paciente/{idPaciente}', ['ModulosController', 'moduloVistaDoctor']);
-
         //----- FUNCIONALIDADES MODULOS PACIENTE 
+
+        //--------- OTROS
+        $r->addRoute('GET', '/perfil', ['ClinicaController', 'perfil']);
+        //---------------
         $registrarRutasComunes($r);
 
         });
