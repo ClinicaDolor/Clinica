@@ -5,7 +5,10 @@ use App\Models\BusquedasModel;
 use App\Models\RecetaModel;
 use App\Models\NotaSubsecuenteModel;
 use App\Models\LaboratorioModel;
+//--------- MODULOS ----------
 use App\Models\AntecedenteFamiliarModel;
+use App\Models\AntecedentesNoPatologicosModel;
+
 use App\Models\PacienteModulosModelo;
 
 class BusquedasController{
@@ -66,7 +69,13 @@ class BusquedasController{
         echo $model->mostrarPreguntasAF($idPaciente,$idRol);
     }
 
+    public function contenidoPreguntasAPNP1($idPaciente,$idRol){
+        $model = new AntecedentesNoPatologicosModel();
+        echo $model->mostrarPreguntasV1($idPaciente,$idRol);
+    }
 
+
+    //---------- CONTENIDO COMENTARIOS ----------
     public function contenidoComentariosModulo($idPaciente,$idRol,$idModulo){
         $model = new PacienteModulosModelo();
         echo $model->mostrarComentariosModulo($idPaciente,$idRol,$idModulo);
