@@ -37,7 +37,8 @@ class PdfController{
         $pageHeight = $pdf->getPageHeight();
 
         // Colocar la imagen de fondo en las coordenadas (0, 0) y ajustarla al tamaño de la página
-        //$pdf->Image($imagePath, 0, 0, $pageWidth, $pageHeight, '', '', '', false, 10);
+        //----------------------------------------------------------------------------------------
+        $pdf->Image($imagePath, 0, 0, $pageWidth, $pageHeight, '', '', '', false, 10);
 
         $pdf->SetFont('courier', '', 12);
         $pdf->SetY(24.5);

@@ -12,7 +12,7 @@ define("RUTA_IMAGES", RUTA_PUBLIC . "images/");
 define("RUTA_IMG_ICONOS", value: RUTA_IMAGES . "iconos/");
 define("RUTA_IMG_FONDO", RUTA_IMAGES . "fondo/");
 
-define("RUTA_STORAGE", RUTA_PUBLIC . "storage/public/");
+define("RUTA_STORAGE", RUTA_PUBLIC . "storage/");
 //--------------------------------------------------------------------------//
 
 define("LINK_HOME", SERVIDOR);
