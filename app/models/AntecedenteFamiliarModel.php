@@ -23,7 +23,7 @@ $this->bd = Database::getInstance();
     return $enfermedades_fijas;
     }
 
-    public function mostrarPreguntasAF($idPaciente, $idRol){
+    public function mostrarPreguntasM2($idPaciente, $idRol){
     $result = '';
 
     $enfermedades_fijas = [

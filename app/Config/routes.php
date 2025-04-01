@@ -137,8 +137,8 @@ return function(RouteCollector $r) {
         //-----------------------------------------//
         //Ruta para crear las diferentes busquedas de los Modulos
         //----------------------------------------//
-        $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-2/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasAF']);
-        $r->addRoute('GET', '/buscar/contenido-preguntasV1-modulo-3/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasAPNP1']);
+        $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-2/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasM2']);
+        $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-3/{idPaciente}/{idRol}/{idCuestionario}', ['BusquedasController', 'contenidoPreguntasM3']);
 
         $r->addRoute('GET', '/buscar/contenido-comentarios-modulos/{idPaciente}/{idRol}/{idModulo}', ['BusquedasController', 'contenidoComentariosModulo']);
 

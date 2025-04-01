@@ -4,7 +4,7 @@ use App\Models\PacienteModulosModelo;
 $bd = Database::getInstance();
 
 $model2 = new PacienteModulosModelo();
-echo $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idRol']);
+$botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idRol']);
 
 ?>
 
@@ -35,31 +35,49 @@ echo $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data
     document.addEventListener("DOMContentLoaded", function() {
     const seccionActual = localStorage.getItem("seccionPreguntas");
 
-    if (!seccionActual || seccionActual === "preguntasV1") {
-    contenidoPreguntasV1();
+    if (!seccionActual || seccionActual === "tabaquismo") {
+    contenidoPreguntas(1);
+    }else if(seccionActual === "alcoholismo"){
+    contenidoPreguntas(2);
+    }else if(seccionActual === "ejercicio"){
+    contenidoPreguntas(3);
+    }else if(seccionActual === "estres"){
+    contenidoPreguntas(4);
+    }else if(seccionActual === "drogas"){
+    contenidoPreguntas(5);
+    }else if(seccionActual === "dormir"){
+    contenidoPreguntas(6);
+    }else if(seccionActual === "grupoRH"){
+    contenidoPreguntas(7);
     }
     
     });
  
 
-    // ---------- CONTENIDO DE LAS PREGUNTAS ----------
-    function contenidoPreguntasV1(idValor = 0) {
-    const usuarioDiv = document.getElementById('main');
-    const idPaciente = usuarioDiv.getAttribute('data-paciente');
-    const idRol = usuarioDiv.getAttribute('data-rol');
+// ---------- CONTENIDO DE LAS PREGUNTAS ----------
 
-    fetch(`/buscar/contenido-preguntasV1-modulo-3/${idPaciente}/${idRol}`)
+// Función para cargar el contenido con fetch y reiniciar el IntersectionObserver
+function contenidoPreguntas(idCuestionario) {
+  const usuarioDiv = document.getElementById('main');
+  const idPaciente = usuarioDiv.getAttribute('data-paciente');
+  const idRol = usuarioDiv.getAttribute('data-rol');
+  
+  fetch(`/buscar/contenido-preguntas-modulo-3/${idPaciente}/${idRol}/${idCuestionario}`)
     .then(response => response.text())
     .then(data => {
-    document.getElementById('contePreguntasV1').innerHTML = data;
-    feather.replace();
-        
+      // Insertar el contenido en el DOM
+      document.getElementById('contePreguntas_' + idCuestionario).innerHTML = data;
+
+      // Reactivar el IntersectionObserver para las nuevas secciones
+      document.querySelectorAll('.sectionQuestion').forEach(section => {
+        observer.observe(section);
+      });
     });
-    }
+}
+
 
 
     </script>
-
     </head>
 
     <body>
@@ -114,7 +132,7 @@ echo $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data
     </div>
 
     <div class="card-body">
-    <div id="contePreguntasV1"></div>
+    <div id="contePreguntas_1"></div>
     </div>
 
     </div>

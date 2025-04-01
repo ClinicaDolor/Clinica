@@ -64,16 +64,15 @@ class BusquedasController{
     }
 
     //---------- CONTENIDO DE LOS MODULOS ----------
-    public function contenidoPreguntasAF($idPaciente,$idRol){
+    public function contenidoPreguntasM2($idPaciente,$idRol){
         $model = new AntecedenteFamiliarModel();
-        echo $model->mostrarPreguntasAF($idPaciente,$idRol);
+        echo $model->mostrarPreguntasM2($idPaciente,$idRol);
     }
 
-    public function contenidoPreguntasAPNP1($idPaciente,$idRol){
+    public function contenidoPreguntasM3($idPaciente,$idRol,$idCuestionario){
         $model = new AntecedentesNoPatologicosModel();
-        echo $model->mostrarPreguntasV1($idPaciente,$idRol);
+        echo $model->mostrarPreguntasM3($idPaciente,$idRol,$idCuestionario);
     }
-
 
     //---------- CONTENIDO COMENTARIOS ----------
     public function contenidoComentariosModulo($idPaciente,$idRol,$idModulo){
