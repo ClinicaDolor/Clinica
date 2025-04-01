@@ -206,14 +206,10 @@ $this->bd = Database::getInstance();
 
     }
 
-
-
     return $result;
     }
 
 
-
- 
     public function agregarEnfermedadPaciente($data){
 
     $sql = "INSERT INTO pc_antecedentes_familiares (

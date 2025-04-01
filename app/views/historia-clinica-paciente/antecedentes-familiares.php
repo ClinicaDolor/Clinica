@@ -73,7 +73,7 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
     const usuarioDiv = document.getElementById('main');
     const idPaciente = usuarioDiv.getAttribute('data-paciente');
     const idRol = usuarioDiv.getAttribute('data-rol');
-    const idModulo = 2;
+    const idModulo = 3;
 
     fetch(`/buscar/contenido-comentarios-modulos/${idPaciente}/${idRol}/${idModulo}`)
     .then(response => response.text())

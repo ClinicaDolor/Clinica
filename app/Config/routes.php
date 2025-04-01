@@ -44,7 +44,11 @@ return function(RouteCollector $r) {
         $r->addRoute('POST', '/paciente/agregar-enfermedad-antecedentes', ['ModulosController', 'pacienteInsertEnfermedad']);
         $r->addRoute('POST', '/paciente/editar-enfermedad-antecedentes', ['ModulosController', 'pacienteEditEnfermedad']);
         $r->addRoute('POST', '/paciente/eliminar-enfermedad-antecedentes', ['ModulosController', 'pacienteDeleteEnfermedad']);
+        
+        //----- 3. ANTECEDENTES NO PATOLOGICOS
+        $r->addRoute('POST', '/paciente/editar-cuestionario-modulo3', ['ModulosController', 'pacienteEditarCuestionarioM3']);
 
+        
         //----- 4. ANTECEDENTES PERSONALES QUIRÚRGICOS
         $r->addRoute('POST', '/paciente/agregar-cirugia-antecedentes', ['ModulosController', 'pacienteInsertCirugia']);
         $r->addRoute('POST', '/paciente/editar-cirugia-antecedentes', ['ModulosController', 'pacienteEditCirugia']);

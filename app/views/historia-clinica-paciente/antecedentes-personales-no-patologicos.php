@@ -1,7 +1,14 @@
 <?php 
 use App\Config\Database;
 use App\Models\PacienteModulosModelo;
+use App\Models\AntecedentesNoPatologicosModel;
 $bd = Database::getInstance();
+
+$model = new AntecedentesNoPatologicosModel();
+$preguntas_fijas = $model->obtenerPreguntasModulos(); 
+foreach ($preguntas_fijas as $preg) {
+echo $model->antecedentesNoPatologicos($data['idPaciente'], $preg);
+}
 
 $model2 = new PacienteModulosModelo();
 $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idRol']);
@@ -25,56 +32,259 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
 
     <style>
     /* Contenedor de preguntas visible inicialmente */
-    #preguntas-container-1 { display: block; }
-    .pregunta-container-1 { display: none; }
-    .pregunta-container-1.active { display: block; }
+    #preguntas-container { display: block; }
+    .pregunta-container { display: none; }
+    .pregunta-container.active { display: block; }
+    /* Sección de comentarios oculta inicialmente */
+    #comentarios-container { display: none; }
     </style>
 
     <script>
+    // Definir el arreglo de temas globalmente
+    const temas = [
+    { id: 1, nombre: "Tabaquismo" },
+    { id: 2, nombre: "Alcoholismo" },
+    { id: 3, nombre: "Ejercicio" },
+    { id: 4, nombre: "Estres" },
+    { id: 5, nombre: "Drogas" },
+    { id: 6, nombre: "Dormir" },
+    { id: 7, nombre: "Grupo Sanguineo" }
+    ];
 
+
+
+    // Al cargar la página se carga el módulo correspondiente (por defecto "Tabaquismo")
     document.addEventListener("DOMContentLoaded", function() {
-    const seccionActual = localStorage.getItem("seccionPreguntas");
+    const seccionActual = localStorage.getItem("seccionActual") || "Tabaquismo";
+    localStorage.setItem("seccionActual", seccionActual);
+    let temaActual = temas.find(t => t.nombre === seccionActual);
 
-    if (!seccionActual || seccionActual === "tabaquismo") {
-    contenidoPreguntas(1);
-    }else if(seccionActual === "alcoholismo"){
-    contenidoPreguntas(2);
-    }else if(seccionActual === "ejercicio"){
-    contenidoPreguntas(3);
-    }else if(seccionActual === "estres"){
-    contenidoPreguntas(4);
-    }else if(seccionActual === "drogas"){
-    contenidoPreguntas(5);
-    }else if(seccionActual === "dormir"){
-    contenidoPreguntas(6);
-    }else if(seccionActual === "grupoRH"){
-    contenidoPreguntas(7);
+    if (!seccionActual || seccionActual === "comentarios") {
+    finalizarPreguntas();
+    } else {
+    contenidoPreguntas(temaActual.id);
     }
-    
+
+    localStorage.setItem("preguntaActual_1", 0);
+    localStorage.setItem("preguntaActual_2", 0);
+    localStorage.setItem("preguntaActual_3", 0);
+    localStorage.setItem("preguntaActual_4", 0);
+    localStorage.setItem("preguntaActual_5", 0);
+    localStorage.setItem("preguntaActual_6", 0);
+    localStorage.setItem("preguntaActual_7", 0);
+
     });
- 
 
-// ---------- CONTENIDO DE LAS PREGUNTAS ----------
+    // ---------- CONTENIDO DE LAS PREGUNTAS ----------
+    function contenidoPreguntas(idCuestionario, idValor = 0) {
+    // Limpia las preguntas anteriores, si existen
+    document.querySelectorAll('.pregunta-container').forEach(p => p.remove());
 
-// Función para cargar el contenido con fetch y reiniciar el IntersectionObserver
-function contenidoPreguntas(idCuestionario) {
-  const usuarioDiv = document.getElementById('main');
-  const idPaciente = usuarioDiv.getAttribute('data-paciente');
-  const idRol = usuarioDiv.getAttribute('data-rol');
-  
-  fetch(`/buscar/contenido-preguntas-modulo-3/${idPaciente}/${idRol}/${idCuestionario}`)
+    const usuarioDiv = document.getElementById('main');
+    const idPaciente = usuarioDiv.getAttribute('data-paciente');
+    const idRol = usuarioDiv.getAttribute('data-rol');
+
+    fetch(`/buscar/contenido-preguntas-modulo-3/${idPaciente}/${idRol}/${idCuestionario}`)
     .then(response => response.text())
     .then(data => {
-      // Insertar el contenido en el DOM
-      document.getElementById('contePreguntas_' + idCuestionario).innerHTML = data;
+    // Insertar el contenido en el contenedor específico del módulo
+    document.getElementById('contePreguntas_' + idCuestionario).innerHTML = data;
+    feather.replace();
 
-      // Reactivar el IntersectionObserver para las nuevas secciones
-      document.querySelectorAll('.sectionQuestion').forEach(section => {
-        observer.observe(section);
-      });
+    // Reactivar el IntersectionObserver para las nuevas secciones (si lo utilizas)
+    document.querySelectorAll('.sectionQuestion').forEach(section => {
+    observer.observe(section);
     });
-}
 
+    // Cargar el progreso para el módulo actual
+    cargarProgreso(idCuestionario, idValor);
+    });
+    }
+
+    // ---------- CONTENIDO DEL COMENTARIO ----------
+    function contenidoComentario() {
+    const usuarioDiv = document.getElementById('main');
+    const idPaciente = usuarioDiv.getAttribute('data-paciente');
+    const idRol = usuarioDiv.getAttribute('data-rol');
+    const idModulo = 3;
+
+    fetch(`/buscar/contenido-comentarios-modulos/${idPaciente}/${idRol}/${idModulo}`)
+    .then(response => response.text())
+    .then(data => {
+
+    document.getElementById('conteComentario').innerHTML = data;
+    feather.replace();   
+
+    });
+    }  
+
+    // ---------- GUARDAR Y CARGAR PROGRESO ----------
+    function guardarProgreso(index, idCuestionario) {
+    localStorage.setItem("preguntaActual_" + idCuestionario, index);
+    }
+
+    function cargarProgreso(idCuestionario, idValor = 0) {
+    let indexGuardado = localStorage.getItem("preguntaActual_" + idCuestionario);
+    indexGuardado = indexGuardado ? parseInt(indexGuardado) : idValor;
+    const preguntas = document.querySelectorAll('.pregunta-container');
+
+    // Remover la clase 'active' de todas las preguntas
+    preguntas.forEach(pregunta => pregunta.classList.remove('active'));
+
+    // Asegurar que el índice guardado no exceda el número de preguntas
+    if (preguntas.length > 0) {
+    if (indexGuardado >= preguntas.length) {
+    indexGuardado = preguntas.length - 1;
+    }
+    preguntas[indexGuardado].classList.add('active');
+    }
+    return indexGuardado;
+    }
+
+    // ---------- NAVEGACIÓN ENTRE PREGUNTAS ----------
+    function siguientePregunta(idTema) {
+    const preguntas = document.querySelectorAll('.pregunta-container');
+    let activeIndex = -1;
+
+    // Mostrar y ocultar el loader (suponiendo que usas jQuery para ello)
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+
+    preguntas.forEach((pregunta, index) => {
+    if (pregunta.classList.contains('active')) {
+    activeIndex = index;
+    pregunta.classList.remove('active');
+    }
+    });
+
+    if (activeIndex === -1 && preguntas.length > 0) {
+    activeIndex = cargarProgreso(idTema);
+    }
+
+    // Si se está en la última pregunta del módulo...
+    if (activeIndex >= preguntas.length - 1) {
+    // Buscar el módulo actual en el arreglo de temas
+    let seccionActual = localStorage.getItem("seccionActual") || temas[0].nombre;
+    let currentIndex = temas.findIndex(t => t.nombre === seccionActual);
+
+    // Si existe un siguiente módulo, preparar el botón para dirigir a esa sección
+    if (currentIndex < temas.length - 1) {
+    let nuevoTema = temas[currentIndex + 1];
+    // Se coloca el botón en el contenedor de botones de la última pregunta
+    let lastPregunta = preguntas[preguntas.length - 1];
+    let botonesContainer = lastPregunta.querySelector('.mt-3.d-flex.justify-content-between');
+    botonesContainer.innerHTML = `<button class="btn btn-success" onclick="irASiguienteSeccion('${nuevoTema.nombre}', ${nuevoTema.id})">${nuevoTema.nombre} <i data-feather="message-circle"></i></button>`;
+    return;
+    } 
+
+    } else {
+    // Avanzar a la siguiente pregunta dentro del mismo módulo
+    const nuevoIndice = activeIndex + 1;
+    preguntas[nuevoIndice].classList.add('active');
+    guardarProgreso(nuevoIndice, idTema);
+    }
+    }
+
+    //---------- MUESTRA LA PREGUNTA ANTERIOR ----------
+    function anteriorPregunta(idTema) {
+    const preguntas = document.querySelectorAll('.pregunta-container');
+    let activeIndex = -1;
+
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+
+    preguntas.forEach((pregunta, index) => {
+    if (pregunta.classList.contains('active')) {
+    activeIndex = index;
+    pregunta.classList.remove('active');
+    }
+    });
+
+    if (activeIndex === -1 && preguntas.length > 0) {
+    activeIndex = cargarProgreso(idTema);
+    }
+
+    // Si se está en la primera pregunta del módulo...
+    if (activeIndex <= 0) {
+    let seccionActual = localStorage.getItem("seccionActual") || temas[0].nombre;
+    let currentIndex = temas.findIndex(t => t.nombre === seccionActual);
+    if (currentIndex > 0) {
+    let nuevoTema = temas[currentIndex - 1];
+    localStorage.setItem("seccionActual", nuevoTema.nombre);
+    // Se asume que al cargar el módulo anterior se muestra la última pregunta
+    contenidoPreguntas(nuevoTema.id, true);
+    return;
+    }
+    } else {
+    // Retroceder a la pregunta anterior dentro del mismo módulo
+    const nuevoIndice = activeIndex - 1;
+    preguntas[nuevoIndice].classList.add('active');
+    guardarProgreso(nuevoIndice, idTema);
+    }
+    }
+
+    //---------- IR A LA SIGUIENTE SECCION ----------
+    function irASiguienteSeccion(nombreTema, idTema) {
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+    localStorage.setItem("seccionActual", nombreTema);
+    //localStorage.removeItem("preguntaActual_" + idTema);
+    contenidoPreguntas(idTema);
+    }
+
+    //---------- MUESTRA LA SECCION DE PREGUNTAS Y COMENTARIOS ----------
+    function seccionPreguntas() {
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+    document.getElementById("preguntas-container").style.display = "block";
+    document.getElementById("comentarios-container").style.display = "none";
+    localStorage.setItem("seccionActual", "Grupo Sanguineo");
+    contenidoPreguntas(7);
+    }
+
+    function finalizarPreguntas() {
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+    document.getElementById("preguntas-container").style.display = "none";
+    document.getElementById("comentarios-container").style.display = "block";
+    localStorage.setItem("seccionActual", "comentarios");
+    contenidoComentario();
+    }
+
+
+    //---------- CONTROL SERVER ----------
+    function gestionarAntecedentesNoPatologicos(url, parametros, callback) {
+    $(".LoaderPage").show();
+    fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(parametros)
+    }).then(res => res.json()).then(data => {
+    $(".LoaderPage").fadeOut(1000);
+    if (data.resultado) callback();
+    else document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
+    });
+    }
+
+
+    //---------- EDITAR ENFERMEDADES DEL PACIENTE ----------
+    function respuestaPreguntaSelect (idRespuesta, elemento, idTema, idRol) {
+    gestionarAntecedentesNoPatologicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/editar-cuestionario-modulo3`, {
+        idRespuesta, detalle: elemento.value, idRol
+    }, () => contenidoPreguntas(idTema));
+    }
+
+    //---------- AGREGAR COMENTARIO DEL MODULO ----------
+    function agregarComentario(idModulo, idPaciente, idRol) {
+    let comentario = document.getElementById('comentarioModulos').value;
+    //if (!comentario) return document.getElementById('comentarioModulos').style.border = '2px solid #A52525';
+    gestionarAntecedentesNoPatologicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/agregar-comentario-modulo`, { idModulo, idPaciente, comentarioModulos: comentario, idRol }, () => FinalizarModuloPaciente(idModulo, idPaciente));
+    }
+
+    //---------- FINALIZAR MODULO DEL PACIENTE----------
+    function FinalizarModuloPaciente(idModulo, idPaciente) {
+    gestionarAntecedentesNoPatologicos('/historia-clinica/paciente/finalizar-modulo-paciente', { idModulo, idPaciente }, () => window.location.href = '/historia-clinica');
+    }
 
 
     </script>
@@ -111,13 +321,13 @@ function contenidoPreguntas(idCuestionario) {
     <section class="section">
 
     <div class="card">
-    <div id="preguntas-container-1">
 
+    <div id="preguntas-container">
     <div class="card-header pb-0">
     <div class="row">
 
-    <div id="seccion1" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-3">
-    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion1">
+    <div id="seccion0" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-2">
+    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion0">
 
     <h8 class="text-primary fw-bold texto">
     <b>A continuacion, responda las siguientes preguntas indicando si presenta alguna de estas conductas o hábitos:</b>
@@ -133,11 +343,51 @@ function contenidoPreguntas(idCuestionario) {
 
     <div class="card-body">
     <div id="contePreguntas_1"></div>
+    <div id="contePreguntas_2"></div>
+    <div id="contePreguntas_3"></div>
+    <div id="contePreguntas_4"></div>
+    <div id="contePreguntas_5"></div>
+    <div id="contePreguntas_6"></div>
+    <div id="contePreguntas_7"></div>
+
+    </div>
+    </div>
+
+    <!---------- CONTENEDOR DE COMENTARIO ---------->
+    <div id="comentarios-container">
+
+    <div class="card-header pb-0">
+    <div class="row">
+
+    <div id="seccion2" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-3">
+    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion2">
+      
+    <h8 class="text-primary fw-bold texto">
+    <b>Si tiene alguna otra información o comentarios que desee compartir, por favor, indíquelo:</b>
+    </h8>
+    </div>
+
+    <div class="col-12">
+    <div id="mensaje" class="text-center text-danger mt-2"></div>
     </div>
 
     </div>
     </div>
 
+    <div class="card-body">
+    <div id="conteComentario"></div>
+
+    <div class="mt-3 d-flex justify-content-between">
+    <button class="btn btn-secondary" onclick="seccionPreguntas()"><i data-feather="chevron-left"></i> Preguntas</button>
+    <?=$botonFinalizar?>
+    </div>
+
+    </div>
+  
+    </div>
+
+
+    </div>
     </section>
 
     </div>

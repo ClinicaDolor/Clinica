@@ -112,7 +112,7 @@ class PacienteModulosModelo{
     $result .= '';
     }else{
 
-    if($idModulo == 2){
+    if($idModulo == 2 || $idModulo == 3){
     $result .= '<button class="btn btn-success" onclick="agregarComentario('.$idModulo.', '.$idPaciente.',\''.$idRol.'\')">Finalizar</button>';
     } else{
     $result .= '<button class="btn btn-success" onclick="finalizarModuloPAC('.$idModulo.', '.$idPaciente.',\''.$idRol.'\')">Finalizar</button>';
