@@ -20,7 +20,7 @@
 }
 
 header {
-  background: var(--header-bg);
+  background: var(--light);
   z-index: 9999;
   
 }
@@ -32,7 +32,7 @@ header {
 
 .navbar-logo{
 padding-left: 1.5em;
-width: 65%;
+width: 50%;
 }
 
 
@@ -51,7 +51,7 @@ width: 65%;
 .menu li a {
   display: block;
   text-decoration: none;
-  color: var(--light);
+  color: var(--primary);
   padding: 1.2em 1.3em;
   font-size: 1rem;
 }
@@ -75,6 +75,7 @@ width: 65%;
 }
 .submenu > li > a {
   padding: 0.5em 1em;
+  color: var(--light);
 }
 .submenu .submenu {
   left: -100%;
@@ -87,8 +88,9 @@ width: 65%;
 
 .menu > li:hover > a,
 .submenu > li:hover > a {
-  background-color: hsla(0, 0%, 100%, 0.05);
+  background-color: hsla(0, 0%, 100%, 0.1);
   color: var(--hover-color);
+  transition: 0.6s;
 }
 .menu > li:hover > a {
   background-color: var(--dark);
@@ -133,6 +135,11 @@ transition: 1s ease;
 }
 
 @media only screen and (max-width: 78.75em) {
+
+  .menu li a {
+    color: var(--primary);
+  }
+  
   .submenu .submenu .submenu {
     left: -100%;
     top: 0.5em;
@@ -144,18 +151,19 @@ transition: 1s ease;
 @media only screen and (max-width: 58.75em) {
   .menu li a {
     font-size: 1rem;
+    color: var(--primary);
   }
 }
 
 @media only screen and (max-width: 50em) {
   header {
-/*  position: relative; */
+    /*position: relative;*/
     padding: 1.5em 2em;
   }
 
   .navbar-logo{
-width: 50%;
-}
+  width: 40%;
+  }
 
   .menu {
     flex-flow: column;
@@ -166,19 +174,17 @@ width: 50%;
     right: 0;
     height: 100vh;
     padding: 0;
-
     opacity: 0;
     transform: scaleY(0);
     transform-origin: top center;
-    transition: 200ms transform cubic-bezier(0.36, 0.4, 0.42, 1.48) 100ms,
-      100ms opacity ease-in-out;
-    
+    transition: 200ms transform cubic-bezier(0.36, 0.4, 0.42, 1.48) 100ms, 100ms opacity ease-in-out;
     overflow-y: scroll;
     
   }
+
   .menu > li > a {
     font-size: 1rem;
-    color: var(--dark);
+    color: var(--primary);
   }
   .submenu > li > a {
     font-size: 1rem;
@@ -203,11 +209,15 @@ width: 50%;
     position: relative;
   }
 
+  .submenu > li > a {
+    color: var(--light);
+  }
+
   .hamburger {
     width: 2em;
     height: 0.25em;
     display: block;
-    background: var(--light);
+    background: var(--primary);
     position: relative;
     cursor: pointer;
     transition: 0.2s transform ease-in-out;
@@ -268,4 +278,24 @@ width: 50%;
   z-index: 999999999;
   background: url('../../../assets/images/logo-clinica-loader.gif') center center no-repeat rgb(249,249,249);
   background-size: 250px 250px; /* Cambia el tamaño de la imagen */
+}
+
+.btn-light:hover{
+  color: #ffffff;
+  transition: 0.4s;
+  transition: background-position 0.4s ease, color 0.4s ease;
+  background: linear-gradient(to right, transparent 50%, var(--primary) 50%);
+  background-size: 201% 100%;
+  background-position: -99% 0;
+}
+
+.truncate-multiline {
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* Número de líneas a mostrar */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-content{
+  height: 400px;
 }
