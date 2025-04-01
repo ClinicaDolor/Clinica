@@ -72,7 +72,8 @@ $("#search").val("");
       </nav>
 
       </header>
-<div class="border-bottom border-primary">
+      
+<div>
 <input type="text" class="form-control border-0 rounded-0 fs-4 fw-light bg-light" id="search" name="search" placeholder="Buscar..." autocomplete="off">
 </div>
 <div class="col-md-5" style="position: absolute;">

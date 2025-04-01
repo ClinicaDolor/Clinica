@@ -41,7 +41,7 @@
 <textarea type="text" class="form-control" id="txtMensaje" placeholder="Mensaje"></textarea>
 </div>
 
-<button type="button" class="btn btn-success btn-sm" style="float: right;">Enviar</button>
+<button type="button" class="btn btn-light" style="float: right;">Enviar <i class="bi bi-chevron-right"></i></button>
 
 </div>
 </div>
