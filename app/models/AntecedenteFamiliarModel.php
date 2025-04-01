@@ -26,13 +26,7 @@ $this->bd = Database::getInstance();
     public function mostrarPreguntasM2($idPaciente, $idRol){
     $result = '';
 
-    $enfermedades_fijas = [
-    "Enfermedades del corazón",
-    "Hipertensión arterial sistémica",
-    "Enfermedad cerebrovascular",
-    "Diabetes Mellitus",
-    "Cáncer"
-    ];
+    $enfermedades_fijas = $this->enfermedadesFijas();
 
     $stmt = $this->bd->query("SELECT * FROM pc_antecedentes_familiares WHERE id_paciente = '".$idPaciente."' ORDER BY id ASC");
     $preguntas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
