@@ -319,7 +319,7 @@ $bd = Database::getInstance();
             </div>
 
             <div class="text-end mt-3">
-            <button class="btn btn-success fs-5" onclick="GuardarPaciente(<?=$data['idPaciente'];?>)"><?=$data['titulo_boton'];?></button>
+            <button class="btn btn-success fs-5" onclick="GuardarPaciente(<?=$data['idPaciente'];?>)"><?=$data['titulo_boton'];?> <i data-feather="chevron-right"></i></button>
             </div>
 
             <div class="text-center fs-5 text-danger" id="mensaje"></div>

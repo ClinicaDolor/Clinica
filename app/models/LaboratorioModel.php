@@ -102,7 +102,7 @@ class LaboratorioModel{
 
     public function insertArchivo($idPaciente,$contenidoLaboratorio,$fileName, $fileData, $fileSize, $fileExtension, $referencia){
 
-        $uploadDir = '../storage/public/laboratorio/';
+        $uploadDir = __DIR__ . '../../../public/storage/laboratorio/';
         
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
@@ -153,7 +153,7 @@ class LaboratorioModel{
             $fecha = (new \DateTime($data['fecha_hora']))->format('d/m/Y');
             $hora = (new \DateTime($data['fecha_hora']))->format('h:i a');
             $result .= '
-            <div class="float-end"><a download="'.$data['nombre'].'" href="/storage/public/'.$data['ruta'].'/'.$data['nombre'].'" class="btn icon btn-primary"><i data-feather="download"></i></a></div>
+            <div class="float-end"><a download="'.$data['nombre'].'" href="/descargar/'.$data['ruta'].'/'.$data['nombre'].'" class="btn icon btn-primary"><i data-feather="download"></i></a></div>
             <div>
             <label class="text-primary"><small>Fecha: </small></label> <label class="fs-5">' . $fecha . '</label>, <label class="text-primary"><small>Hora: </small></label> <label class="fs-5">'. $hora .'</label>
             </div>

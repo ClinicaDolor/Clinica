@@ -268,7 +268,7 @@ $bd = Database::getInstance();
                     
                     <label class="text-primary mt-3 mb-1"><smallal>Medicamento:</smallal></label>
                     <div id="snow" class="editor"></div>
-                    <div class="text-end mt-3"><button class="btn btn-success" onclick="AgregarReceta(<?=$data['idPaciente'];?>)">Agregar Receta</button></div>
+                    <div class="text-end mt-3"><button class="btn btn-success" onclick="AgregarReceta(<?=$data['idPaciente'];?>)">Agregar Receta <i data-feather="chevron-right"></i></button></div>
                     <div id="mensaje"></div>
                     </div>
                 </div>
