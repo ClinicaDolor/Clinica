@@ -44,7 +44,11 @@ return function(RouteCollector $r) {
         $r->addRoute('POST', '/paciente/agregar-enfermedad-antecedentes', ['ModulosController', 'pacienteInsertEnfermedad']);
         $r->addRoute('POST', '/paciente/editar-enfermedad-antecedentes', ['ModulosController', 'pacienteEditEnfermedad']);
         $r->addRoute('POST', '/paciente/eliminar-enfermedad-antecedentes', ['ModulosController', 'pacienteDeleteEnfermedad']);
+        
+        //----- 3. ANTECEDENTES NO PATOLOGICOS
+        $r->addRoute('POST', '/paciente/editar-cuestionario-modulo3', ['ModulosController', 'pacienteEditarCuestionarioM3']);
 
+        
         //----- 4. ANTECEDENTES PERSONALES QUIRÚRGICOS
         $r->addRoute('POST', '/paciente/agregar-cirugia-antecedentes', ['ModulosController', 'pacienteInsertCirugia']);
         $r->addRoute('POST', '/paciente/editar-cirugia-antecedentes', ['ModulosController', 'pacienteEditCirugia']);
@@ -134,6 +138,14 @@ return function(RouteCollector $r) {
         $r->addRoute('GET', '/buscar/tabla-laboratorio/{idPaciente}/{referencia}', ['BusquedasController', 'tableLaboratorio']);
         $r->addRoute('GET', '/buscar/tabla-notas-subsecuentes/{idPaciente}/{referencia}', ['BusquedasController', 'tableNotasSubsecuentes']);
     
+        //-----------------------------------------//
+        //Ruta para crear las diferentes busquedas de los Modulos
+        //----------------------------------------//
+        $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-2/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasM2']);
+        $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-3/{idPaciente}/{idRol}/{idCuestionario}', ['BusquedasController', 'contenidoPreguntasM3']);
+
+        $r->addRoute('GET', '/buscar/contenido-comentarios-modulos/{idPaciente}/{idRol}/{idModulo}', ['BusquedasController', 'contenidoComentariosModulo']);
+
         //-----------------------------------------//
         //Cerrar sesion
         //----------------------------------------//

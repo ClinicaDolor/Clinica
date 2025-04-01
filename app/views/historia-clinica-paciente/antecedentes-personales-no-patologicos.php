@@ -1,18 +1,17 @@
 <?php 
 use App\Config\Database;
 use App\Models\PacienteModulosModelo;
-use App\Models\AntecedenteFamiliarModel;
+use App\Models\AntecedentesNoPatologicosModel;
 $bd = Database::getInstance();
 
-$model = new AntecedenteFamiliarModel();
-
-$enfermedades_fijas = $model->enfermedadesFijas(); 
-foreach ($enfermedades_fijas as $enf) {
-echo $model->antecedentesFamiliares($data['idPaciente'], $enf);
+$model = new AntecedentesNoPatologicosModel();
+$preguntas_fijas = $model->obtenerPreguntasModulos(); 
+foreach ($preguntas_fijas as $preg) {
+echo $model->antecedentesNoPatologicos($data['idPaciente'], $preg);
 }
 
 $model2 = new PacienteModulosModelo();
-$botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idRol']);
+$botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idRol']);
 
 ?>
 
@@ -41,33 +40,67 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
     </style>
 
     <script>
+    // Definir el arreglo de temas globalmente
+    const temas = [
+    { id: 1, nombre: "Tabaquismo" },
+    { id: 2, nombre: "Alcoholismo" },
+    { id: 3, nombre: "Ejercicio" },
+    { id: 4, nombre: "Estres" },
+    { id: 5, nombre: "Drogas" },
+    { id: 6, nombre: "Dormir" },
+    { id: 7, nombre: "Grupo Sanguineo" }
+    ];
+
+
+
+    // Al cargar la página se carga el módulo correspondiente (por defecto "Tabaquismo")
     document.addEventListener("DOMContentLoaded", function() {
-    const seccionActual = localStorage.getItem("seccionActual");
-    
-    if (!seccionActual || seccionActual === "preguntas") {
-    contenidoPreguntas();
-    } else if (seccionActual === "comentarios") {
+    const seccionActual = localStorage.getItem("seccionActual") || "Tabaquismo";
+    localStorage.setItem("seccionActual", seccionActual);
+    let temaActual = temas.find(t => t.nombre === seccionActual);
+
+    if (!seccionActual || seccionActual === "comentarios") {
     finalizarPreguntas();
+    } else {
+    contenidoPreguntas(temaActual.id);
     }
 
+    localStorage.setItem("preguntaActual_1", 0);
+    localStorage.setItem("preguntaActual_2", 0);
+    localStorage.setItem("preguntaActual_3", 0);
+    localStorage.setItem("preguntaActual_4", 0);
+    localStorage.setItem("preguntaActual_5", 0);
+    localStorage.setItem("preguntaActual_6", 0);
+    localStorage.setItem("preguntaActual_7", 0);
+
     });
-    
+
     // ---------- CONTENIDO DE LAS PREGUNTAS ----------
-    function contenidoPreguntas(idValor = 0) {
+    function contenidoPreguntas(idCuestionario, idValor = 0) {
+    // Limpia las preguntas anteriores, si existen
+    document.querySelectorAll('.pregunta-container').forEach(p => p.remove());
+
     const usuarioDiv = document.getElementById('main');
     const idPaciente = usuarioDiv.getAttribute('data-paciente');
     const idRol = usuarioDiv.getAttribute('data-rol');
 
-    fetch(`/buscar/contenido-preguntas-modulo-2/${idPaciente}/${idRol}`)
+    fetch(`/buscar/contenido-preguntas-modulo-3/${idPaciente}/${idRol}/${idCuestionario}`)
     .then(response => response.text())
     .then(data => {
-    document.getElementById('contePreguntas').innerHTML = data;
+    // Insertar el contenido en el contenedor específico del módulo
+    document.getElementById('contePreguntas_' + idCuestionario).innerHTML = data;
     feather.replace();
-            
-    cargarProgreso(idValor);
+
+    // Reactivar el IntersectionObserver para las nuevas secciones (si lo utilizas)
+    document.querySelectorAll('.sectionQuestion').forEach(section => {
+    observer.observe(section);
+    });
+
+    // Cargar el progreso para el módulo actual
+    cargarProgreso(idCuestionario, idValor);
     });
     }
-    
+
     // ---------- CONTENIDO DEL COMENTARIO ----------
     function contenidoComentario() {
     const usuarioDiv = document.getElementById('main');
@@ -83,41 +116,37 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
     feather.replace();   
 
     });
+    }  
+
+    // ---------- GUARDAR Y CARGAR PROGRESO ----------
+    function guardarProgreso(index, idCuestionario) {
+    localStorage.setItem("preguntaActual_" + idCuestionario, index);
     }
 
-    function guardarProgreso(index) {
-    localStorage.setItem("preguntaActual", index);
-    }
-
-    function cargarProgreso(idValor) {
-    let indexGuardado = localStorage.getItem("preguntaActual");
-    indexGuardado = indexGuardado ? parseInt(indexGuardado) : 0;
-
+    function cargarProgreso(idCuestionario, idValor = 0) {
+    let indexGuardado = localStorage.getItem("preguntaActual_" + idCuestionario);
+    indexGuardado = indexGuardado ? parseInt(indexGuardado) : idValor;
     const preguntas = document.querySelectorAll('.pregunta-container');
-    
-    // Calcular el nuevo índice dentro de los límites permitidos
-    let nuevoIndex = indexGuardado + idValor;
-    if (nuevoIndex < 0) nuevoIndex = 0; // Evita ir antes de la primera pregunta
-    if (nuevoIndex > preguntas.length) nuevoIndex = preguntas.length - 1; // Evita ir después de la última
 
     // Remover la clase 'active' de todas las preguntas
     preguntas.forEach(pregunta => pregunta.classList.remove('active'));
 
-    // Activar la nueva pregunta
-    preguntas[nuevoIndex].classList.add('active');
-
-    // Mostrar el botón si es la última pregunta
-    document.getElementById('btnAgregarEnfermedad').style.display =
-    nuevoIndex === preguntas.length - 1 ? 'block' : 'none';
-
-    // Guardar el nuevo progreso
-    guardarProgreso(nuevoIndex);
+    // Asegurar que el índice guardado no exceda el número de preguntas
+    if (preguntas.length > 0) {
+    if (indexGuardado >= preguntas.length) {
+    indexGuardado = preguntas.length - 1;
+    }
+    preguntas[indexGuardado].classList.add('active');
+    }
+    return indexGuardado;
     }
 
-    function siguientePregunta() {
+    // ---------- NAVEGACIÓN ENTRE PREGUNTAS ----------
+    function siguientePregunta(idTema) {
     const preguntas = document.querySelectorAll('.pregunta-container');
     let activeIndex = -1;
 
+    // Mostrar y ocultar el loader (suponiendo que usas jQuery para ello)
     $(".LoaderPage").show();
     $(".LoaderPage").fadeOut(1000);
 
@@ -128,21 +157,36 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
     }
     });
 
-    if (activeIndex < preguntas.length - 1) {
+    if (activeIndex === -1 && preguntas.length > 0) {
+    activeIndex = cargarProgreso(idTema);
+    }
+
+    // Si se está en la última pregunta del módulo...
+    if (activeIndex >= preguntas.length - 1) {
+    // Buscar el módulo actual en el arreglo de temas
+    let seccionActual = localStorage.getItem("seccionActual") || temas[0].nombre;
+    let currentIndex = temas.findIndex(t => t.nombre === seccionActual);
+
+    // Si existe un siguiente módulo, preparar el botón para dirigir a esa sección
+    if (currentIndex < temas.length - 1) {
+    let nuevoTema = temas[currentIndex + 1];
+    // Se coloca el botón en el contenedor de botones de la última pregunta
+    let lastPregunta = preguntas[preguntas.length - 1];
+    let botonesContainer = lastPregunta.querySelector('.mt-3.d-flex.justify-content-between');
+    botonesContainer.innerHTML = `<button class="btn btn-success" onclick="irASiguienteSeccion('${nuevoTema.nombre}', ${nuevoTema.id})">${nuevoTema.nombre} <i data-feather="message-circle"></i></button>`;
+    return;
+    } 
+
+    } else {
+    // Avanzar a la siguiente pregunta dentro del mismo módulo
     const nuevoIndice = activeIndex + 1;
     preguntas[nuevoIndice].classList.add('active');
-    guardarProgreso(nuevoIndice); // Guarda el progreso al avanzar
-    }
-
-    // Mostrar el botón solo si se está en la última pregunta
-    if (activeIndex + 1 === preguntas.length - 1) {
-    document.getElementById('btnAgregarEnfermedad').style.display = 'block';
-    } else {
-    document.getElementById('btnAgregarEnfermedad').style.display = 'none';
+    guardarProgreso(nuevoIndice, idTema);
     }
     }
 
-    function anteriorPregunta() {
+    //---------- MUESTRA LA PREGUNTA ANTERIOR ----------
+    function anteriorPregunta(idTema) {
     const preguntas = document.querySelectorAll('.pregunta-container');
     let activeIndex = -1;
 
@@ -156,55 +200,60 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
     }
     });
 
-    if (activeIndex > 0) {
+    if (activeIndex === -1 && preguntas.length > 0) {
+    activeIndex = cargarProgreso(idTema);
+    }
+
+    // Si se está en la primera pregunta del módulo...
+    if (activeIndex <= 0) {
+    let seccionActual = localStorage.getItem("seccionActual") || temas[0].nombre;
+    let currentIndex = temas.findIndex(t => t.nombre === seccionActual);
+    if (currentIndex > 0) {
+    let nuevoTema = temas[currentIndex - 1];
+    localStorage.setItem("seccionActual", nuevoTema.nombre);
+    // Se asume que al cargar el módulo anterior se muestra la última pregunta
+    contenidoPreguntas(nuevoTema.id, true);
+    return;
+    }
+    } else {
+    // Retroceder a la pregunta anterior dentro del mismo módulo
     const nuevoIndice = activeIndex - 1;
     preguntas[nuevoIndice].classList.add('active');
-    guardarProgreso(nuevoIndice); // Guarda el progreso al retroceder
+    guardarProgreso(nuevoIndice, idTema);
+    }
     }
 
-    // Ocultar el botón si no estamos en la última pregunta
-    document.getElementById('btnAgregarEnfermedad').style.display = 'none';
+    //---------- IR A LA SIGUIENTE SECCION ----------
+    function irASiguienteSeccion(nombreTema, idTema) {
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+    localStorage.setItem("seccionActual", nombreTema);
+    //localStorage.removeItem("preguntaActual_" + idTema);
+    contenidoPreguntas(idTema);
     }
-
-    //---------- CAMBIA EL ESTADO DE LAS RESPUESTAS ----------
-    function respuestaPregunta(select, id) {
-    let row = select.closest('.pregunta-container');
-    let tipoSelect = row.querySelector(".detalle-enfermedad");
-    let inputEspecificar = row.querySelector(".especificar-enfermedad");
-    let divTipoEnfermedad = row.querySelector(".divTipoEnfermedad");
-    let esSi = select.value === "Si";
-    let esDiabetes = row.dataset.enfermedad.trim() === "Diabetes Mellitus";
-
-    tipoSelect.disabled = !(esSi && esDiabetes);
-    divTipoEnfermedad.style.display = (esSi && esDiabetes) ? 'block' : 'none';
-    inputEspecificar.disabled = !esSi;
-
-    if (!esSi) {
-    tipoSelect.value = "";
-    inputEspecificar.value = "";
-    }
-
-    editarEnfermedad(id, select, 2, row.dataset.rol);
-    }
-
 
     //---------- MUESTRA LA SECCION DE PREGUNTAS Y COMENTARIOS ----------
     function seccionPreguntas() {
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
     document.getElementById("preguntas-container").style.display = "block";
     document.getElementById("comentarios-container").style.display = "none";
-    localStorage.setItem("seccionActual", "preguntas");
-    contenidoPreguntas();
+    localStorage.setItem("seccionActual", "Grupo Sanguineo");
+    contenidoPreguntas(7);
     }
 
     function finalizarPreguntas() {
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
     document.getElementById("preguntas-container").style.display = "none";
     document.getElementById("comentarios-container").style.display = "block";
     localStorage.setItem("seccionActual", "comentarios");
     contenidoComentario();
     }
 
+
     //---------- CONTROL SERVER ----------
-    function gestionarEnfermedadPaciente(url, parametros, callback) {
+    function gestionarAntecedentesNoPatologicos(url, parametros, callback) {
     $(".LoaderPage").show();
     fetch(url, {
     method: 'POST',
@@ -217,34 +266,27 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
     });
     }
 
-    //---------- AGREGAR ENFERMEDAD PACIENTE ----------
-    function agregarEnfermedadPaciente(idPaciente, idRol) {
-    gestionarEnfermedadPaciente(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/agregar-enfermedad-antecedentes`, { idPaciente, idRol }, () => contenidoPreguntas(1));
-    }
-
-    //---------- ELIMINAR ENFERMEDADES DEL PACIENTE ----------
-    function eliminarEnfermedadPaciente(idEnfermedad, idRol) {
-    gestionarEnfermedadPaciente(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/eliminar-enfermedad-antecedentes`, { idEnfermedad, idRol }, () => contenidoPreguntas(1));
-    }
 
     //---------- EDITAR ENFERMEDADES DEL PACIENTE ----------
-    function editarEnfermedad(idEnfermedad, elemento, parametro, idRol) {
-    gestionarEnfermedadPaciente(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/editar-enfermedad-antecedentes`, {
-        idEnfermedad, detalle: elemento.value, edicion: parametro, idRol
-    }, () => contenidoPreguntas(0));
+    function respuestaPreguntaSelect (idRespuesta, elemento, idTema, idRol) {
+    gestionarAntecedentesNoPatologicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/editar-cuestionario-modulo3`, {
+        idRespuesta, detalle: elemento.value, idRol
+    }, () => contenidoPreguntas(idTema));
     }
 
     //---------- AGREGAR COMENTARIO DEL MODULO ----------
     function agregarComentario(idModulo, idPaciente, idRol) {
     let comentario = document.getElementById('comentarioModulos').value;
     //if (!comentario) return document.getElementById('comentarioModulos').style.border = '2px solid #A52525';
-    gestionarEnfermedadPaciente(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/agregar-comentario-modulo`, { idModulo, idPaciente, comentarioModulos: comentario, idRol }, () => FinalizarModuloPaciente(idModulo, idPaciente));
+    gestionarAntecedentesNoPatologicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/agregar-comentario-modulo`, { idModulo, idPaciente, comentarioModulos: comentario, idRol }, () => FinalizarModuloPaciente(idModulo, idPaciente));
     }
 
     //---------- FINALIZAR MODULO DEL PACIENTE----------
     function FinalizarModuloPaciente(idModulo, idPaciente) {
-    gestionarEnfermedadPaciente('/historia-clinica/paciente/finalizar-modulo-paciente', { idModulo, idPaciente }, () => window.location.href = '/historia-clinica');
+    gestionarAntecedentesNoPatologicos('/historia-clinica/paciente/finalizar-modulo-paciente', { idModulo, idPaciente }, () => window.location.href = '/historia-clinica');
     }
+
+
     </script>
     </head>
 
@@ -273,30 +315,23 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
 
     <div class="page-title mb-4">     
     <h8><?=$data['nombre'];?></h8>
-    <h3>Antecedentes familiares</h3>
+    <h3>Antecedentes Personales No Patológicos</h3>
     </div>
     
     <section class="section">
 
     <div class="card">
 
-    <!---------- CONTENEDOR DE PREGUNTAS ---------->
     <div id="preguntas-container">
     <div class="card-header pb-0">
     <div class="row">
 
-    <div id="seccion1" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-3">
-    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion1">
+    <div id="seccion0" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-2">
+    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion0">
 
     <h8 class="text-primary fw-bold texto">
-    <b>A continuación, le preguntaremos si existen antecedentes familiares de alguna de las siguientes enfermedades. <br>Por favor, mencione si alguno de sus familiares cercanos, como abuelos, padres, hermanos, etc., ha padecido alguna de ellas:</b>
+    <b>A continuacion, responda las siguientes preguntas indicando si presenta alguna de estas conductas o hábitos:</b>
     </h8>
-    </div>
-
-    <div class="col-12 col-md-1 d-flex justify-content-end align-items-center">
-    <button id="btnAgregarEnfermedad" onclick="agregarEnfermedadPaciente(<?=$data['idPaciente'];?>,'<?=$data['idRol'];?>')" class="btn icon btn-success float-end" style="display: none;">
-    <i data-feather="plus" width="20"></i>
-    </button>
     </div>
 
     <div class="col-12">
@@ -307,10 +342,16 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
     </div>
 
     <div class="card-body">
-    <div id="contePreguntas"></div>
-    </div>
-    </div>
+    <div id="contePreguntas_1"></div>
+    <div id="contePreguntas_2"></div>
+    <div id="contePreguntas_3"></div>
+    <div id="contePreguntas_4"></div>
+    <div id="contePreguntas_5"></div>
+    <div id="contePreguntas_6"></div>
+    <div id="contePreguntas_7"></div>
 
+    </div>
+    </div>
 
     <!---------- CONTENEDOR DE COMENTARIO ---------->
     <div id="comentarios-container">
@@ -344,8 +385,9 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
     </div>
   
     </div>
-    </div>
 
+
+    </div>
     </section>
 
     </div>

@@ -3,15 +3,8 @@ use App\Config\Database;
 use App\Models\AntecedenteFamiliarModel;
 $bd = Database::getInstance();
 
-$enfermedades_fijas = [
-    "Enfermedades del corazón",
-    "Hipertensión arterial sistémica",
-    "Enfermedad cerebrovascular",
-    "Diabetes Mellitus",
-    "Cáncer"
-];
-
 $model = new AntecedenteFamiliarModel();
+$enfermedades_fijas = $model->enfermedadesFijas(); 
 foreach ($enfermedades_fijas as $enf) {
 echo $model->antecedentesFamiliares($data['idPaciente'], $enf);
 }
@@ -35,203 +28,74 @@ echo $model->antecedentesFamiliares($data['idPaciente'], $enf);
 
     <script>
         
-    function mostrarDetalle(select, id) {
-    var inputDetalle = document.getElementById("detalle_" + id);
-    var selectDiabetes = document.getElementById("diabetes_tipo_" + id);
-            
-    if (select.value === "Si") {
-    if (selectDiabetes) selectDiabetes.style.display = "inline";
-    } else {        
-    if (selectDiabetes) selectDiabetes.style.display = "none";
-    }
-    }
+    document.addEventListener("DOMContentLoaded", function() {
+    contenidoPreguntas();
+    contenidoComentario();
+    });
 
-    function agregarEnfermedadPaciente(idPaciente,idRol){
 
-    const val = (idRol == "Paciente") ? "historia-clinica" : "clinica";
+    // ---------- CONTENIDO DE LAS PREGUNTAS ----------
+    function contenidoPreguntas(idValor = 0) {
+    const usuarioDiv = document.getElementById('main');
+    const idPaciente = usuarioDiv.getAttribute('data-paciente');
+    const idRol = usuarioDiv.getAttribute('data-rol');
 
-    const parametros = {
-    idPaciente : idPaciente,
-    idRol : idRol
-    };
-
-    fetch('/' + val + '/paciente/agregar-enfermedad-antecedentes', {
-    method: 'POST',
-    headers: {
-    'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(parametros)
-    })
-    .then(response => response.json())
+    fetch(`/buscar/contenido-preguntas-modulo-2/${idPaciente}/${idRol}`)
+    .then(response => response.text())
     .then(data => {
-
-    if (data.resultado) {
-    location.reload()
-    } else {
-    document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
-    }
+    document.getElementById('contePreguntas').innerHTML = data;
+    feather.replace();
 
     });
-            
     }
 
-    function eliminarEnfermedadPaciente(idEnfermedad,idRol){
-    const val = (idRol == "Paciente") ? "historia-clinica" : "clinica";
+    // ---------- CONTENIDO DEL COMENTARIO ----------
+    function contenidoComentario() {
+    const usuarioDiv = document.getElementById('main');
+    const idPaciente = usuarioDiv.getAttribute('data-paciente');
+    const idRol = usuarioDiv.getAttribute('data-rol');
+    const idModulo = 2;
 
-    const parametros = {
-    idEnfermedad : idEnfermedad,
-    idRol : idRol
-    };
-
-    fetch('/' + val + '/paciente/eliminar-enfermedad-antecedentes', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(parametros)
-    })
-    .then(response => response.json())
+    fetch(`/buscar/contenido-comentarios-modulos/${idPaciente}/${idRol}/${idModulo}`)
+    .then(response => response.text())
     .then(data => {
 
-    if (data.resultado) {
-    location.reload()
-    } else {
-    document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
-    }
+    document.getElementById('conteComentario').innerHTML = data;
+    feather.replace();   
 
     });
-        
     }
 
+    //---------- CONTROL SERVER ----------
+    function gestionarEnfermedadPaciente(url, parametros, callback) {
+    $(".LoaderPage").show();
+    fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(parametros)
+    }).then(res => res.json()).then(data => {
+    $(".LoaderPage").fadeOut(1000);
+    if (data.resultado) callback();
+    else document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
+    });
+    }
+
+    //---------- AGREGAR ENFERMEDAD PACIENTE ----------
+    function agregarEnfermedadPaciente(idPaciente, idRol) {
+    gestionarEnfermedadPaciente(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/agregar-enfermedad-antecedentes`, { idPaciente, idRol }, () => contenidoPreguntas(1));
+    }
+
+    //---------- ELIMINAR ENFERMEDADES DEL PACIENTE ----------
+    function eliminarEnfermedadPaciente(idEnfermedad, idRol) {
+    gestionarEnfermedadPaciente(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/eliminar-enfermedad-antecedentes`, { idEnfermedad, idRol }, () => contenidoPreguntas(1));
+    }
+
+    //---------- EDITAR ENFERMEDADES DEL PACIENTE ----------
     function editarEnfermedad(idEnfermedad, elemento, parametro, idRol) {
-    let valor = elemento.value; 
-    const val = (idRol == "Paciente") ? "historia-clinica" : "clinica";
-
-    const parametros = {
-    idEnfermedad : idEnfermedad,
-    detalle : valor,
-    edicion : parametro,
-    idRol : idRol
-    };
-
-    fetch('/' + val + '/paciente/editar-enfermedad-antecedentes', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(parametros)
-    })
-    .then(response => response.json())
-    .then(data => {
-
-    if (data.resultado) {
-    //location.reload()
-    } else {
-    document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
+    gestionarEnfermedadPaciente(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/editar-enfermedad-antecedentes`, {
+        idEnfermedad, detalle: elemento.value, edicion: parametro, idRol
+    }, () => contenidoPreguntas(0));
     }
-
-    });
-
-    }
-
-    function agregarComentario(idModulo, idPaciente, idRol){
-    const comentarioModulos = document.getElementById('comentarioModulos').value;
-    const val = (idRol == "Paciente") ? "historia-clinica" : "clinica";
-
-    const parametros = {
-    idModulo : idModulo,
-    idPaciente : idPaciente,
-    comentarioModulos : comentarioModulos,
-    idRol : idRol
-    };
-
-
-    if(comentarioModulos != ""){
-    $('#comentarioModulos').css('border',''); 
-    
-    fetch('/' + val + '/paciente/agregar-comentario-modulo', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(parametros)
-    })
-    .then(response => response.json())
-    .then(data => {
-
-    if (data.resultado) {
-    location.reload()
-    } else {
-    document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
-    }
-
-    });
-
-    }else{
-    $('#comentarioModulos').css('border','2px solid #A52525'); 
-    }
-
-
-    }
-
-
-    function eliminarComentario(idComentario, idRol){
-    const val = (idRol == "Paciente") ? "historia-clinica" : "clinica";
-
-    const parametros = {
-    idComentario : idComentario,
-    idRol : idRol
-    };
-
-    fetch('/' + val + '/paciente/eliminar-comentario-modulo', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(parametros)
-    })
-    .then(response => response.json())
-    .then(data => {
-
-    if (data.resultado) {
-    location.reload()
-    } else {
-    document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
-    }
-
-    });
-
-    }
-
-
-    //---------- FINALIZAR MODULOS ----------//
-    function FinalizarModuloPaciente(idModulo, idPaciente){
-
-    const parametros = {
-    idModulo : idModulo,
-    idPaciente : idPaciente
-    };
-
-    fetch('/historia-clinica/paciente/finalizar-modulo-paciente', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(parametros)
-    })
-    .then(response => response.json())
-    .then(data => {
-
-    if (data.resultado) {
-    window.location.href = '/historia-clinica';
-    } else {
-    document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
-    }
-
-    });
-
-    }
-
 
     </script>
     </head>
@@ -243,7 +107,7 @@ echo $model->antecedentesFamiliares($data['idPaciente'], $enf);
     <!---------- SIDEBAR ---------->
     <?=$data['sidebar'];?>
     
-    <div id="main"> 
+    <div id="main" data-rol="<?=$data['idRol'];?>" data-paciente="<?=$data['idPaciente'];?>">
     <nav class="navbar navbar-header navbar-expand navbar-light">
     <a class="sidebar-toggler"><span class="navbar-toggler-icon"></span></a>
     <button class="btn navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -265,177 +129,43 @@ echo $model->antecedentesFamiliares($data['idPaciente'], $enf);
     </div>
     
     <section class="section">
-    <div class="card">
-    <div class="card-body pb-0">
-
+    
     <div class="row">
-    <div class="col-11">
-    <h8 class="text-primary">
-    <b>A continuación, le preguntaremos si existen antecedentes familiares de alguna de las siguientes enfermedades. <br>Por favor, mencione si alguno de sus familiares cercanos, como abuelos, padres, hermanos, etc., ha padecido alguna de ellas:</b>
+
+    <div class="col-12">
+    <div class="card">
+
+    <div id="contePreguntas"></div>
+
+
+    </div>
+    </div>
+
+    <!---------- CONTENIDO DE C0MENTARIOS COMENTARIOS ---------->
+    <div class="col-12">
+    <div class="card">
+    <div class="card-header pb-0">
+    <div class="row">
+
+    <div id="seccion2" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-3">      
+    <h8 class="text-primary fw-bold texto">
+    <b>Si tiene alguna otra información o comentarios que desee compartir, por favor, indíquelo:</b>
     </h8>
     </div>
- 
-    <div class="col-1">
-    <button onclick="agregarEnfermedadPaciente(<?=$data['idPaciente'];?>,'<?=$data['idRol'];?>')" class="btn icon btn-success float-end"> <i data-feather="plus" width="20"></i> </button>
-    </div>
-
-    <div class="col-12">
-    <div id="mensaje" class="text-center text-danger mt-2"></div>
-    </div>
-
-    </div>
-
-    <div class="row mt-3">
-
-    <div class="col-12">
-    <div class="table-responsive">
-    <table class="table table-striped" id="table_enfermedades">
-    <thead>
-    <tr>
-    <th class="text-start align-middle" width="250px">Nombre de la enfermedad</th>
-    <th class="text-center align-middle" width="250px">Si/No/Se ignora</th>
-    <th class="text-center align-middle" width="250px">Tipo</th>
-    <th class="text-center align-middle">Especificar enfermedad</th>
-    <th class="text-center align-middle" width="30px"></th>
-
-    </tr>
-    </thead>
-    <tbody>
-        
-    <?php
-    try {
-    $stmt = $bd->query("SELECT * FROM pc_antecedentes_familiares WHERE id_paciente = '".$data['idPaciente']."'");
-    $preguntas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    } catch (PDOException $e) {
-    die("Error en la consulta: " . $e->getMessage());
-    }
-
-    foreach ($preguntas as $pregunta): 
-    $idEnfermedad = $pregunta['id'];
-    $enfermedad = $pregunta['enfermedad'];
-    $tipo = $pregunta['tipo'];
-    $detalle = $pregunta['detalle'];
-    $especificar = $pregunta['especificar'];
-    ?>
-    <tr>
-    <td class="text-start align-middle p-1">
-    <?php if (in_array($enfermedad, $enfermedades_fijas)): ?>
-    <?= $enfermedad; ?>
-    <?php else: ?>
-    <input onchange="editarEnfermedad(<?=$idEnfermedad?>, this, 1,'<?=$data['idRol'];?>')" class="form-control nombre-enfermedad" value="<?= $enfermedad ?? '' ?>" placeholder="Escribe la enfermedad...">
-    <?php endif; ?>
-    </td>
-
-    <td class="text-center align-middle">
-    <select class="form-select tipo-enfermedad" onchange="editarEnfermedad(<?=$idEnfermedad?>, this, 2,'<?=$data['idRol'];?>')" <?= in_array($enfermedad, $enfermedades_fijas) ? '' : 'disabled'; ?>>
-    <option value="" disabled selected <?php if ($detalle === '') echo 'selected'; ?>>Selecciona una opción...</option>
-    <option value="Si" <?php if ($detalle == 'Si') echo 'selected'; ?>>Sí</option>
-    <option value="No" <?php if ($detalle == 'No') echo 'selected'; ?>>No</option>
-    <option value="Se ignora" <?php if ($detalle == 'Se ignora') echo 'selected'; ?>>Se ignora</option>
-    </select>
-    </td>
-
-    <td class="text-center align-middle tipo-detalle">
-    <select class="form-select detalle-enfermedad" onchange="editarEnfermedad(<?=$idEnfermedad?>, this, 3,'<?=$data['idRol'];?>')" <?= ($enfermedad == "Diabetes Mellitus" && $detalle == "Si") ? '' : 'disabled'; ?>>
-    <option value="" disabled selected <?php if($tipo === '') echo 'selected'; ?>>Selecciona una opción...</option>
-    <option value="Tipo 1" <?php if($tipo === 'Tipo 1') echo 'selected'; ?>>Tipo 1</option>
-    <option value="Tipo 2" <?php if($tipo === 'Tipo 2') echo 'selected'; ?>>Tipo 2</option>
-    <option value="Gestacional" <?php if($tipo === 'Gestacional') echo 'selected'; ?>>Gestacional</option>
-    <option value="Otro" <?php if($tipo === 'Otro') echo 'selected'; ?>>Otro</option>
-    </select>
-    </td>
-
-    <td class="text-center align-middle">
-    <input class="form-control especificar-enfermedad" onchange="editarEnfermedad(<?=$idEnfermedad?>, this, 4,'<?=$data['idRol'];?>')" value="<?=$especificar ?? ''?>" placeholder="Especifica aquí la enfermedad..." <?= ($detalle == 'Si') ? '' : 'disabled'; ?>>
-    </td>
-
-
-    <td class="text-start align-middle">
-    <?php if (in_array($enfermedad, $enfermedades_fijas)): ?>
-        
-    <?php else: ?>
-    <i data-feather="trash-2" class="pointer" onclick="eliminarEnfermedadPaciente(<?=$idEnfermedad?>,'<?=$data['idRol'];?>')"></i>
-    <?php endif; ?>
-    </td>
-
-    </tr>
-    <?php endforeach; ?>
-    </tbody>
-    </table>
-    </div>
-    </div>  
-
-    <div class="col-12">
-    <div class="fw-bold text-primary mt-2 mb-1">Si tiene alguna otra información o comentario que desee compartir, por favor, indíquelo:</div>
-
-    <div class="input-group mb-3">
-    <input type="text" class="form-control" id="comentarioModulos" placeholder="Ingresa aquí tu información o comentario...">
-    <button class="btn btn-outline-secondary" type="button" onclick="agregarComentario(2,<?=$data['idPaciente']?>,'<?=$data['idRol'];?>')">Agregar comentario</button>
-    </div>
-
-    <div class="table-responsive">
-    <table class="table table-striped" id="table_comentarios">
-    <thead>
-    <tr>
-    <th class="text-center align-middle" width="30px">#</th>
-    <th class="text-start align-middle" width="">Comentario</th>
-    <th class="text-center align-middle" width="30px"><i data-feather="trash-2"></i></th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php
-    $num = 1;
-    try {
-    $stmt_2 = $bd->query("SELECT id, comentario FROM pac_historia_clinica_comentario WHERE id_modulo = 2 AND id_paciente = '".$data['idPaciente']."'");
-    $comentarios = $stmt_2->fetchAll(PDO::FETCH_ASSOC);
-
-    } catch (PDOException $e) {
-    die("Error en la consulta: " . $e->getMessage());
-    }
-
-    foreach ($comentarios as $comentario): 
-    $idComentario = $comentario['id'];
-    $moduloComentario = $comentario['comentario'];
-    ?>
-    <tr>
-    <td class="text-center align-middle"><?=$num?></td>
-    <td class="text-start align-middle"><?=$moduloComentario?></td>
-    <th class="text-center align-middle"><i class="pointer" data-feather="trash-2" onclick="eliminarComentario(<?=$idComentario?>,'<?=$data['idRol'];?>')"></i></th>
-    </tr>
-    <?php 
-    $num++;
-    endforeach; 
-    ?>
-    </tbody>
-    </table>
-    </div>
-    </div>
 
     </div>
     </div>
 
-    <?php
-    if($data['idRol'] == "Paciente"){
-    try {
-    $stmt = $bd->query("SELECT * FROM pac_historia_clinica_finalizar WHERE id_modulo = 2 AND id_paciente = '".$data['idPaciente']."'");
-    $modulos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    } catch (PDOException $e) {
-    die("Error en la consulta: " . $e->getMessage());
-    }
-
-  
-    if (empty($modulos)): 
-    ?>
-    <div class="card-footer">
-    <button class="btn btn-success float-end fs-5" onclick="FinalizarModuloPaciente(2, <?=$data['idPaciente'];?>)">Finalizar</button>
+    
+    <div class="card-body">
+    <div id="conteComentario"></div>
     </div>
-    <?php endif; 
-    }
-    ?>
+    
+    </div>
+    </div>
 
     </div>
+
 
 
     </section>

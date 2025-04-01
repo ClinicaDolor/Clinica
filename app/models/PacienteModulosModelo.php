@@ -58,6 +58,70 @@ class PacienteModulosModelo{
     }
 
 
+    //---------- VALIDACION STATUS DE MODULO ----------
+
+    public function statusModulo($idPaciente, $idModulo){
+    $stmt = $this->bd->query("SELECT id, comentario FROM pac_historia_clinica_comentario WHERE id_modulo = '".$idModulo."' AND id_paciente = '".$idPaciente."' ORDER BY id DESC LIMIT 1");
+    $comentarios = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    return $comentarios;
+    }
+
+    //---------- COMENTATIOS DE LOS MODULOS ----------
+    public function mostrarComentariosModulo($idPaciente, $idRol, $idModulo) {
+    $result = '';
+    
+    $comentarios = $this->statusModulo($idPaciente, $idModulo);
+        
+    if ($idRol == "Doctor"){
+    $moduloComentario = "Sin comentarios";
+    $deshabilitar = "disabled";
+    }else{
+
+
+    $deshabilitar = "";
+    if (!empty($comentarios)) {
+    $num = 1;
+    foreach ($comentarios as $comentario): 
+    $moduloComentario = $comentario['comentario'];
+    $num++;
+    endforeach; 
+    $deshabilitar = "disabled";
+    }else{
+    $moduloComentario = "";
+    }
+    }
+
+    $result .= '
+    <textarea class="form-control" id="comentarioModulos" placeholder="Ingresa aquí tu comentario..." style="height: 200px;" '.$deshabilitar.'>'.$moduloComentario.'</textarea>';
+    return $result;
+    }
+
+
+   
+
+
+    //---------- FINALIZAR MODULO ----------
+    public function botonFinalizarModulo($idModulo, $idPaciente, $idRol){
+    $result = '';
+
+    $stmt = $this->bd->query("SELECT * FROM pac_historia_clinica_finalizar WHERE id_modulo = '".$idModulo."' AND id_paciente = '".$idPaciente."' ORDER BY id ASC");
+    $preguntas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    if (!empty($preguntas)) {
+    $result .= '';
+    }else{
+
+    if($idModulo == 2 || $idModulo == 3){
+    $result .= '<button class="btn btn-success" onclick="agregarComentario('.$idModulo.', '.$idPaciente.',\''.$idRol.'\')">Finalizar</button>';
+    } else{
+    $result .= '<button class="btn btn-success" onclick="finalizarModuloPAC('.$idModulo.', '.$idPaciente.',\''.$idRol.'\')">Finalizar</button>';
+    }   
+    }
+
+    return $result;
+    }
+
     //---------- FINALIZAR MODULO ----------
     public function finalizarModulos($data){
 
@@ -85,5 +149,4 @@ class PacienteModulosModelo{
         
     }
     
-
 }

@@ -50,7 +50,7 @@ function tableLaboratorio(){
             return response.text();
             })
             .then(data => {
-
+ 
                 const resultsContainer = document.getElementById('conteLaboratorio');
                 resultsContainer.innerHTML = data;
 

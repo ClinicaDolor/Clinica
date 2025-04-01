@@ -1,6 +1,8 @@
 <?php 
 use App\Config\Database;
 $bd = Database::getInstance();
+
+
 ?>
 
     <!DOCTYPE html>
@@ -16,6 +18,7 @@ $bd = Database::getInstance();
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="<?=RUTA_JS;?>loader.js"></script>
+    <script src="<?=RUTA_JS;?>clean-data.js"></script>
     </head>
 
     <body> 
