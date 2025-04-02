@@ -392,7 +392,7 @@ function tableLaboratorio(){
                 </div>
                 </div>
                 <div id="mensaje"></div>
-                <div class="text-end"><button class="btn btn-success fs-5" onclick="AgregarNota()">Guardar Nota Subsecuente <i data-feather="arrow-right"></i> </button></div>
+                <div class="text-end"><button class="btn btn-success fs-5" onclick="AgregarNota()">Guardar Nota Subsecuente <i data-feather="chevron-right"></i> </button></div>
 
             </div>
             <div class="col-12 col-sm-6">
@@ -418,7 +418,7 @@ function tableLaboratorio(){
                 <label class="text-primary"><small>Descripción:</small></label>
 
                 <div id="snow3" class="editor2"></div>
-                <div class="text-end mt-3"><button class="btn btn-primary" onclick="AgregarLaboratorio()">Agregar</button></div>
+                <div class="text-end mt-3"><button class="btn btn-primary" onclick="AgregarLaboratorio()">Agregar <i data-feather="chevron-right"></i></button></div>
 
                 </div>
                 </div>

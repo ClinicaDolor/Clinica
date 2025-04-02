@@ -152,6 +152,11 @@ return function(RouteCollector $r) {
 
         $r->addRoute('GET', '/cerrar-sesion', ['LoginController', 'cerrarSesion']);
         $r->addRoute('GET', '/pdf/receta/{idReceta}', ['PdfController', 'pdfReceta']);
+
+        //-----------------------------------------------//
+        //-------- Controlador para descargar archivos ---//
+        $r->addRoute('GET', '/descargar/{ruta}/{archivo}', ['DownloadController', 'download']);
+
 };
 
 ?>
