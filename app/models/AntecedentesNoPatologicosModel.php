@@ -21,6 +21,16 @@ $this->bd = Database::getInstance();
     return $modulos;
     }
 
+    
+    public function obtenerNameModulos($idTema){
+    $stmt = $this->bd->query("SELECT tema FROM pac_temas_modulo_3 WHERE id = '".$idTema."' ORDER BY id ASC");
+    $modulos = array();
+    while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+    $tema = $row['tema'];
+    }
+    return $tema;
+    }
+
     //---------- OBTENER DATOS DEL MODULO ----------//
     public function obtenerPreguntasModulos(){
     $stmt = $this->bd->query("SELECT id FROM pac_preguntas_modulo_3 ORDER BY id ASC");
@@ -34,102 +44,153 @@ $this->bd = Database::getInstance();
     }
         
     public function mostrarPreguntasM3($idPaciente, $idRol, $idTema){
-        $result = '';
-        $modulos = $this->obtenerModulos();
+    $result = '';
+
+    $modulos = $this->obtenerModulos();
+    // Consulta para obtener las preguntas y respuestas
+    $stmt = $this->bd->query("SELECT 
+    pac_respuestas_paciente_modulo_3.id AS idRespuesta, 
+    pac_temas_modulo_3.tema,
+    pac_preguntas_modulo_3.pregunta, 
+    pac_preguntas_modulo_3.tipo, 
+    pac_respuestas_paciente_modulo_3.respuesta 
+    FROM pac_temas_modulo_3 
+    INNER JOIN pac_preguntas_modulo_3 ON pac_preguntas_modulo_3.id_tema = pac_temas_modulo_3.id 
+    INNER JOIN pac_respuestas_paciente_modulo_3 ON pac_preguntas_modulo_3.id = pac_respuestas_paciente_modulo_3.id_pregunta 
+    WHERE pac_respuestas_paciente_modulo_3.id_paciente = '".$idPaciente."' AND pac_temas_modulo_3.id = '".$idTema."' ORDER BY pac_temas_modulo_3.id ASC");
+    $preguntas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    if($idRol == "Paciente"){
+    // Verifica si existen preguntas
+    if (!empty($preguntas)) {
+    $num = 1;
+    foreach ($preguntas as $index => $pregunta) :
+    $temaModulo = $pregunta['tema'];
+    $idRespuesta = $pregunta['idRespuesta'];
+    $preguntaPC = $pregunta['pregunta'];
+    $respuesta = $pregunta['respuesta'];
+    $tipo = $pregunta['tipo'];
     
-        // Consulta para obtener las preguntas y respuestas
-        $stmt = $this->bd->query("SELECT 
-            pac_respuestas_paciente_modulo_3.id AS idRespuesta, 
-            pac_temas_modulo_3.tema,
-            pac_preguntas_modulo_3.pregunta, 
-            pac_preguntas_modulo_3.tipo, 
-            pac_respuestas_paciente_modulo_3.respuesta 
-            FROM pac_temas_modulo_3 
-            INNER JOIN pac_preguntas_modulo_3 ON pac_preguntas_modulo_3.id_tema = pac_temas_modulo_3.id 
-            INNER JOIN pac_respuestas_paciente_modulo_3 ON pac_preguntas_modulo_3.id = pac_respuestas_paciente_modulo_3.id_pregunta 
-            WHERE pac_respuestas_paciente_modulo_3.id_paciente = '".$idPaciente."' AND pac_temas_modulo_3.id = '".$idTema."'");
-        $preguntas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    
-        // Verifica si existen preguntas
-        if (!empty($preguntas)) {
-            $num = 1;
-            foreach ($preguntas as $index => $pregunta) :
-                $temaModulo = $pregunta['tema'];
-                $idRespuesta = $pregunta['idRespuesta'];
-                $preguntaPC = $pregunta['pregunta'];
-                $respuesta = $pregunta['respuesta'];
-                $tipo = $pregunta['tipo'];
-    
-                // La primera pregunta se muestra activa
-                $claseActiva = ($index == 0) ? 'active' : '';      
-                $result .= '<div class="pregunta-container '.$claseActiva.'" data-index="'.$index.'" data-id="'.$num.'" data-pregunta="'.$preguntaPC.'" data-rol="'.$idRol.'" data-tema="'.$idTema.'">';
+    // La primera pregunta se muestra activa
+    $claseActiva = ($index == 0) ? 'active' : '';      
+    $result .= '<div class="pregunta-container '.$claseActiva.'" data-index="'.$index.'" data-id="'.$num.'" data-pregunta="'.$preguntaPC.'" data-rol="'.$idRol.'" data-tema="'.$idTema.'">';
                             
-                $result .= '<h8 class="text-success fw-bold"><b>'.$temaModulo.'</b></h8>';
-                $result .= '
-                <div id="seccion'.$idRespuesta.'" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mt-3 mb-1">';
-                $result .= '<h8 class="text-secondary fw-bold mb-1 texto"><b>'.$preguntaPC.'</b></h8>
-                </div>';
+    $result .= '<h8 class="text-success fw-bold"><b>'.$temaModulo.'</b></h8>';
+    $result .= '<div id="seccion'.$idRespuesta.'" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mt-3 mb-1">';
+    $result .= '<h8 class="text-secondary fw-bold mb-1 texto"><b>'.$preguntaPC.'</b></h8>
+    </div>';
     
-                // Mostrar el tipo de pregunta (select o input)
-                if ($tipo == "select") {
-                    $result .= '<select class="form-select" onchange="respuestaPreguntaSelect('.$idRespuesta.', this, '.$idTema.', \''.$idRol.'\')">
-                        <option value="" disabled selected>Selecciona una opción...</option>
-                        <option value="Si" ' . ($respuesta == 'Si' ? 'selected' : '') . '>Sí</option>
-                        <option value="No" ' . ($respuesta == 'No' ? 'selected' : '') . '>No</option>
-                        </select>';
-                } else {
-                    $result .= '<input type="text" class="form-control" value="' . ($respuesta == 0 ? '' : $respuesta) . '" placeholder="Ingresa aquí tu respuesta..." onchange="respuestaPreguntaSelect('.$idRespuesta.', this, '.$idTema.', \''.$idRol.'\')">';
-                }
+    // Mostrar el tipo de pregunta (select o input)
+    if ($tipo == "select") {
+    $result .= '<select class="form-select" onchange="respuestaPreguntaSelect('.$idRespuesta.', this, '.$idTema.', \''.$idRol.'\')">
+    <option value="" disabled selected>Selecciona una opción...</option>
+    <option value="Si" ' . ($respuesta == 'Si' ? 'selected' : '') . '>Sí</option>
+    <option value="No" ' . ($respuesta == 'No' ? 'selected' : '') . '>No</option>
+    </select>';
+    } else {
+    $result .= '<input type="text" class="form-control" value="' . ($respuesta == 0 ? '' : $respuesta) . '" placeholder="Ingresa aquí tu respuesta..." onchange="respuestaPreguntaSelect('.$idRespuesta.', this, '.$idTema.', \''.$idRol.'\')">';
+    }
     
-                //----- Botones de navegación -----
-                $result .= '<div class="mt-3 d-flex justify-content-between">';
-                // Botón "Anterior"
-                if ($index == 0) {
-                    if($idTema > 1){ 
-                        // Se obtiene el nombre del módulo anterior desde el array
-                        $prevNombre = $modulos[$idTema - 1];
-                        $prevId = $idTema - 1;
-                        $result .= '<button class="btn btn-success" onclick="anteriorPregunta(' . $idTema . ')"><i data-feather="chevron-left"></i>'.$prevNombre.'</button>';
-                    } else {
-                        $result .= '<div></div>';
-                    }
-                } else {
-                    $result .= '<button class="btn btn-secondary" onclick="anteriorPregunta(' . $idTema . ')"><i data-feather="chevron-left"></i> Anterior</button>';
-                }
+    //----- Botones de navegación -----
+    $result .= '<div class="mt-3 d-flex justify-content-between">';
+                
+    // Botón "Anterior"
+    if ($index == 0) {
+    if($idTema > 1){ 
+    // Se obtiene el nombre del módulo anterior desde el array
+    $prevNombre = $modulos[$idTema - 1];
+    $prevId = $idTema - 1;
+    $result .= '<button class="btn btn-success" onclick="anteriorPregunta(' . $idTema . ')"><i data-feather="chevron-left"></i>'.$prevNombre.'</button>';
+    } else {
+    $result .= '<div></div>';
+    }
+    } else {
+    $result .= '<button class="btn btn-secondary" onclick="anteriorPregunta(' . $idTema . ')"><i data-feather="chevron-left"></i> Anterior</button>';
+    }
     
-                //----- Botón Siguiente o de cambio de módulo -----
-                if ($index < count($preguntas) - 1) {
-                    if($index == 0 && $tipo == "select" && $respuesta == "No"){
-                        // Botón para ir a la última sección
-                        if(isset($modulos[$idTema+1])){
-                            $nextNombre = $modulos[$idTema+1];
-                            $nextId = $idTema + 1;
-                            $result .= '<button class="btn btn-success" onclick="irASiguienteSeccion(\''.$nextNombre.'\','.$nextId.')">'.$nextNombre.' <i data-feather="chevron-right"></i></button>';
-                        } else {
-                            $result .= '<button class="btn btn-success" onclick="finalizarPreguntas()">Comentarios <i data-feather="message-circle"></i></button>';
-                        }
-                    } else {
-                        // Botón normal para la siguiente pregunta
-                        $result .= '<button class="btn btn-primary" onclick="siguientePregunta(' . $idTema . ')">Siguiente <i data-feather="chevron-right"></i></button>';
-                    }
-                } else {
-                    // Al final del módulo, se comprueba si existe un siguiente módulo
-                    if(isset($modulos[$idTema+1])){
-                        $nextNombre = $modulos[$idTema+1];
-                        $nextId = $idTema + 1;
-                        $result .= '<button class="btn btn-success" onclick="irASiguienteSeccion(\''.$nextNombre.'\','.$nextId.')">'.$nextNombre.' <i data-feather="chevron-right"></i></button>';
-                    } else {
-                        $result .= '<button class="btn btn-success" onclick="finalizarPreguntas()">Comentarios <i data-feather="message-circle"></i></button>';
-                    }
-                }
-                $result .= '</div>';  // Cierre contenedor de botones
-                $result .= '</div>';  // Cierre contenedor de la pregunta
+    //----- Botón Siguiente o de cambio de módulo -----
+    if ($index < count($preguntas) - 1) {
+    if($index == 0 && $tipo == "select" && $respuesta == "No"){
+    // Botón para ir a la última sección
+    if(isset($modulos[$idTema+1])){
+    $nextNombre = $modulos[$idTema+1];
+    $nextId = $idTema + 1;
+    $result .= '<button class="btn btn-success" onclick="irASiguienteSeccion(\''.$nextNombre.'\','.$nextId.')">'.$nextNombre.' <i data-feather="chevron-right"></i></button>';
+    } else {
+    $result .= '<button class="btn btn-success" onclick="finalizarPreguntas()">Comentarios <i data-feather="message-circle"></i></button>';
+    }
+
+    } else {
+    // Botón normal para la siguiente pregunta
+    $result .= '<button class="btn btn-primary" onclick="siguientePregunta(' . $idTema . ')">Siguiente <i data-feather="chevron-right"></i></button>';
+    }
+
+    } else {
+    // Al final del módulo, se comprueba si existe un siguiente módulo
+    if(isset($modulos[$idTema+1])){
+    $nextNombre = $modulos[$idTema+1];
+    $nextId = $idTema + 1;
+    $result .= '<button class="btn btn-success" onclick="irASiguienteSeccion(\''.$nextNombre.'\','.$nextId.')">'.$nextNombre.' <i data-feather="chevron-right"></i></button>';
+    } else {
+    $result .= '<button class="btn btn-success" onclick="finalizarPreguntas()">Comentarios <i data-feather="message-circle"></i></button>';
+    }
+
+    }
+    $result .= '</div>';  // Cierre contenedor de botones
+    $result .= '</div>';  // Cierre contenedor de la pregunta
     
-                $num++;
-            endforeach;
-        }
+    $num++;
+    endforeach;
+    }
+
+    }else{
+
+
+    $modulos = $this->obtenerNameModulos($idTema);
+
+    $result .= '    
+    <div class="table-responsive mb-3">
+    <table class="table table-striped" id="table_enfermedades">
+    <thead>
+    <tr>
+    <th class="text-center align-middle" colspan="3">'.$modulos.'</th>
+    </tr>
+
+    <tr>
+    <th class="text-center align-middle" width="40px">#</th>
+    <th class="text-start align-middle">Pregunta</th>
+    <th class="text-start align-middle">Respuesta</th>
+    </tr>
+    </thead>
+    <tbody>';
+
+    if (!empty($preguntas)) {
+    $num = 1;
+    foreach ($preguntas as $index => $pregunta) :
+    $preguntaPC = $pregunta['pregunta'];
+    $respuesta = $pregunta['respuesta'];
+    $tipo = $pregunta['tipo'];
+
+    $result .= ' <tr> 
+    <td class="text-center align-middle">'.$num.'</td>';
+
+    $result .= '<td class="text-start align-middle">'.$preguntaPC.'</td>
+    <td class="text-start align-middle">'.$respuesta.'</td>
+    </tr>';
     
-        return $result;
+    $num++;
+    endforeach;
+    }
+
+    $result .= '</tbody>
+    </table>
+    </div>';
+
+    }
+
+        
+    
+    return $result;
     }
     
 

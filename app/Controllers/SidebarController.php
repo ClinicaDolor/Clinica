@@ -82,6 +82,11 @@ class SidebarController {
     ['titulo' => 'Antecedentes familiares', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ],
 
+
+    'antecedentes-personales-no-patologicos' => [
+    ['titulo' => 'Antecedentes personales no patologicos', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ],
+
     'perfil' => [
     ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/pacientes', 'icono' => 'users']
     ],
@@ -103,16 +108,16 @@ class SidebarController {
     ['titulo' => 'Antecedentes familiares', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ],
 
+    'antecedentes-personales-no-patologicos' => [
+    ['titulo' => 'Antecedentes personales no patologicos', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ],
+
     'antecedentes-personales-quirurgicos' => [
     ['titulo' => 'Antecedentes Personales Quirúrgicos', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ],
 
     'procedimientos-control-dolor' => [
     ['titulo' => 'Procedimientos que ha utilizado para controlar el dolor', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
-    ],
-
-    'antecedentes-personales-no-patologicos' => [
-    ['titulo' => 'Antecedentes personales no patologicos', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ]
     
     
