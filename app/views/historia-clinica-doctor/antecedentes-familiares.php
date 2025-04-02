@@ -139,7 +139,7 @@ echo $model->antecedentesFamiliares($data['idPaciente'], $enf);
 
 
     </div>
-    </div>
+    </div> 
 
     <!---------- CONTENIDO DE C0MENTARIOS COMENTARIOS ---------->
     <div class="col-12">
