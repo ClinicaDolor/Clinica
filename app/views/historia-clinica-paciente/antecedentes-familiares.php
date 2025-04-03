@@ -319,7 +319,7 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
     <div class="row">
 
     <div id="seccion2" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-3">
-    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion2">
+    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion100">
       
     <h8 class="text-primary fw-bold texto">
     <b>Si tiene alguna otra información o comentarios que desee compartir, por favor, indíquelo:</b>
