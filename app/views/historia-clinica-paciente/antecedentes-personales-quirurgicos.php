@@ -1,8 +1,10 @@
 <?php 
 use App\Config\Database;
+use App\Models\PacienteModulosModelo;
 $bd = Database::getInstance();
-?>
 
+?>
+ 
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -18,13 +20,20 @@ $bd = Database::getInstance();
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="<?=RUTA_JS;?>loader.js"></script>
 
+    <style>
+    /* Contenedor de preguntas visible inicialmente */
+    .pregunta-container { display: none; }
+    .pregunta-container.active { display: block; }
+    </style>
+
     <script>
     document.addEventListener("DOMContentLoaded", function() {
     contenidoPreguntas();
+
     });
  
     // ---------- CONTENIDO DE LAS PREGUNTAS ----------
-    function contenidoPreguntas() {
+    function contenidoPreguntas(idValor = 0) {
     const usuarioDiv = document.getElementById('main');
     const idPaciente = usuarioDiv.getAttribute('data-paciente');
     const idRol = usuarioDiv.getAttribute('data-rol');
@@ -37,23 +46,99 @@ $bd = Database::getInstance();
     contenedor.innerHTML = data;
     feather.replace();
 
-    const tabla = document.querySelector("#table_cirugia");
-    if (tabla) {
-    dataTable = new simpleDatatables.DataTable(tabla,{
-	searchable: true,
-    fixedHeight: true,
-	columns: [
-	{
-	select: 1, sort: "desc"
-	},
-    { select: [0,1,2,3], sortable: false },
-
-	]
+    // Reactivar el IntersectionObserver para las nuevas secciones
+    document.querySelectorAll('.sectionQuestion').forEach(section => {
+    observer.observe(section);
     });
-    }   
 
+    cargarProgreso(idValor);
     });
     } 
+
+    function guardarProgreso(index) {
+    localStorage.setItem("preguntaActual", index);
+    }
+
+    function cargarProgreso(idValor) {
+    let indexGuardado = localStorage.getItem("preguntaActual");
+    indexGuardado = indexGuardado ? parseInt(indexGuardado) : 0;
+
+    const preguntas = document.querySelectorAll('.pregunta-container');
+    
+    // Calcular el nuevo índice dentro de los límites permitidos
+    let nuevoIndex = indexGuardado + idValor;
+    if (nuevoIndex < 0) nuevoIndex = 0; // Evita ir antes de la primera pregunta
+    if (nuevoIndex >= preguntas.length) nuevoIndex = preguntas.length - 1; // Evita ir después de la última pregunta
+
+    // Remover la clase 'active' de todas las preguntas
+    preguntas.forEach(pregunta => pregunta.classList.remove('active'));
+
+    // Asegúrate de que el índice esté dentro del rango de preguntas
+    if (preguntas[nuevoIndex]) {
+    // Activar la nueva pregunta
+    preguntas[nuevoIndex].classList.add('active');
+    // Mostrar el botón si es la última pregunta
+    document.getElementById('btnAgregarCirugia').style.display = nuevoIndex === preguntas.length - 1 ? 'block' : 'none';
+    }
+
+    // Guardar el nuevo progreso
+    guardarProgreso(nuevoIndex);
+    }
+
+
+    //---------- PREGUNTA ANTERIOR ----------
+    function anteriorPregunta() {
+    const preguntas = document.querySelectorAll('.pregunta-container');
+    let activeIndex = -1;
+
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+
+    preguntas.forEach((pregunta, index) => {
+    if (pregunta.classList.contains('active')) {
+    activeIndex = index;
+    pregunta.classList.remove('active');
+    }
+    });
+
+    if (activeIndex > 0) {
+    const nuevoIndice = activeIndex - 1;
+    preguntas[nuevoIndice].classList.add('active');
+    guardarProgreso(nuevoIndice); // Guarda el progreso al retroceder
+    }
+
+    // Ocultar el botón si no estamos en la última pregunta
+    document.getElementById('btnAgregarCirugia').style.display = 'none';
+    }
+
+    //---------- PREGUNTA SIGUIENTE ----------
+    function siguientePregunta() {
+    const preguntas = document.querySelectorAll('.pregunta-container');
+    let activeIndex = -1;
+
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+
+    preguntas.forEach((pregunta, index) => {
+    if (pregunta.classList.contains('active')) {
+    activeIndex = index;
+    pregunta.classList.remove('active');
+    }
+    });
+
+    if (activeIndex < preguntas.length - 1) {
+    const nuevoIndice = activeIndex + 1;
+    preguntas[nuevoIndice].classList.add('active');
+    guardarProgreso(nuevoIndice); // Guarda el progreso al avanzar
+    }
+
+    // Mostrar el botón solo si se está en la última pregunta
+    if (activeIndex + 1 === preguntas.length - 1) {
+    document.getElementById('btnAgregarCirugia').style.display = 'block';
+    } else {
+    document.getElementById('btnAgregarCirugia').style.display = 'none';
+    }
+    }
 
     //---------- CONTROL SERVER ----------
     function gestionarAntecedentesQuirurgicos(url, parametros, callback) {
@@ -92,7 +177,10 @@ $bd = Database::getInstance();
     gestionarAntecedentesQuirurgicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/eliminar-cirugia-antecedentes`, { idQuirurgico, idRol }, () => contenidoPreguntas(1));
     }
 
-
+    //---------- FINALIZAR MODULO DEL PACIENTE----------
+    function finalizarModuloPAC(idModulo, idPaciente) {
+    gestionarAntecedentesQuirurgicos('/historia-clinica/paciente/finalizar-modulo-paciente', { idModulo, idPaciente }, () => window.location.href = '/historia-clinica');
+    }
     </script>
     </head>
 
@@ -129,22 +217,22 @@ $bd = Database::getInstance();
     <div id="contePreguntas"></div>
     </div>
     </section>
-    </div>
 
+    </div>
     <!----- FOOTER ---------->
     <?php include_once __DIR__ . '/../components/footer-mvsd.php';?>
-
     </div>
     </div>
 
     </div>
     </div>
 
+    <script src="<?=RUTA_JS;?>voice-utilities.js"></script>
     <script src="<?=RUTA_JS;?>/feather-icons/feather.min.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="<?=RUTA_JS;?>app.js"></script>    
     <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
     <script src="<?=RUTA_JS;?>main.js"></script>
-
+    
     </body>
     </html>

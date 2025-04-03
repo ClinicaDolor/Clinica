@@ -126,7 +126,8 @@ function leerSiguienteSeccion() {
 document.querySelectorAll('.btnLeer').forEach(button => {
   button.addEventListener('click', function() {
     const target = this.getAttribute('data-target');
-    leerTextoSeccion(target); // Leer el texto de la sección cuando se hace clic en el botón
+    // Repetir la lectura del texto de la sección correspondiente
+    leerTextoSeccion(target);
   });
 });
 
@@ -163,3 +164,10 @@ document.querySelectorAll('.sectionQuestion').forEach(section => {
   observer.observe(section);
 });
 
+// ---------- LEER LAS PREGUNTAS ----------
+function readQuestion(){
+  const firstSection = document.querySelector('.sectionQuestion');
+  const sectionId = firstSection.id;
+  leerTextoSeccion(sectionId);
+}   
+      

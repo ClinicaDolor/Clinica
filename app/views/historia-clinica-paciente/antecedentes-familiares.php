@@ -30,7 +30,7 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="<?=RUTA_JS;?>loader.js"></script>
-
+ 
     <style>
     /* Contenedor de preguntas visible inicialmente */
     #preguntas-container { display: block; }
@@ -273,7 +273,7 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
 
     <div class="page-title mb-4">     
     <h8><?=$data['nombre'];?></h8>
-    <h3>Antecedentes familiares</h3>
+    <h3><?=$data['title'];?></h3>
     </div>
     
     <section class="section">
@@ -319,7 +319,7 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
     <div class="row">
 
     <div id="seccion2" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-3">
-    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion2">
+    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion100">
       
     <h8 class="text-primary fw-bold texto">
     <b>Si tiene alguna otra información o comentarios que desee compartir, por favor, indíquelo:</b>

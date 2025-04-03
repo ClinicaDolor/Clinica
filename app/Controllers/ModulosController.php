@@ -200,7 +200,7 @@ class ModulosController extends BaseController {
     }
             
     $model = new AntecedentesNoPatologicosModel();
-    $resultModel = $model->editarCuesrionarioModulo($data);
+    $resultModel = $model->editarCuestionarioModulo($data);
         
     if ($resultModel['resultado'] == 200) {
     echo HttpMethod::jsonResponse(200,true,$resultModel['mensaje']);

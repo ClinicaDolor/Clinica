@@ -84,7 +84,7 @@ class SidebarController {
 
 
     'antecedentes-personales-no-patologicos' => [
-    ['titulo' => 'Antecedentes personales no patologicos', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ['titulo' => 'Antecedentes Personales No Patologicos', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ],
 
     'perfil' => [
@@ -109,7 +109,7 @@ class SidebarController {
     ],
 
     'antecedentes-personales-no-patologicos' => [
-    ['titulo' => 'Antecedentes personales no patologicos', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ['titulo' => 'Antecedentes Personales No Patologicos', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ],
 
     'antecedentes-personales-quirurgicos' => [

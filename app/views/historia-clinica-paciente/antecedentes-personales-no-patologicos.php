@@ -10,11 +10,13 @@ foreach ($preguntas_fijas as $preg) {
 echo $model->antecedentesNoPatologicos($data['idPaciente'], $preg);
 }
 
+$modulos = $model->obtenerModulos();
+
 $model2 = new PacienteModulosModelo();
 $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idRol']);
 
 ?>
-
+ 
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -29,7 +31,7 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="<?=RUTA_JS;?>loader.js"></script>
-
+ 
     <style>
     /* Contenedor de preguntas visible inicialmente */
     #preguntas-container { display: block; }
@@ -40,18 +42,13 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
     </style>
 
     <script>
-    // Definir el arreglo de temas globalmente
-    const temas = [
-    { id: 1, nombre: "Tabaquismo" },
-    { id: 2, nombre: "Alcoholismo" },
-    { id: 3, nombre: "Ejercicio" },
-    { id: 4, nombre: "Estres" },
-    { id: 5, nombre: "Drogas" },
-    { id: 6, nombre: "Dormir" },
-    { id: 7, nombre: "Grupo Sanguineo" }
-    ];
+    // Pasar los datos de PHP a JavaScript
+    const modulos = <?=json_encode($modulos)?>;
 
-
+    // Crear el arreglo de temas (adaptado al formato que usas en el frontend)
+    const temas = Object.keys(modulos).map(id => {
+    return { id: id, nombre: modulos[id] };
+    });
 
     // Al cargar la página se carga el módulo correspondiente (por defecto "Tabaquismo")
     document.addEventListener("DOMContentLoaded", function() {
@@ -65,13 +62,12 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
     contenidoPreguntas(temaActual.id);
     }
 
-    localStorage.setItem("preguntaActual_1", 0);
-    localStorage.setItem("preguntaActual_2", 0);
-    localStorage.setItem("preguntaActual_3", 0);
-    localStorage.setItem("preguntaActual_4", 0);
-    localStorage.setItem("preguntaActual_5", 0);
-    localStorage.setItem("preguntaActual_6", 0);
-    localStorage.setItem("preguntaActual_7", 0);
+    // Inicializar las preguntas con valor 0 si no están configuradas en localStorage
+    for (let i = 1; i <= 7; i++) {
+    if (localStorage.getItem(`preguntaActual_${i}`) === null) {
+    localStorage.setItem(`preguntaActual_${i}`, 0);
+    }
+    }
 
     });
 
@@ -228,7 +224,6 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
     $(".LoaderPage").show();
     $(".LoaderPage").fadeOut(1000);
     localStorage.setItem("seccionActual", nombreTema);
-    //localStorage.removeItem("preguntaActual_" + idTema);
     contenidoPreguntas(idTema);
     }
 
@@ -268,12 +263,18 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
 
 
     //---------- EDITAR ENFERMEDADES DEL PACIENTE ----------
-    function respuestaPreguntaSelect (idRespuesta, elemento, idTema, idRol) {
+    function respuestaPreguntaSelect (idPaciente, idRespuesta, elemento, idTema, idTipo, idRol) {
     gestionarAntecedentesNoPatologicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/editar-cuestionario-modulo3`, {
-        idRespuesta, detalle: elemento.value, idRol
-    }, () => contenidoPreguntas(idTema));
+    idPaciente,
+    idRespuesta, 
+    idTema,
+    idTipo,
+    detalle: elemento.value,
+    idRol
+    }, 
+    () => contenidoPreguntas(idTema));
     }
-
+   
     //---------- AGREGAR COMENTARIO DEL MODULO ----------
     function agregarComentario(idModulo, idPaciente, idRol) {
     let comentario = document.getElementById('comentarioModulos').value;
@@ -285,8 +286,6 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
     function FinalizarModuloPaciente(idModulo, idPaciente) {
     gestionarAntecedentesNoPatologicos('/historia-clinica/paciente/finalizar-modulo-paciente', { idModulo, idPaciente }, () => window.location.href = '/historia-clinica');
     }
-
-
     </script>
     </head>
 
@@ -315,7 +314,7 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
 
     <div class="page-title mb-4">     
     <h8><?=$data['nombre'];?></h8>
-    <h3>Antecedentes Personales No Patológicos</h3>
+    <h3><?=$data['title'];?></h3>
     </div>
     
     <section class="section">
@@ -326,8 +325,8 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
     <div class="card-header pb-0">
     <div class="row">
 
-    <div id="seccion0" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-2">
-    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion0">
+    <div id="seccion100" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-2">
+    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion100">
 
     <h8 class="text-primary fw-bold texto">
     <b>A continuacion, responda las siguientes preguntas indicando si presenta alguna de estas conductas o hábitos:</b>
@@ -359,8 +358,8 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
     <div class="card-header pb-0">
     <div class="row">
 
-    <div id="seccion2" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-3">
-    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion2">
+    <div id="seccion101" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-3">
+    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion101">
       
     <h8 class="text-primary fw-bold texto">
     <b>Si tiene alguna otra información o comentarios que desee compartir, por favor, indíquelo:</b>
@@ -386,7 +385,6 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
   
     </div>
 
-
     </div>
     </section>
 
@@ -405,5 +403,6 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
     <script src="<?=RUTA_JS;?>app.js"></script>    
     <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
     <script src="<?=RUTA_JS;?>main.js"></script>
+    
     </body>
     </html>

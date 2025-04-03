@@ -73,6 +73,33 @@ echo $model->antecedentesNoPatologicos($data['idPaciente'], $preg);
     });
     }
 
+    //---------- CONTROL SERVER ----------
+    function gestionarAntecedentesNoPatologicos(url, parametros, callback) {
+    $(".LoaderPage").show();
+    fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(parametros)
+    }).then(res => res.json()).then(data => {
+    $(".LoaderPage").fadeOut(1000);
+    if (data.resultado) callback();
+    else document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
+    });
+    }
+
+    //---------- EDITAR ENFERMEDADES DEL PACIENTE ----------
+    function respuestaPreguntaSelect (idPaciente, idRespuesta, elemento, idTema, idTipo, idRol) {
+    gestionarAntecedentesNoPatologicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/editar-cuestionario-modulo3`, {
+    idPaciente,
+    idRespuesta, 
+    idTema,
+    idTipo,
+    detalle: elemento.value,
+    idRol
+    }, 
+    () => contenidoPreguntas(idTema));
+    }
+
     </script>
     </head>
 
