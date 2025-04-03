@@ -45,7 +45,7 @@ $this->bd = Database::getInstance();
         
     public function mostrarPreguntasM3($idPaciente, $idRol, $idTema){
     $result = '';
-
+      
     $stmt = $this->bd->query("SELECT 
     pac_respuestas_paciente_modulo_3.id AS idRespuesta, 
     pac_temas_modulo_3.tema,
@@ -57,7 +57,7 @@ $this->bd = Database::getInstance();
     INNER JOIN pac_respuestas_paciente_modulo_3 ON pac_preguntas_modulo_3.id = pac_respuestas_paciente_modulo_3.id_pregunta 
     WHERE pac_respuestas_paciente_modulo_3.id_paciente = '".$idPaciente."' AND pac_temas_modulo_3.id = '".$idTema."' ORDER BY pac_temas_modulo_3.id ASC");
     $preguntas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    
+      
     if($idRol == "Paciente"){
     $modulos = $this->obtenerModulos();
 
@@ -69,6 +69,7 @@ $this->bd = Database::getInstance();
     $preguntaPC = $pregunta['pregunta'];
     $respuesta = $pregunta['respuesta'];
     $tipo = $pregunta['tipo'];
+
                     
     // La primera pregunta se muestra activa
     $claseActiva = ($index == 0) ? 'active' : '';      
@@ -94,7 +95,6 @@ $this->bd = Database::getInstance();
                     
     //----- Botones de navegación -----
     $result .= '<div class="mt-3 d-flex justify-content-between">';
-                        
     // Botón "Anterior"
     if ($index == 0) {
     if($idTema > 1){ 
@@ -108,7 +108,7 @@ $this->bd = Database::getInstance();
     } else {
     $result .= '<button class="btn btn-secondary" onclick="anteriorPregunta(' . $idTema . ')"><i data-feather="chevron-left"></i> Anterior</button>';
     }
-                    
+      
     // Verificar si la respuesta está vacía para preguntas de tipo "select"
     if ($tipo == "select" && empty($respuesta)) {
     // Si la respuesta está vacía, no mostrar los botones "Siguiente" ni "Ir a siguiente sección"

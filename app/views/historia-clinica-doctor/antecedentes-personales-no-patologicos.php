@@ -191,9 +191,6 @@ echo $model->antecedentesNoPatologicos($data['idPaciente'], $preg);
     </div>
     </div>
 
-
-
-    
     <script src="<?=RUTA_JS;?>/feather-icons/feather.min.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="<?=RUTA_JS;?>app.js"></script>    
