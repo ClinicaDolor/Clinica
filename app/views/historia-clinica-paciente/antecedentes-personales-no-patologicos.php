@@ -31,7 +31,7 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="<?=RUTA_JS;?>loader.js"></script>
-
+ 
     <style>
     /* Contenedor de preguntas visible inicialmente */
     #preguntas-container { display: block; }
@@ -314,7 +314,7 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
 
     <div class="page-title mb-4">     
     <h8><?=$data['nombre'];?></h8>
-    <h3>Antecedentes Personales No Patológicos</h3>
+    <h3><?=$data['title'];?></h3>
     </div>
     
     <section class="section">
@@ -325,8 +325,8 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
     <div class="card-header pb-0">
     <div class="row">
 
-    <div id="seccion0" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-2">
-    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion0">
+    <div id="seccion100" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-2">
+    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion100">
 
     <h8 class="text-primary fw-bold texto">
     <b>A continuacion, responda las siguientes preguntas indicando si presenta alguna de estas conductas o hábitos:</b>
@@ -358,8 +358,8 @@ $botonFinalizar = $model2->botonFinalizarModulo(3,$data['idPaciente'],$data['idR
     <div class="card-header pb-0">
     <div class="row">
 
-    <div id="seccion100" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-3">
-    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion100">
+    <div id="seccion101" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-3">
+    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion101">
       
     <h8 class="text-primary fw-bold texto">
     <b>Si tiene alguna otra información o comentarios que desee compartir, por favor, indíquelo:</b>

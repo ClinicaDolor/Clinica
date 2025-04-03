@@ -76,8 +76,11 @@ $this->bd = Database::getInstance();
                                     
     $result .= '<h8 class="text-success fw-bold"><b>'.$temaModulo.'</b></h8>';
     $result .= '<div id="seccion'.$idRespuesta.'" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mt-3 mb-1">';
-    $result .= '<h8 class="text-secondary fw-bold mb-1 texto"><b>'.$preguntaPC.'</b></h8></div>';
-                    
+    // $result .= '<img src="'.RUTA_IMAGES.'/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion'.$idRespuesta.'">';
+    $result .= '<h8 class="text-secondary fw-bold mb-1 texto"><b>'.$preguntaPC.'</b></h8>
+    </div>';
+
+        
     // Mostrar el tipo de pregunta (select o input)
     if ($tipo == "select") {
     $result .= '<select class="form-select" onchange="respuestaPreguntaSelect('.$idPaciente.','.$idRespuesta.', this, '.$idTema.', \''.$tipo.'\',\''.$idRol.'\')">
@@ -334,5 +337,4 @@ $this->bd = Database::getInstance();
     return $resultado; 
     }
     
-
 }

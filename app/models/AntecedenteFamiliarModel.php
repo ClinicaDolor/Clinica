@@ -58,10 +58,10 @@ $this->bd = Database::getInstance();
     <thead>
     <tr>
     <th class="text-start align-middle" width="250px">Nombre de la enfermedad</th>
-    <th class="text-center align-middle" width="250px">Si/No/Se ignora</th>
+    <th class="text-center align-middle" width="250px">Respuesta</th>
     <th class="text-center align-middle" width="250px">Tipo</th>
     <th class="text-center align-middle">Especificar enfermedad</th>
-    <th class="text-center align-middle" width="30px"></th>
+    <th class="text-center align-middle" width="30px"><i data-feather="trash-2"></i></th>
 
     </tr>
     </thead>
@@ -76,47 +76,44 @@ $this->bd = Database::getInstance();
     $detalle = $pregunta['detalle'];
     $especificar = $pregunta['especificar'];
 
-    $result .= '    <tr>
-        <td class="text-start align-middle p-1">
-            ' . (in_array($enfermedad, $enfermedades_fijas) ? $enfermedad : '<input onchange="editarEnfermedad('.$idEnfermedad.', this, 1, \''.$idRol.'\')" 
-                   class="form-control nombre-enfermedad" 
-                   value="' . ($enfermedad ?? '') . '" 
-                   placeholder="Escribe la enfermedad...">') . '
-        </td>
+    $result .= '<tr>
+    <td class="text-start align-middle p-1">
+    <span class="d-none search-value">'.$enfermedad.'</span>
+    ' . (in_array($enfermedad, $enfermedades_fijas) ? $enfermedad : '<input onchange="editarEnfermedad('.$idEnfermedad.', this, 1, \''.$idRol.'\')" 
+    class="form-control nombre-enfermedad" value="' . ($enfermedad ?? '') . '"  placeholder="Escribe la enfermedad...">') . '
+    </td>
 
-        <td class="text-center align-middle">
-            <select class="form-select tipo-enfermedad" 
-                    onchange="editarEnfermedad('.$idEnfermedad.', this, 2, \''.$idRol.'\')" 
-                    ' . (in_array($enfermedad, $enfermedades_fijas) ? '' : 'disabled') . '>
-                <option value="" disabled selected ' . ($detalle === '' ? 'selected' : '') . '>Selecciona una opción...</option>
-                <option value="Si" ' . ($detalle == 'Si' ? 'selected' : '') . '>Sí</option>
-                <option value="No" ' . ($detalle == 'No' ? 'selected' : '') . '>No</option>
-            </select>
-        </td>
+    <td class="text-center align-middle">
+    <select class="form-select tipo-enfermedad" onchange="editarEnfermedad('.$idEnfermedad.', this, 2, \''.$idRol.'\')" 
+    ' . (in_array($enfermedad, $enfermedades_fijas) ? '' : 'disabled') . '>
+    <option value="" disabled selected ' . ($detalle === '' ? 'selected' : '') . '>Selecciona una opción...</option>
+    <option value="Si" ' . ($detalle == 'Si' ? 'selected' : '') . '>Sí</option>
+    <option value="No" ' . ($detalle == 'No' ? 'selected' : '') . '>No</option>
+     </select>
+    </td>
 
-        <td class="text-center align-middle tipo-detalle">
-            <select class="form-select detalle-enfermedad" 
-                    onchange="editarEnfermedad('.$idEnfermedad.', this, 3, \''.$idRol.'\')" 
-                    ' . (($enfermedad == "Diabetes Mellitus" && $detalle == "Si") ? '' : 'disabled') . '>
-                <option value="" disabled selected ' . ($tipo === '' ? 'selected' : '') . '>Selecciona una opción...</option>
-                <option value="Tipo 1" ' . ($tipo === 'Tipo 1' ? 'selected' : '') . '>Tipo 1</option>
-                <option value="Tipo 2" ' . ($tipo === 'Tipo 2' ? 'selected' : '') . '>Tipo 2</option>
-                <option value="Gestacional" ' . ($tipo === 'Gestacional' ? 'selected' : '') . '>Gestacional</option>
-                <option value="Otro" ' . ($tipo === 'Otro' ? 'selected' : '') . '>Otro</option>
-            </select>
-        </td>
+    <td class="text-center align-middle tipo-detalle">';
+    if($enfermedad == "Diabetes Mellitus"){
 
-        <td class="text-center align-middle">
-            <input class="form-control especificar-enfermedad" 
-                   onchange="editarEnfermedad('.$idEnfermedad.', this, 4, \''.$idRol.'\')" 
-                   value="' . ($especificar ?? '') . '" 
-                   placeholder="Especifica aquí la enfermedad..." 
-                   ' . ($detalle == 'Si' ? '' : 'disabled') . '>
-        </td>
+    $result.= '<select class="form-select detalle-enfermedad" onchange="editarEnfermedad('.$idEnfermedad.', this, 3, \''.$idRol.'\')" 
+    ' . (($enfermedad == "Diabetes Mellitus" && $detalle == "Si") ? '' : 'disabled') . '>
+    <option value="" disabled selected ' . ($tipo === '' ? 'selected' : '') . '>Selecciona una opción...</option>
+    <option value="Tipo 1" ' . ($tipo === 'Tipo 1' ? 'selected' : '') . '>Tipo 1</option>
+    <option value="Tipo 2" ' . ($tipo === 'Tipo 2' ? 'selected' : '') . '>Tipo 2</option>
+    <option value="Gestacional" ' . ($tipo === 'Gestacional' ? 'selected' : '') . '>Gestacional</option>
+    <option value="Otro" ' . ($tipo === 'Otro' ? 'selected' : '') . '>Otro</option>
+    </select>';
+    }   
+    $result .= '</td>
 
-        <td class="text-start align-middle">
-            ' . (!in_array($enfermedad, $enfermedades_fijas) ? '<i data-feather="trash-2" class="pointer" onclick="eliminarEnfermedadPaciente('.$idEnfermedad.', \''.$idRol.'\')"></i>' : '') . '
-        </td>
+    <td class="text-center align-middle">
+    <input class="form-control especificar-enfermedad" onchange="editarEnfermedad('.$idEnfermedad.', this, 4, \''.$idRol.'\')" value="' . ($especificar ?? '') . '" 
+    placeholder="Especifica aquí la enfermedad..." ' . ($detalle == 'Si' ? '' : 'disabled') . '>
+    </td>
+
+    <td class="text-start align-middle">
+    ' . (!in_array($enfermedad, $enfermedades_fijas) ? '<i data-feather="trash-2" class="pointer" onclick="eliminarEnfermedadPaciente('.$idEnfermedad.', \''.$idRol.'\')"></i>' : '') . '
+    </td>
     </tr>';
 
     endforeach;

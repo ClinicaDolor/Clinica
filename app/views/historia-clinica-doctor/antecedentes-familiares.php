@@ -63,6 +63,21 @@ echo $model->antecedentesFamiliares($data['idPaciente'], $enf);
     document.getElementById('conteComentario').innerHTML = data;
     feather.replace();   
 
+    const tabla = document.querySelector("#table_enfermedades");
+    if (tabla) {
+    dataTable = new simpleDatatables.DataTable(tabla,{
+	searchable: true,
+    fixedHeight: true,
+	columns: [
+	{
+	select: 1, sort: "desc"
+	},
+    { select: [1,2,3,4], sortable: false },
+
+	]
+    });
+    }   
+
     });
     }
 
@@ -165,9 +180,6 @@ echo $model->antecedentesFamiliares($data['idPaciente'], $enf);
     </div>
 
     </div>
-
-
-
     </section>
 
     </div>
@@ -176,82 +188,14 @@ echo $model->antecedentesFamiliares($data['idPaciente'], $enf);
     </div>
     </div>
 
-
-
     </div>
     </div>
 
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll(".tipo-enfermedad").forEach(select => {
-            select.addEventListener("change", function() {
-                let row = this.closest("tr");
-                let enfermedad = row.querySelector("td:first-child").innerText.trim();
-                let tipoSelect = row.querySelector(".detalle-enfermedad");
-                let inputEspecificar = row.querySelector(".especificar-enfermedad");
-
-                // Si el usuario elige "No", vaciar y deshabilitar los otros campos
-                if (this.value === "No") {
-                    tipoSelect.value = "";
-                    tipoSelect.disabled = true;
-                    inputEspecificar.value = "";
-                    inputEspecificar.disabled = true;
-                    return; // Detener la ejecución aquí
-                }
-
-                // Si la enfermedad es "Diabetes Mellitus" y selecciona "Sí", habilitar detalle
-                if (enfermedad === "Diabetes Mellitus" && this.value === "Si") {
-                    tipoSelect.disabled = false;
-                } else {
-                    tipoSelect.value = "";
-                    tipoSelect.disabled = true;
-                }
-
-                // Habilitar campo "Especificar enfermedad" solo si el select tiene "Si"
-                inputEspecificar.disabled = this.value !== "Si";
-                if (this.value !== "Si") {
-                    inputEspecificar.value = "";
-                }
-            });
-        });
-    });
-    </script>
-
-    
     <script src="<?=RUTA_JS;?>/feather-icons/feather.min.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="<?=RUTA_JS;?>app.js"></script>    
     <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
     <script src="<?=RUTA_JS;?>main.js"></script>
-
-    <script>
-    let table1 = document.querySelector('#table_enfermedades');
-    let dataTable = new simpleDatatables.DataTable(table1,{
-	searchable: true,
-    fixedHeight: true,
-	columns: [
-	{
-	select: 1, sort: "desc"
-	},
-    { select: [1,2,3,4], sortable: false },
-
-	]
-    });
-
-    let table2 = document.querySelector('#table_comentarios');
-    let dataTable2 = new simpleDatatables.DataTable(table2,{
-	searchable: true,
-    fixedHeight: true,
-	columns: [
-	{
-	select: 1, sort: "desc"
-	},
-    { select: [2], sortable: false },
-
-	]
-    });
-
-    </script>
 
     </body>
     </html>

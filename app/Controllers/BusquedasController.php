@@ -8,6 +8,7 @@ use App\Models\LaboratorioModel;
 //--------- MODULOS ----------
 use App\Models\AntecedenteFamiliarModel;
 use App\Models\AntecedentesNoPatologicosModel;
+use App\Models\AntecedentesQuirurgicos;
 
 use App\Models\PacienteModulosModelo;
 
@@ -72,6 +73,11 @@ class BusquedasController{
     public function contenidoPreguntasM3($idPaciente,$idRol,$idCuestionario){
         $model = new AntecedentesNoPatologicosModel();
         echo $model->mostrarPreguntasM3($idPaciente,$idRol,$idCuestionario);
+    }
+ 
+    public function contenidoPreguntasM4($idPaciente,$idRol){
+        $model = new AntecedentesQuirurgicos();
+        echo $model->mostrarPreguntasM4($idPaciente,$idRol);
     }
 
     //---------- CONTENIDO COMENTARIOS ----------
