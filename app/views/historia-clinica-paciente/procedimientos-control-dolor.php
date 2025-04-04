@@ -1,6 +1,9 @@
 <?php 
 use App\Config\Database;
+use App\Models\PacienteModulosModelo;
 $bd = Database::getInstance();
+
+
 
 ?>
 
@@ -20,79 +23,6 @@ $bd = Database::getInstance();
     <script src="<?=RUTA_JS;?>loader.js"></script>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-    contenidoPreguntas();
-    });
- 
-    // ---------- CONTENIDO DE LAS PREGUNTAS ----------
-    function contenidoPreguntas() {
-    const usuarioDiv = document.getElementById('main');
-    const idPaciente = usuarioDiv.getAttribute('data-paciente');
-    const idRol = usuarioDiv.getAttribute('data-rol');
-
-    fetch(`/buscar/contenido-preguntas-modulo-4/${idPaciente}/${idRol}`)
-    .then(response => response.text())
-    .then(data => {
-
-    const contenedor = document.getElementById('contePreguntas');
-    contenedor.innerHTML = data;
-    feather.replace();
-
-    const tabla = document.querySelector("#table_cirugia");
-    if (tabla) {
-    dataTable = new simpleDatatables.DataTable(tabla,{
-	searchable: true,
-    fixedHeight: true,
-	columns: [
-	{
-	select: 1, sort: "desc"
-	},
-    { select: [0,1,2,3], sortable: false },
-
-	]
-    });
-    }   
-
-    });
-    } 
-  
-    //---------- CONTROL SERVER ----------
-    function gestionarAntecedentesQuirurgicos(url, parametros, callback) {
-    $(".LoaderPage").show();
-    fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(parametros)
-    }).then(res => res.json()).then(data => {
-    $(".LoaderPage").fadeOut(1000);
-    if (data.resultado) callback();
-    else document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
-    });
-    } 
-
-    //---------- AGREGAR CIRUGIA DEL PACIENTE ----------
-    function agregarCirugiaPaciente (idPaciente, idRol) {
-    gestionarAntecedentesQuirurgicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/agregar-cirugia-antecedentes`, {
-    idPaciente,
-    idRol
-    }, 
-    () => contenidoPreguntas(1));
-    }
-
-    //---------- EDITAR CIRUGIA DEL PACIENTE ----------
-    function editarCirugia(idCirugia, elemento, parametro, idRol) {
-    gestionarAntecedentesQuirurgicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/editar-cirugia-antecedentes`, {
-        idCirugia, 
-        detalle: elemento.value, 
-        edicion: parametro, 
-        idRol
-    }, () => contenidoPreguntas(0));
-    }
-    //---------- ELIMINAR CIRUGIA DEL PACIENTE ----------
-    function eliminarCirugiaPaciente(idQuirurgico, idRol) {
-    gestionarAntecedentesQuirurgicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/eliminar-cirugia-antecedentes`, { idQuirurgico, idRol }, () => contenidoPreguntas(1));
-    }
-
 
     </script>
     </head>
@@ -126,26 +56,31 @@ $bd = Database::getInstance();
     </div>
     
     <section class="section">
+
     <div class="card">
+
+    <!---------- CONTENEDOR DE PREGUNTAS ---------->
+    <div id="preguntas-container">
     <div id="contePreguntas"></div>
     </div>
-    </section>
-    </div>
 
+    </div>
+    </section>
+
+    </div>
     <!----- FOOTER ---------->
     <?php include_once __DIR__ . '/../components/footer-mvsd.php';?>
-
     </div>
     </div>
 
     </div>
     </div>
 
+    <script src="<?=RUTA_JS;?>voice-utilities.js"></script>
     <script src="<?=RUTA_JS;?>/feather-icons/feather.min.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="<?=RUTA_JS;?>app.js"></script>    
     <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
     <script src="<?=RUTA_JS;?>main.js"></script>
-
     </body>
     </html>

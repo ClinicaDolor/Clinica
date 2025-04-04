@@ -95,6 +95,10 @@ class SidebarController {
     ['titulo' => 'Antecedentes Personales Quirúrgicos', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ],
 
+    'antecedentes-personales-patologicos' => [
+    ['titulo' => 'Antecedentes Personales  Patologicos', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ],
+
     'procedimientos-control-dolor' => [
     ['titulo' => 'Procedimientos que ha utilizado para controlar el dolor', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ]
@@ -114,6 +118,10 @@ class SidebarController {
 
     'antecedentes-personales-quirurgicos' => [
     ['titulo' => 'Antecedentes Personales Quirúrgicos', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ],
+
+    'antecedentes-personales-patologicos' => [
+    ['titulo' => 'Antecedentes Personales Patologicos', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ],
 
     'procedimientos-control-dolor' => [

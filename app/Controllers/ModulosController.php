@@ -5,6 +5,7 @@ use App\Middleware\AuthMiddleware;
 use App\Models\AntecedenteFamiliarModel;
 use App\Models\AntecedentesNoPatologicosModel;
 use App\Models\AntecedentesQuirurgicos;
+use App\Models\AntecedentesPatologicosModel;
 use App\Models\ProcedimientosDolorModel;
 use App\Models\PacienteModulosModelo;
 use App\Models\PacienteModel;
@@ -183,7 +184,6 @@ class ModulosController extends BaseController {
     
     }
 
-
    //----- 3. ANTECEDENTES NO PATOLOGICOS ----------
    public function pacienteEditarCuestionarioM3(){
     $data = json_decode(file_get_contents('php://input'), true);
@@ -285,6 +285,35 @@ class ModulosController extends BaseController {
     }
         
     }
+
+    
+   //----- 3. ANTECEDENTES NO PATOLOGICOS ----------
+   public function pacienteEditarCuestionarioV1M5(){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $idRol = $data['idRol'];  // Obtener el idRol
+    $idRol == "Paciente" ? $view = "historia-clinica" : $view = "clinica";
+            
+    $authMiddleware = new AuthMiddleware($view);
+    $authMiddleware->authPermisos();
+    header('Content-Type: application/json');
+        
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo HttpMethod::jsonResponse(405, false, "Método no permitido. Usa POST.");
+    return;
+    }
+            
+    $model = new AntecedentesPatologicosModel();
+    $resultModel = $model->editarCuestionarioV1Modulo($data);
+        
+    if ($resultModel['resultado'] == 200) {
+    echo HttpMethod::jsonResponse(200,true,$resultModel['mensaje']);
+    } else {
+    echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
+    }
+            
+    }
+
+
 
 
     //---------- 8. PROCEFIMIENTOS PARA CONTROLAR EL DOLOR ----------
