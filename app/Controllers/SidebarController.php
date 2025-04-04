@@ -47,17 +47,17 @@ class SidebarController {
     ],
 
     'clinica-paciente-recetas' => [
-    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$id, 'icono' => 'users'],
+    ['titulo' => 'Expediente', 'url' => SERVIDOR . 'clinica/paciente/'.$id, 'icono' => 'folder'],
     ['titulo' => 'Paciente Recetas', 'url' => SERVIDOR . 'clinica/receta/paciente/'.$id, 'icono' => 'file-text']
     ],
     
     'clinica-paciente-notas' => [
-    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$id, 'icono' => 'users'],
+    ['titulo' => 'Expediente', 'url' => SERVIDOR . 'clinica/paciente/'.$id, 'icono' => 'folder'],
     ['titulo' => 'Paciente Notas', 'url' => SERVIDOR . 'clinica/nota-subsecuente/paciente/'.$id.'/referencia/'.$referencia, 'icono' => 'file-text']
     ],
 
     'clinica-paciente-laboratorio' => [
-    ['titulo' => 'Paciente', 'url' => SERVIDOR . 'clinica/paciente/'.$id, 'icono' => 'users'],
+    ['titulo' => 'Expediente', 'url' => SERVIDOR . 'clinica/paciente/'.$id, 'icono' => 'folder'],
     ['titulo' => 'Paciente Laboratorio', 'url' => SERVIDOR . 'clinica/laboratorio/paciente/'.$id, 'icono' => 'file-text']
     ],
 
@@ -66,15 +66,18 @@ class SidebarController {
     ],
  
     'clinica-receta' => [
-    ['titulo' => 'Receta', 'url' => SERVIDOR . 'clinica/receta/'.$id, 'icono' => 'users']
+    ['titulo' => 'Expediente', 'url' => SERVIDOR . 'clinica/paciente/'.$referencia, 'icono' => 'folder'],
+    ['titulo' => 'Receta', 'url' => SERVIDOR . 'clinica/receta/'.$id, 'icono' => 'file-text']
     ],
 
     'clinica-laboratorio' => [
-    ['titulo' => 'Laboratorio', 'url' => SERVIDOR . 'clinica/laboratorio/'.$id, 'icono' => 'users']
+    ['titulo' => 'Expediente', 'url' => SERVIDOR . 'clinica/paciente/'.$referencia, 'icono' => 'folder'],
+    ['titulo' => 'Laboratorio', 'url' => SERVIDOR . 'clinica/laboratorio/'.$id, 'icono' => 'file-text']
     ],
 
     'nota-subsecuente' => [
-    ['titulo' => 'Nota Subsecuente', 'url' => SERVIDOR . 'clinica/nota-subsecuente/'.$id, 'icono' => 'users']
+    ['titulo' => 'Expediente', 'url' => SERVIDOR . 'clinica/paciente/'.$referencia, 'icono' => 'folder'],
+    ['titulo' => 'Nota Subsecuente', 'url' => SERVIDOR . 'clinica/nota-subsecuente/'.$id, 'icono' => 'file-text']
     ],
 
     //---------- MODULOS DE HISTORIA CLINICA ----------

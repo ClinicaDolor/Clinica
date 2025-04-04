@@ -36,7 +36,7 @@ class NotaSubsecuenteController extends BaseController{
 
         $motivo_atencion = $paciente->getMotivoAtencion();
 
-        $sidebarController->configureSidebar('DOCTOR', 'nota-subsecuente', $sidebar, $idNota);
+        $sidebarController->configureSidebar('DOCTOR', 'nota-subsecuente', $sidebar, $idNota, $modelNota->getIdPaciente());
         $sidebar->setActivarItem('Nota Subsecuente');
         $sidebarHtml = $sidebar->render();
 

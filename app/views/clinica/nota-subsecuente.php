@@ -8,10 +8,20 @@
     <link rel="apple-touch-icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>bootstrap.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/simple-datatables/style.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="<?=RUTA_JS;?>loader.js"></script>
     </head>
+    <style>
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .resizable {
+            transition: all 0.3s ease-in-out; /* Suaviza el cambio de tamaño */
+        }
+    </style>
     <script>
     
     document.addEventListener("DOMContentLoaded", function() {
@@ -36,6 +46,22 @@
         resultsContainer.innerHTML = data;
         feather.replace();
 
+        const tabla = document.querySelector("#LaboratorioNotaSub");
+                if (tabla) {
+                    dataTable = new simpleDatatables.DataTable(tabla,{
+                        searchable: true,
+                        fixedHeight: true,
+                        perPageSelect: false,
+                        searchable: true,
+                        columns: [
+                        {
+                            select: 0, sort: "desc"
+                        },
+                        { select: [3], sortable: false },
+                        ]
+                    });
+                }     
+
     });
 
     }
@@ -50,6 +76,11 @@
     <!----- BUSCADOR DE LA BARRA DE NAVEGACION ---------->
     <?php include_once __DIR__ . '/../components/search-bar-doctor.php';?>
             <div class="main-content container-fluid">
+            
+            <button id="toggleButton" class="btn icon btn-light text-dark float-end" onclick="toggleSize()">
+            <i id="toggleIcon" data-feather="columns"></i>
+            </button>
+
             <div class="page-title">
                 <h3><?=$data['title'];?></h3>
             </div>
@@ -57,7 +88,7 @@
             <section class="mt-3">
 
             <div class="row">
-                <div class="col-12 col-sm-6">
+                <div class="col-12 col-sm-6 resizable">
 
                 <div class="card">
                     <div class="card-header">
@@ -135,7 +166,7 @@
                 </div>
 
                 </div>
-                <div class="col-12 col-sm-6">
+                <div class="col-12 col-sm-6 resizable">
                         
                 <div class="card">
                     <div class="card-header">
@@ -164,6 +195,7 @@
     <script src="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="<?=RUTA_JS;?>app.js"></script> 
     <script src="<?=RUTA_JS;?>main.js"></script>
+    <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
     <script src="<?=RUTA_JS?>search-main.js"></script>
 
 </body>
