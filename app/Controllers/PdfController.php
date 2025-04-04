@@ -75,7 +75,7 @@ class PdfController{
         $pdf->SetFont('courier', '', 12);
         $pdf->SetY(40);
         $pdf->SetX(71);
-        $pdf->Cell(0, 0, 'Fecha: '.$model->getFecha().', Hora: '.$model->getHora(), 0, 1, 'L');
+        $pdf->Cell(0, 0, 'Fecha: '.$model->getFecha(), 0, 1, 'L');
         $pdf->Ln(2);
 
         $pdf->SetFont('courier', '', 11);

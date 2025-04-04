@@ -24,11 +24,19 @@ $bd = Database::getInstance();
             font-size: 20px;
             height: 250px;
         }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .resizable {
+            transition: all 0.3s ease-in-out; /* Suaviza el cambio de tamaño */
+        }
     </style>
     <script>
     function AgregarLaboratorio(idPaciente) {
     
     const referencia = 0;
+    const titulo = document.getElementById('Titulo').value;
     const fileInput = document.getElementById('Archivo');
     const file = fileInput.files[0];
     const contenidoLaboratorio = document.querySelector('.ql-editor').innerHTML;
@@ -45,6 +53,7 @@ $bd = Database::getInstance();
             formData.append('file', file);
             formData.append('contenidoLaboratorio', contenidoLaboratorio);
             formData.append('referencia', referencia);
+            formData.append('titulo', titulo);
                
             fetch('/clinica/laboratorio/insert-laboratorio', {
                     method: 'POST',
@@ -90,6 +99,7 @@ $bd = Database::getInstance();
                 });
 
     } 
+
     </script>
 
  </head>
@@ -104,13 +114,18 @@ $bd = Database::getInstance();
             <?php include_once __DIR__ . '/../components/search-bar-doctor.php';?>
             
             <div class="main-content container-fluid">
+
+            <button id="toggleButton" class="btn icon btn-light text-dark float-end" onclick="toggleSize()">
+            <i id="toggleIcon" data-feather="columns"></i>
+            </button>
+            
             <div class="page-title">
                 <h3><?=$data['title'];?></h3>
             </div>
 
             <section>
             <div class="row mt-3">
-                <div class="col-12 col-sm-12">
+                <div class="col-12 col-sm-12 resizable">
                     <div class="card">
                         <div class="card-header">
                             <h4 class="card-title">Información del paciente</h4>
@@ -155,7 +170,7 @@ $bd = Database::getInstance();
             <section>
 
             <div class="row">
-                <div class="col-12 col-sm-5">
+                <div class="col-12 col-sm-5 resizable">
 
                 <div class="card">
                 <div class="card-header text-light">
@@ -177,6 +192,7 @@ $bd = Database::getInstance();
                         <tr>
                             <th class="text-center">#</th>
                             <th>Fecha y Hora</th>
+                            <th>Titulo</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -184,6 +200,7 @@ $bd = Database::getInstance();
                         <tr onclick="DetalleLaboratorio(<?=$registro['id']?>)">
                             <td class="text-center"><?=$registro['id']?></td>
                             <td><?=(new DateTime(datetime: $registro['fecha_hora']))->format('d/m/Y h:i a');?></td>
+                            <td><?=$registro['titulo']?></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
@@ -193,7 +210,7 @@ $bd = Database::getInstance();
                 </div>
 
                 </div>
-                <div class="col-12 col-sm-7">
+                <div class="col-12 col-sm-7 resizable">
                         
                 <div class="card">
                     <div class="card-header text-light">
@@ -214,8 +231,11 @@ $bd = Database::getInstance();
                 <h4 class="card-title">Nueva Archivo</h4>
                 </div>
                 <div class="card-body">
+
+                <label class="text-primary"><small>Titulo:</small></label>
+                <input type="text" class="form-control" id="Titulo">
                 
-                <label class="text-primary"><small>Archivo:</small></label>
+                <label class="text-primary mt-2"><small>Archivo:</small></label>
                 <div class="mb-3"><input type="file" class="form-control" id="Archivo"></div>
                 
                 <label class="text-primary"><small>Descripción:</small></label>
@@ -259,7 +279,7 @@ $bd = Database::getInstance();
         searchable: true,
         fixedHeight: true,
         perPageSelect: false,
-        searchable: false,
+        searchable: true,
         columns: [
         {
             select: 1, sort: "desc"

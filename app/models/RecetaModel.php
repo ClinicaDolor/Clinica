@@ -25,7 +25,7 @@ class RecetaModel{
         $stmt->execute();
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        return $data['id'];
+        return $data['id'] ?? 0;
 
     }
 
@@ -37,12 +37,18 @@ class RecetaModel{
         $stmt->execute();
         $registros = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        $this->fecha = (new \DateTime($registros['fecha_hora']))->format('d/m/Y');
-        $this->hora = (new \DateTime($registros['fecha_hora']))->format('h:i a');
+        if (!empty($registros['fecha_hora'])) {
+            $fechaHora = new \DateTime($registros['fecha_hora']);
+            $this->fecha = $fechaHora->format('d/m/Y');
+            $this->hora = $fechaHora->format('h:i a');
+        } else {
+            $this->fecha = null;
+            $this->hora = null;
+        }
 
-        $this->id_paciente = $registros['id_paciente'];
-        $this->diagnostico = $registros['diagnostico'];
-        $this->medicamento = $registros['medicamento'];
+        $this->id_paciente = $registros['id_paciente'] ?? null;
+        $this->diagnostico = $registros['diagnostico'] ?? null;
+        $this->medicamento = $registros['medicamento'] ?? null;
 
     
     }

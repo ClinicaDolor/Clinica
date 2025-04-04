@@ -24,6 +24,13 @@ $bd = Database::getInstance();
             font-size: 20px;
             height: 250px;
         }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .resizable {
+            transition: all 0.3s ease-in-out; /* Suaviza el cambio de tamaño */
+        }
     </style>
     <script>
         function AgregarReceta(idPaciente){
@@ -146,13 +153,18 @@ $bd = Database::getInstance();
             <?php include_once __DIR__ . '/../components/search-bar-doctor.php';?>
             
             <div class="main-content container-fluid">
+            
+            <button id="toggleButton" class="btn icon btn-light text-dark float-end" onclick="toggleSize()">
+            <i id="toggleIcon" data-feather="columns"></i>
+            </button>
+
             <div class="page-title">
                 <h3><?=$data['title'];?></h3>
             </div>
 
             <section>
             <div class="row mt-3">
-                <div class="col-12 col-sm-12">
+                <div class="col-12 col-sm-12 resizable">
                     <div class="card">
 
                         <div class="card-header text-light">
@@ -199,7 +211,7 @@ $bd = Database::getInstance();
             <section>
 
             <div class="row">
-                <div class="col-12 col-sm-5">
+                <div class="col-12 col-sm-5 resizable">
 
                 <div class="card">
                 <div class="card-header">
@@ -239,7 +251,7 @@ $bd = Database::getInstance();
                 </div>
 
                 </div>
-                <div class="col-12 col-sm-7">
+                <div class="col-12 col-sm-7 resizable">
                         
                 <div class="card">
                     <div class="card-header">
