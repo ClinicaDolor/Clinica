@@ -88,7 +88,6 @@ $this->bd = Database::getInstance();
     return $ocultartb;
     }
 
-
     //---------- OBTENER PREGUNTAS DEL MODULO (V1) ----------//
     public function mostrarPreguntasM5V1($idPaciente, $idRol, $idTema){
     $result = '';
@@ -349,9 +348,6 @@ $this->bd = Database::getInstance();
     $result .= '<button class="btn btn-secondary" onclick="seccionPreguntas()"><i data-feather="chevron-left"></i> Preguntas</button>';
     }
                     
-    if ($index2 < count($enfermedades) - 1) {
-    }
-
 
     if ($index2 < count($enfermedades) - 1) {
     $result .= '<button class="btn btn-primary" onclick="siguientePreguntaV2()">Siguiente <i data-feather="chevron-right"></i></button>';
@@ -470,7 +466,7 @@ $this->bd = Database::getInstance();
     // Vaciar respuestas de las demás preguntas del mismo módulo, excepto la que se respondió ('No')
     $sql2 = "UPDATE pac_respuestas_paciente_modulo_5 
     SET respuesta = '' WHERE id_pregunta IN (SELECT id FROM pac_preguntas_modulo_5 WHERE id_tema = :id_tema)
-    AND id_paciente = :id_pacienteAND id != :id_respuesta";
+    AND id_paciente = :id_paciente AND id != :id_respuesta";
     $stmt2 = $this->bd->prepare($sql2);
     $stmt2->bindParam(':id_tema', $idTema);
     $stmt2->bindParam(':id_paciente', $idPaciente);
