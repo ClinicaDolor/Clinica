@@ -45,7 +45,7 @@ return function(RouteCollector $r) {
         $r->addRoute('POST', '/paciente/editar-enfermedad-antecedentes', ['ModulosController', 'pacienteEditEnfermedad']);
         $r->addRoute('POST', '/paciente/eliminar-enfermedad-antecedentes', ['ModulosController', 'pacienteDeleteEnfermedad']);
         
-        //----- 3. ANTECEDENTES NO PATOLOGICOS
+        //----- 3. ANTECEDENTES PERSONALES NO PATOLOGICOS
         $r->addRoute('POST', '/paciente/editar-cuestionario-modulo3', ['ModulosController', 'pacienteEditarCuestionarioM3']);
 
         
@@ -54,7 +54,11 @@ return function(RouteCollector $r) {
         $r->addRoute('POST', '/paciente/editar-cirugia-antecedentes', ['ModulosController', 'pacienteEditCirugia']);
         $r->addRoute('POST', '/paciente/eliminar-cirugia-antecedentes', ['ModulosController', 'pacienteDeleteCirugia']);
 
+
+
+        //----- 5. ANTECEDENTES PERSONALES PATOLOGICOS
         $r->addRoute('POST', '/paciente/editar-cuestionarioV1-modulo5', ['ModulosController', 'pacienteEditarCuestionarioV1M5']);
+        $r->addRoute('POST', '/paciente/editar-cuestionarioV2-modulo5', ['ModulosController', 'pacienteEditarCuestionarioV2M5']);
 
 
 
@@ -149,6 +153,7 @@ return function(RouteCollector $r) {
         $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-3/{idPaciente}/{idRol}/{idCuestionario}', ['BusquedasController', 'contenidoPreguntasM3']);
         $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-4/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasM4']);
         $r->addRoute('GET', '/buscar/contenido-preguntasV1-modulo-5/{idPaciente}/{idRol}/{idCuestionario}', ['BusquedasController', 'contenidoPreguntasM5V1']);
+        $r->addRoute('GET', '/buscar/contenido-preguntasV2-modulo-5/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasM5V2']);
 
 
 

@@ -139,7 +139,7 @@ $this->bd = Database::getInstance();
     <div class="text-secondary fw-bold mb-1">Nombre de la enfermedad:</div>
     <h4 class="mb-3">'.$enfermedad.'</h4>
     <div class="text-secondary fw-bold mb-1">¿Alguno de tus familiares ha sido diagnosticado con esta enfermedad?</div>
-    <select class="form-select tipo-enfermedad mb-3" onchange="respuestaPregunta(this, '.$idEnfermedad.')">
+    <select class="form-select tipo-enfermedad mb-3" onchange="editarEnfermedad('.$idEnfermedad.', this, 2, \''.$idRol.'\')">
     <option value="" disabled selected>Selecciona una opción...</option>
     <option value="Si" '.($detalle == 'Si' ? 'selected' : '').'>Sí</option>
     <option value="No" '.($detalle == 'No' ? 'selected' : '').'>No</option>

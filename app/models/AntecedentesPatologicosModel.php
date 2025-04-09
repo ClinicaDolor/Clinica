@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 use App\Config\Database;
+use App\Models\PacienteModulosModelo;
 
 class AntecedentesPatologicosModel{
 private $bd;
@@ -21,6 +22,15 @@ $this->bd = Database::getInstance();
     return $modulos;
     }
 
+    public function obtenerNameModulos($idTema){
+    $stmt = $this->bd->query("SELECT tema FROM pac_temas_modulo_5 WHERE id = '".$idTema."' ORDER BY id ASC");
+    $modulos = array();
+    while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+    $tema = $row['tema'];
+    }
+    return $tema;
+    }
+
     //---------- OBTENER DATOS DEL MODULO ----------//
     public function obtenerPreguntasModulos(){
     $stmt = $this->bd->query("SELECT id FROM pac_preguntas_modulo_5 ORDER BY id ASC");
@@ -32,7 +42,6 @@ $this->bd = Database::getInstance();
     
     return $idPreguntas;
     }
-
 
     //---------- AGREGA PREGUNTAS AL INICIAR ----------//
     public function antecedentesPatologicos($idPaciente, $idPregunta) {
@@ -50,7 +59,37 @@ $this->bd = Database::getInstance();
     }
 
 
-    //---------- OBTENER PREGUNTAS DEL MODULO ----------//
+
+    //---------- AGREGA PREGUNTAS AL INICIAR ----------//
+    public function validarFormato($idPaciente, $idTema) {
+    $ocultartb = "";
+    
+    $stmt = $this->bd->query("SELECT 
+    pac_respuestas_paciente_modulo_5.id AS idRespuesta, 
+    pac_temas_modulo_5.tema,
+    pac_preguntas_modulo_5.pregunta, 
+    pac_preguntas_modulo_5.tipo, 
+    pac_respuestas_paciente_modulo_5.respuesta 
+    FROM pac_temas_modulo_5 
+    INNER JOIN pac_preguntas_modulo_5 ON pac_preguntas_modulo_5.id_tema = pac_temas_modulo_5.id 
+    INNER JOIN pac_respuestas_paciente_modulo_5 ON pac_preguntas_modulo_5.id = pac_respuestas_paciente_modulo_5.id_pregunta 
+    WHERE pac_respuestas_paciente_modulo_5.id_paciente = '".$idPaciente."' AND pac_temas_modulo_5.id = '".$idTema."' AND pac_preguntas_modulo_5.tipo = 'select' ORDER BY pac_temas_modulo_5.id ASC");
+    $preguntas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    
+    foreach ($preguntas as $index => $pregunta) :
+    $respuesta = $pregunta['respuesta'];
+        
+    if($respuesta == "No" || $respuesta == ""){
+    $ocultartb = "disabled";
+    }
+    
+    endforeach;
+    
+    return $ocultartb;
+    }
+
+
+    //---------- OBTENER PREGUNTAS DEL MODULO (V1) ----------//
     public function mostrarPreguntasM5V1($idPaciente, $idRol, $idTema){
     $result = '';
 
@@ -134,7 +173,7 @@ $this->bd = Database::getInstance();
     $nextId = $idTema + 1;
     $result .= '<button class="btn btn-success" onclick="irASiguienteSeccion(\''.$nextNombre.'\','.$nextId.')">'.$nextNombre.' <i data-feather="chevron-right"></i></button>';
     } else {
-    $result .= '<button class="btn btn-success" onclick="finalizarPreguntas()">Comentarios <i data-feather="message-circle"></i></button>';
+    $result .= '<button class="btn btn-secondary" onclick="seccionEnfermedades()">Padecimientos <i data-feather="heart"></i></button>';
     }
     } else {
     // Botón normal para la siguiente pregunta
@@ -147,7 +186,7 @@ $this->bd = Database::getInstance();
     $nextId = $idTema + 1;
     $result .= '<button class="btn btn-success" onclick="irASiguienteSeccion(\''.$nextNombre.'\','.$nextId.')">'.$nextNombre.' <i data-feather="chevron-right"></i></button>';
     } else {
-    $result .= '<button class="btn btn-success" onclick="finalizarPreguntas()">Comentarios <i data-feather="message-circle"></i></button>';
+    $result .= '<button class="btn btn-secondary" onclick="seccionEnfermedades()">Padecimientos <i data-feather="heart"></i></button>';
     }
     }
 
@@ -159,13 +198,249 @@ $this->bd = Database::getInstance();
     }
 
     }else{
-    //---------- Apartado del doctor
-    $result .= '';
+        
+    
+    $modulos = $this->obtenerNameModulos($idTema);
+    
+    $result .= '    
+        
+    <div class="alert alert-success text-center" role="alert">
+    '.$modulos.'
+    </div>
+    
+    <div class="table-responsive mb-3">
+    <table class="table table-striped" id="table_enfermedades">
+    <thead>
+    <tr>
+    <th class="text-center align-middle" width="40px">#</th>
+    <th class="text-start align-middle" >Pregunta</th>
+    <th class="text-start align-middle text-center" width="280px">Respuesta</th>
+    </tr>
+    </thead>
+    <tbody>';
+
+    if (!empty($preguntas)) {
+    $num = 1;
+    foreach ($preguntas as $index2 => $pregunta) {
+    $temaModulo = $pregunta['tema'];
+    $idRespuesta = $pregunta['idRespuesta'];
+    $preguntaPC = $pregunta['pregunta'];
+    $respuesta = $pregunta['respuesta'];
+    $tipo = $pregunta['tipo'];
+        
+    // Mostrar el tipo de pregunta (select o input)
+    if ($tipo == "select") {
+    $elementotd = '<select class="form-select" onchange="respuestaPreguntaSelect('.$idPaciente.','.$idRespuesta.', this, '.$idTema.', \''.$tipo.'\',\''.$idRol.'\')">
+    <option value="" disabled selected>Selecciona una opción...</option>
+    <option value="Si" ' . ($respuesta == 'Si' ? 'selected' : '') . '>Sí</option>
+    <option value="No" ' . ($respuesta == 'No' ? 'selected' : '') . '>No</option>
+    </select>';
+        
+    } else {
+    
+    $deshabilitarInput = $this->validarFormato($idPaciente,$idTema);
+    $elementotd = '<input type="text" class="form-control" ' . $deshabilitarInput . ' value="' . ($respuesta == 0 ? '' : $respuesta) . '" placeholder="Ingresa aquí la respuesta..." onchange="respuestaPreguntaSelect('.$idPaciente.','.$idRespuesta.', this, '.$idTema.', \''.$tipo.'\',\''.$idRol.'\')">';
+    }
+        
+    $result .= ' <tr> 
+    <td class="text-center align-middle">'.$num.'</td>';
+        
+    $result .= '<td class="text-start align-middle">'.$preguntaPC.'</td>
+    <td class="text-start align-middle">'.$elementotd.'</td>
+    </tr>';
+                    
+    $num++;
+    }
+    }
+
+
+    $result .= '</tbody>
+    </table>
+    </div>';
+
     }
 
     return $result;
     }
 
+
+
+
+    //---------- OBTENER PREGUNTAS DEL MODULO (V1) ----------//
+    public function mostrarPreguntasM5V2($idPaciente, $idRol){
+    $result = '';
+    
+    $stmt = $this->bd->query("SELECT 
+    pac_enfermedades_respuestas_modulo_5.id AS idRespuesta,
+    pac_enfermedades_modulo_5.id,
+    pac_enfermedades_modulo_5.descripcion AS pregunta,
+    pac_enfermedades_respuestas_modulo_5.respuesta,
+    pac_enfermedades_respuestas_modulo_5.tipo,
+    pac_enfermedades_respuestas_modulo_5.year_diagnostico
+    FROM pac_enfermedades_respuestas_modulo_5
+    INNER JOIN pac_enfermedades_modulo_5 ON pac_enfermedades_respuestas_modulo_5.id_enfermedad = pac_enfermedades_modulo_5.id
+    WHERE pac_enfermedades_respuestas_modulo_5.id_paciente = '".$idPaciente."' 
+    ORDER BY pac_enfermedades_modulo_5.id ASC"
+    );
+    
+    $enfermedades = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    
+    if($idRol == "Paciente"){
+    
+    $model = new PacienteModulosModelo();
+    $botonFinalizar = $model->botonFinalizarModulo(5,$idPaciente,$idRol);
+
+    if (!empty($enfermedades)) {
+    foreach ($enfermedades as $index2 => $enfermedad) {
+    $idRespuesta = $enfermedad['idRespuesta'];
+    $preguntaEnf = $enfermedad['pregunta'];
+    $respuesta = $enfermedad['respuesta'];
+    $tipo = $enfermedad['tipo'];
+    $year = $enfermedad['year_diagnostico'];
+    
+    $claseActiva = ($index2 == 0) ? 'active' : '';
+    $result .= '<div class="enfermedad-container '.$claseActiva.'" data-index="'.$index2.'" data-id="'.$idRespuesta.'" data-enfermedad="'.$preguntaEnf.'" data-rol="'.$idRol.'">';
+        
+    $result .= '
+    <div class="text-secondary fw-bold mb-1">Nombre de la enfermedad:</div>
+    <div id="seccion50'.$idRespuesta.'" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-3">
+    <h4 class="texto">'.$preguntaEnf.'</h4>
+    </div>
+    <div class="text-secondary fw-bold mb-1">¿Ha sido diagnosticado con esta enfermedad en algún momento?</div>
+    <select class="form-select tipo-enfermedad mb-3" onchange="editarEnfermedadV2('.$idRespuesta.', this, 1, \''.$idRol.'\')">
+    <option value="" disabled selected>Selecciona una opción...</option>
+    <option value="Si" '.($respuesta == 'Si' ? 'selected' : '').'>Sí</option>
+    <option value="No" '.($respuesta == 'No' ? 'selected' : '').'>No</option>
+    </select>';
+    
+    // Solo si ha sido diagnosticado, mostramos preguntas adicionales
+    if($respuesta == 'Si'){
+    
+    if($preguntaEnf == 'Diabetes Mellitus'){
+    $result .= '<div class="text-secondary fw-bold mb-1">¿Qué tipo de diabetes?</div>
+    <select class="form-select detalle-enfermedad mb-3" onchange="editarEnfermedadV2('.$idRespuesta.', this, 2, \''.$idRol.'\')">
+    <option value="" disabled selected>Selecciona una opción...</option>
+    <option value="Tipo 1" '.($tipo === 'Tipo 1' ? 'selected' : '').'>Tipo 1</option>
+    <option value="Tipo 2" '.($tipo === 'Tipo 2' ? 'selected' : '').'>Tipo 2</option>
+    <option value="Gestacional" '.($tipo === 'Gestacional' ? 'selected' : '').'>Gestacional</option>
+    <option value="Otro" '.($tipo === 'Otro' ? 'selected' : '').'>Otro</option>
+    </select>';
+
+    } else if ($preguntaEnf == 'Enfermedad pulmonar'){
+    $result .= '<div class="text-secondary fw-bold mb-1">¿Qué tipo de enfermedad pulmonar?</div>
+    <select class="form-select detalle-enfermedad mb-3" onchange="editarEnfermedadV2('.$idRespuesta.', this, 2, \''.$idRol.'\')">
+        <option value="" disabled selected>Selecciona una opción...</option>
+        <option value="EPOC" '.($tipo === 'EPOC' ? 'selected' : '').'>EPOC</option>
+        <option value="Asma" '.($tipo === 'Asma' ? 'selected' : '').'>Asma</option>
+        <option value="Otro" '.($tipo === 'Otro' ? 'selected' : '').'>Otro</option>
+    </select>';  
+    }
+    
+    $result .= '<div class="text-secondary fw-bold mb-1">¿En qué año fue diagnosticado?:</div>
+    <input class="form-control especificar-enfermedad" type="number" onchange="editarEnfermedadV2('.$idRespuesta.', this, 3, \''.$idRol.'\')" value="'.$year.'" placeholder="Ingresa aquí el año de diagnóstico..." />';
+    }
+    
+    // Navegación entre preguntas
+    $result .= '<div class="mt-3 d-flex justify-content-between">';
+    
+    if ($index2 > 0) {
+    $result .= '<button class="btn btn-secondary" onclick="anteriorPreguntaV2()"><i data-feather="chevron-left"></i> Anterior</button>';
+    } else {
+    $result .= '<button class="btn btn-secondary" onclick="seccionPreguntas()"><i data-feather="chevron-left"></i> Preguntas</button>';
+    }
+                    
+    if ($index2 < count($enfermedades) - 1) {
+    }
+
+
+    if ($index2 < count($enfermedades) - 1) {
+    $result .= '<button class="btn btn-primary" onclick="siguientePreguntaV2()">Siguiente <i data-feather="chevron-right"></i></button>';
+    } else {
+    $result .= $botonFinalizar;
+    }
+
+    
+    $result .= '</div>'; // fin botones
+    $result .= '</div>'; // fin enfermedad-container
+    }
+    
+    } else {
+    $result .= '<div class="alert alert-danger text-center" role="alert">No se encontraron preguntas en esta sección.</div>';
+    }
+    
+    } else {
+
+    $result .= '    
+        
+    <div class="table-responsive mb-3">
+    <table class="table table-striped" id="table_enfermedades">
+    <thead>
+    <tr>
+    <th class="text-center align-middle" width="40px">#</th>
+    <th class="text-start align-middle" width="300px">Enfermedad</th>
+    <th class="text-start align-middle text-center" width="300px">¿Ha sido diagnosticado con esta enfermedad en algún momento?</th>
+    <th class="text-start align-middle text-center" width="200px">Tipo</th>
+    <th class="text-start align-middle text-center" width="150px">Año de diagnostico</th>
+    </tr>
+    </thead>
+    <tbody>';  
+
+    if (!empty($enfermedades)) {
+    $num = 1;
+    foreach ($enfermedades as $index2 => $enfermedad) {
+    $idRespuesta = $enfermedad['idRespuesta'];
+    $preguntaEnf = $enfermedad['pregunta'];
+    $respuesta = $enfermedad['respuesta'];
+    $tipo = $enfermedad['tipo'];
+    $year = $enfermedad['year_diagnostico'];
+
+    $result .= '<tr>';
+    $result .= '<td class="text-center align-middle">'.$num.'</td>';
+    $result .= '<td class="text-start align-middle">'.$preguntaEnf.'</td>';
+    $result .= '<td class="text-start align-middle">
+    <select class="form-select tipo-enfermedad mb-3" onchange="editarEnfermedadV2('.$idRespuesta.', this, 1, \''.$idRol.'\')">
+    <option value="" disabled selected>Selecciona una opción...</option>
+    <option value="Si" '.($respuesta == 'Si' ? 'selected' : '').'>Sí</option>
+    <option value="No" '.($respuesta == 'No' ? 'selected' : '').'>No</option>
+    </select>
+    </td>';
+
+    $result .= '<td class="text-start align-middle">';
+    if($respuesta == 'Si'){
+    
+    if($preguntaEnf == 'Diabetes Mellitus'){
+    $result .= '<select class="form-select detalle-enfermedad mb-3" onchange="editarEnfermedadV2('.$idRespuesta.', this, 2, \''.$idRol.'\')">
+    <option value="" disabled selected>Selecciona una opción...</option>
+    <option value="Tipo 1" '.($tipo === 'Tipo 1' ? 'selected' : '').'>Tipo 1</option>
+    <option value="Tipo 2" '.($tipo === 'Tipo 2' ? 'selected' : '').'>Tipo 2</option>
+    <option value="Gestacional" '.($tipo === 'Gestacional' ? 'selected' : '').'>Gestacional</option>
+    <option value="Otro" '.($tipo === 'Otro' ? 'selected' : '').'>Otro</option>
+    </select>';
+    
+    } else if ($preguntaEnf == 'Enfermedad pulmonar'){
+    $result .= '<select class="form-select detalle-enfermedad mb-3" onchange="editarEnfermedadV2('.$idRespuesta.', this, 2, \''.$idRol.'\')">
+    <option value="" disabled selected>Selecciona una opción...</option>
+    <option value="EPOC" '.($tipo === 'EPOC' ? 'selected' : '').'>EPOC</option>
+    <option value="Asma" '.($tipo === 'Asma' ? 'selected' : '').'>Asma</option>
+    <option value="Otro" '.($tipo === 'Otro' ? 'selected' : '').'>Otro</option>
+    </select>';  
+    }
+    }
+    $result .= '</td>
+    <td class="text-start align-middle"><input class="form-control especificar-enfermedad" type="number" onchange="editarEnfermedadV2('.$idRespuesta.', this, 3, \''.$idRol.'\')" value="'.$year.'" placeholder="Ingresa aquí el año de diagnóstico..." /></td>
+    </tr>';
+    $num++;
+    }
+    }
+
+    $result .= '</tbody>
+    </table>
+    </div>';
+    }
+    
+    return $result;
+    }
+    
 
     public function editarCuestionarioDatoV1($idRespuesta,$detalle){
 
@@ -186,7 +461,6 @@ $this->bd = Database::getInstance();
         
     }
     
-
     public function editarCuestionarioSelectV1($idPaciente,$idRespuesta,$idTema){
 
     // Si la respuesta es "NO", actualizamos la respuesta a 'NO' y las demás respuestas a vacío
@@ -219,7 +493,7 @@ $this->bd = Database::getInstance();
         
     }
 
-    
+
     public function editarCuestionarioV1Modulo($data) {
     
     //---------- Verificamos si el tipo es "input" ----------
@@ -245,4 +519,74 @@ $this->bd = Database::getInstance();
     return $resultado; 
     }
     
+
+
+
+    public function editarCuestionarioV2Modulo($data) {
+    
+    $opcionEdicion = $data['edicion'];
+
+    $consulta2 = "";
+    if($opcionEdicion == 1){
+    $consulta = "respuesta";
+    if($data['detalle'] == "No"){
+    $consulta2 = ",tipo = '', year_diagnostico = ''";
+    }
+    }else if($opcionEdicion == 2){
+    $consulta = "tipo";
+    }else if($opcionEdicion == 3){
+    $consulta = "year_diagnostico";
+    }
+    
+    $sql = "UPDATE pac_enfermedades_respuestas_modulo_5 SET 
+    $consulta = :detalle $consulta2 WHERE id = :id_enfermedad";
+    
+    $stmt = $this->bd->prepare($sql);                    
+                
+    $datos = [
+    ':id_enfermedad' => $data['idEnfermedad'],
+    ':detalle' => $data['detalle']
+    ];
+            
+    if ($stmt->execute($datos)) {
+    return array('resultado' => 200,'mensaje' => '¡Se actualizo la informacion correctamente!');
+            
+    } else {
+    return array('resultado' => 401,'mensaje' => '¡Error al actualizar la enfermedad de la lista!');
+    }
+    }
+
+
+
+    //---------- OBTENER DATOS DEL MODULO ----------//
+    public function obtenerPreguntasModulosV2(){
+    $stmt = $this->bd->query("SELECT id FROM pac_enfermedades_modulo_5 ORDER BY id ASC");
+    $idPreguntas = [];
+                
+    while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+    $idPreguntas[] = $row['id'];
+    }
+        
+    return $idPreguntas;
+    }
+
+
+    //---------- AGREGA PREGUNTAS AL INICIAR ----------//
+    public function antecedentesPatologicosV2($idPaciente, $idEnfermedad) {
+    $sql = "SELECT COUNT(*) FROM pac_enfermedades_respuestas_modulo_5 WHERE id_paciente = ? AND id_enfermedad = ?";
+    $stmt = $this->bd->prepare($sql);
+    $stmt->execute([$idPaciente, $idEnfermedad]);
+    $numero = $stmt->fetchColumn();
+                
+    if ($numero == 0) {
+    $sql_insert = "INSERT INTO pac_enfermedades_respuestas_modulo_5 (id_enfermedad, id_paciente, respuesta, tipo, year_diagnostico) 
+    VALUES (?, ?, '', '', '')";
+    $stmt_insert = $this->bd->prepare($sql_insert);
+    $stmt_insert->execute(params: [$idEnfermedad, $idPaciente]);
+    }
+    }
+
+
+
+
 }

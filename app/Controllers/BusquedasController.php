@@ -86,6 +86,12 @@ class BusquedasController{
         echo $model->mostrarPreguntasM5V1($idPaciente,$idRol,$idCuestionario);
     }
 
+    public function contenidoPreguntasM5V2($idPaciente,$idRol){
+    $model = new AntecedentesPatologicosModel();
+    echo $model->mostrarPreguntasM5V2($idPaciente,$idRol);
+    }
+
+
 
     //---------- CONTENIDO COMENTARIOS ----------
     public function contenidoComentariosModulo($idPaciente,$idRol,$idModulo){

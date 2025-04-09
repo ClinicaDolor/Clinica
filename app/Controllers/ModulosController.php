@@ -314,7 +314,30 @@ class ModulosController extends BaseController {
     }
 
 
-
+   public function pacienteEditarCuestionarioV2M5(){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $idRol = $data['idRol'];  // Obtener el idRol
+    $idRol == "Paciente" ? $view = "historia-clinica" : $view = "clinica";
+            
+    $authMiddleware = new AuthMiddleware($view);
+    $authMiddleware->authPermisos();
+    header('Content-Type: application/json');
+        
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo HttpMethod::jsonResponse(405, false, "Método no permitido. Usa POST.");
+    return;
+    }
+            
+    $model = new AntecedentesPatologicosModel();
+    $resultModel = $model->editarCuestionarioV2Modulo($data);
+        
+    if ($resultModel['resultado'] == 200) {
+    echo HttpMethod::jsonResponse(200,true,$resultModel['mensaje']);
+    } else {
+    echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
+    }
+            
+    }
 
     //---------- 8. PROCEFIMIENTOS PARA CONTROLAR EL DOLOR ----------
     public function pacienteInsertProcedimientos(){

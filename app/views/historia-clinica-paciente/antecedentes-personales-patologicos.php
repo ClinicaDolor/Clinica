@@ -1,6 +1,5 @@
 <?php 
 use App\Config\Database;
-use App\Models\PacienteModulosModelo;
 use App\Models\AntecedentesPatologicosModel;
 $bd = Database::getInstance();
 
@@ -10,6 +9,11 @@ foreach ($preguntas_fijas as $preg) {
 echo $model->antecedentesPatologicos($data['idPaciente'], $preg);
 }
 
+$preguntas_enfermedad = $model->obtenerPreguntasModulosV2(); 
+foreach ($preguntas_enfermedad as $preg_enfermedad ) {
+echo $model->antecedentesPatologicosV2($data['idPaciente'], $preg_enfermedad);
+}
+    
 $modulos = $model->obtenerModulosM5();
 ?>
    
@@ -33,6 +37,10 @@ $modulos = $model->obtenerModulosM5();
     #preguntas-container { display: block; }
     .pregunta-container { display: none; }
     .pregunta-container.active { display: block; }
+    /* Sección de comentarios oculta inicialmente */
+    #enfermedades-container { display: none; }
+    .enfermedad-container { display: none; }
+    .enfermedad-container.active { display: block; }
     </style>
 
     <script>
@@ -44,23 +52,29 @@ $modulos = $model->obtenerModulosM5();
     return { id: id, nombre: modulos[id] };
     });
 
+    
     // Al cargar la página se carga el módulo correspondiente (por defecto "Tabaquismo")
     document.addEventListener("DOMContentLoaded", function() {
     const seccionActual = localStorage.getItem("seccionActual") || "Oxigenacion";
     localStorage.setItem("seccionActual", seccionActual);
     let temaActual = temas.find(t => t.nombre === seccionActual);
 
-    if (!seccionActual || seccionActual === "comentarios") {
-    finalizarPreguntas();
+
+    if (!seccionActual || seccionActual === "enfermedades") {
+    seccionEnfermedades();
     } else {
     contenidoPreguntas(temaActual.id);
     }
-
+    
     // Inicializar las preguntas con valor 0 si no están configuradas en localStorage
     for (let i = 1; i <= 7; i++) {
     if (localStorage.getItem(`preguntaActual_${i}`) === null) {
     localStorage.setItem(`preguntaActual_${i}`, 0);
     }
+    }
+
+    if (localStorage.getItem(`preguntaActualV2`) === null) {
+    localStorage.setItem(`preguntaActualV2`, 0);
     }
 
     });
@@ -82,15 +96,15 @@ $modulos = $model->obtenerModulosM5();
     document.getElementById('contePreguntas_' + idCuestionario).innerHTML = data;
     feather.replace();
 
+    // Reactivar el IntersectionObserver para las nuevas secciones (si lo utilizas)
+    document.querySelectorAll('.sectionQuestion').forEach(section => {
+    observer.observe(section);
+    });
+
     // Cargar el progreso para el módulo actual
     cargarProgreso(idCuestionario, idValor);
     });
     }
-
-    // ---------- CONTENIDO PREGUNTAS V2 ----------
-    
-
-
 
     // ---------- GUARDAR Y CARGAR PROGRESO ----------
     function guardarProgreso(index, idCuestionario) {
@@ -206,6 +220,121 @@ $modulos = $model->obtenerModulosM5();
     }
 
 
+    //---------- MUESTRA LA SECCION DE PREGUNTAS Y COMENTARIOS ----------
+    function seccionPreguntas() {
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+    document.getElementById("preguntas-container").style.display = "block";
+    document.getElementById("enfermedades-container").style.display = "none";
+    localStorage.setItem("seccionActual", "Alergias (Medicamentos)");
+    contenidoPreguntas(4);
+    }
+
+
+    // ------------------------------ CONTENIDO PREGUNTAS V2 ------------------------------
+    function contenidoEnfermedades(idValor = 0) {
+    // Limpia las preguntas anteriores, si existen
+    document.querySelectorAll('.enfermedad-container').forEach(p => p.remove());
+    
+    const usuarioDiv = document.getElementById('main');
+    const idPaciente = usuarioDiv.getAttribute('data-paciente');
+    const idRol = usuarioDiv.getAttribute('data-rol');
+
+    fetch(`/buscar/contenido-preguntasV2-modulo-5/${idPaciente}/${idRol}`)
+    .then(response => response.text())
+    .then(data => {
+    document.getElementById('contePreguntasV2').innerHTML = data;
+    feather.replace();
+            
+    // Reactivar el IntersectionObserver para las nuevas secciones (si lo utilizas)
+    document.querySelectorAll('.sectionQuestion').forEach(section => {
+    observer.observe(section);
+    });
+
+    cargarProgresoV2(idValor);
+    });
+    }
+
+    // ---------- VER PREGUNTAS V2 ----------
+    function seccionEnfermedades() {
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+    document.getElementById("preguntas-container").style.display = "none";
+    document.getElementById("enfermedades-container").style.display = "block";
+    localStorage.setItem("seccionActual", "enfermedades");
+    contenidoEnfermedades();
+    }
+
+
+    function guardarProgresoV2(index) {
+    localStorage.setItem("preguntaActualV2", index);
+    }
+
+    function cargarProgresoV2(idValor) {
+    let indexGuardado = localStorage.getItem("preguntaActualV2");
+    indexGuardado = indexGuardado ? parseInt(indexGuardado) : 0;
+
+    const preguntas = document.querySelectorAll('.enfermedad-container');
+    
+    // Calcular el nuevo índice dentro de los límites permitidos
+    let nuevoIndex = indexGuardado + idValor;
+    if (nuevoIndex < 0) nuevoIndex = 0; // Evita ir antes de la primera pregunta
+    if (nuevoIndex > preguntas.length) nuevoIndex = preguntas.length - 1; // Evita ir después de la última
+
+    // Remover la clase 'active' de todas las preguntas
+    preguntas.forEach(pregunta => pregunta.classList.remove('active'));
+
+    // Activar la nueva pregunta
+    preguntas[nuevoIndex].classList.add('active');
+
+    // Guardar el nuevo progreso
+    guardarProgresoV2(nuevoIndex);
+    }
+
+    function siguientePreguntaV2() {
+    const preguntas = document.querySelectorAll('.enfermedad-container');
+    let activeIndex = -1;
+
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+
+    preguntas.forEach((pregunta, index) => {
+    if (pregunta.classList.contains('active')) {
+    activeIndex = index;
+    pregunta.classList.remove('active');
+    }
+    });
+
+    if (activeIndex < preguntas.length - 1) {
+    const nuevoIndice = activeIndex + 1;
+    preguntas[nuevoIndice].classList.add('active');
+    guardarProgresoV2(nuevoIndice); // Guarda el progreso al avanzar
+    }
+
+    }
+
+    function anteriorPreguntaV2() {
+    const preguntas = document.querySelectorAll('.enfermedad-container');
+    let activeIndex = -1;
+
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+
+    preguntas.forEach((pregunta, index) => {
+    if (pregunta.classList.contains('active')) {
+    activeIndex = index;
+    pregunta.classList.remove('active');
+    }
+    });
+
+    if (activeIndex > 0) {
+    const nuevoIndice = activeIndex - 1;
+    preguntas[nuevoIndice].classList.add('active');
+    guardarProgresoV2(nuevoIndice); // Guarda el progreso al retroceder
+    }
+
+    }
+    
 
     //---------- CONTROL SERVER ----------
     function gestionarAntecedentesPatologicos(url, parametros, callback) {
@@ -236,6 +365,17 @@ $modulos = $model->obtenerModulosM5();
     }
 
 
+    //---------- EDITAR ENFERMEDADES DEL PACIENTE ----------
+    function editarEnfermedadV2(idEnfermedad, elemento, parametro, idRol) {
+    gestionarAntecedentesPatologicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/editar-cuestionarioV2-modulo5`, {
+    idEnfermedad, detalle: elemento.value, edicion: parametro, idRol
+    }, () => contenidoEnfermedades(0));
+    }
+
+    //---------- FINALIZAR MODULO DEL PACIENTE----------
+    function finalizarModuloPAC(idModulo, idPaciente) {
+    gestionarAntecedentesPatologicos('/historia-clinica/paciente/finalizar-modulo-paciente', { idModulo, idPaciente }, () => window.location.href = '/historia-clinica');
+    }
 
     </script>
     </head>
@@ -300,6 +440,39 @@ $modulos = $model->obtenerModulosM5();
     <div id="contePreguntas_4"></div>
     </div>
     </div>
+
+
+    <!---------- CONTENEDOR DE ENFERMEDADES ---------->
+    <div id="enfermedades-container">
+
+    <div class="card-header pb-0">
+    <div class="row">
+
+    <div id="seccion101" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-2">
+    <img src="<?=RUTA_IMAGES ?>/iconos/audio.png" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion101">
+
+    <h8 class="text-primary fw-bold texto">
+    <b>A continuación se presentará una serie de distintas enfermedades.
+    Si usted padece o ha padecido alguna de ellas, por favor indique el año aproximado en que fue diagnosticado:</b>
+    </h8>
+    </div>
+
+    <div class="col-12">
+    <div id="mensaje" class="text-center text-danger mt-2"></div>
+    </div>
+
+    </div>
+    </div>
+
+    
+    <div class="card-body">
+    <div id="contePreguntasV2"></div>
+    </div>
+    </div>
+
+    </div>
+
+
 
     </div>
     </section>

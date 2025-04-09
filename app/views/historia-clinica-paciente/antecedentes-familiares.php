@@ -166,28 +166,6 @@ $botonFinalizar = $model2->botonFinalizarModulo(2,$data['idPaciente'],$data['idR
     document.getElementById('btnAgregarEnfermedad').style.display = 'none';
     }
 
-    //---------- CAMBIA EL ESTADO DE LAS RESPUESTAS ----------
-    function respuestaPregunta(select, id) {
-    let row = select.closest('.pregunta-container');
-    let tipoSelect = row.querySelector(".detalle-enfermedad");
-    let inputEspecificar = row.querySelector(".especificar-enfermedad");
-    let divTipoEnfermedad = row.querySelector(".divTipoEnfermedad");
-    let esSi = select.value === "Si";
-    let esDiabetes = row.dataset.enfermedad.trim() === "Diabetes Mellitus";
-
-    tipoSelect.disabled = !(esSi && esDiabetes);
-    divTipoEnfermedad.style.display = (esSi && esDiabetes) ? 'block' : 'none';
-    inputEspecificar.disabled = !esSi;
-
-    if (!esSi) {
-    tipoSelect.value = "";
-    inputEspecificar.value = "";
-    }
-
-    editarEnfermedad(id, select, 2, row.dataset.rol);
-    }
-
-
     //---------- MUESTRA LA SECCION DE PREGUNTAS Y COMENTARIOS ----------
     function seccionPreguntas() {
     document.getElementById("preguntas-container").style.display = "block";
