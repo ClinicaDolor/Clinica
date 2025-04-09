@@ -113,7 +113,7 @@ class AntecedentesQuirurgicos{
     $result .= '</div>';
 
     }else{
- 
+  
     $result .= '
     <div class="card-header pb-0">
     <div class="row">
@@ -151,7 +151,6 @@ class AntecedentesQuirurgicos{
     $preguntas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
 
-    
     $result .= '
     <div class="card-header pb-0">
     <div class="row">
@@ -187,7 +186,7 @@ class AntecedentesQuirurgicos{
     <th class="text-center align-middle" width="30px"><i data-feather="trash-2"></i></th>
     </tr>
     </thead>
-    <tbody>';
+    <tbody>'; 
 
     foreach ($preguntas as $index => $pregunta) :
     $idCirugia = $pregunta['id'];

@@ -104,6 +104,10 @@ class SidebarController {
 
     'procedimientos-control-dolor' => [
     ['titulo' => 'Procedimientos que ha utilizado para controlar el dolor', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ],
+
+    'medicacion-actual' => [
+    ['titulo' => 'Medicación Actual', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ]
 
     ],
@@ -129,8 +133,11 @@ class SidebarController {
 
     'procedimientos-control-dolor' => [
     ['titulo' => 'Procedimientos que ha utilizado para controlar el dolor', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ],
+
+    'medicacion-actual' => [
+    ['titulo' => 'Medicación Actual', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ]
-    
     
     ]
     ]; 
