@@ -16,16 +16,17 @@ echo $model->antecedentesPatologicosV2($data['idPaciente'], $preg_enfermedad);
     
 ?>
 
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="en">
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?=$data['title'];?></title>
     <link rel="shortcut icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
     <link rel="apple-touch-icon" href="<?=RUTA_IMAGES ?>/logo-clinica.png">
-    <title><?=$data['title'];?></title>
     <link rel="stylesheet" href="<?=RUTA_CSS;?>bootstrap.css">
     <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="<?=RUTA_PUBLIC;?>libs/simple-datatables/style.css">
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="<?=RUTA_JS;?>loader.js"></script>
@@ -54,7 +55,7 @@ echo $model->antecedentesPatologicosV2($data['idPaciente'], $preg_enfermedad);
     feather.replace();
     });
     }
-
+ 
     // ------------------------------ CONTENIDO PREGUNTAS V2 ------------------------------
     function contenidoEnfermedades() {
     const usuarioDiv = document.getElementById('main');
@@ -66,6 +67,21 @@ echo $model->antecedentesPatologicosV2($data['idPaciente'], $preg_enfermedad);
     .then(data => {
     document.getElementById('contePreguntasV2').innerHTML = data;
     feather.replace();
+
+    const tabla = document.querySelector("#table_enfermedades");
+    if (tabla) {
+    dataTable = new simpleDatatables.DataTable(tabla,{
+	searchable: true,
+    fixedHeight: true,
+	columns: [
+	{
+	select: 0, sort: "asc"
+	},
+    { select: [2,3,4], sortable: false },
+
+	]
+    });
+    }  
 
     });
     }
@@ -184,6 +200,7 @@ echo $model->antecedentesPatologicosV2($data['idPaciente'], $preg_enfermedad);
     <script src="<?=RUTA_JS;?>/feather-icons/feather.min.js"></script>
     <script src="<?=RUTA_PUBLIC;?>libs/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="<?=RUTA_JS;?>app.js"></script>    
+    <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
     <script src="<?=RUTA_JS;?>main.js"></script>
 
     </body>

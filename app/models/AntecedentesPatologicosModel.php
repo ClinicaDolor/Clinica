@@ -209,7 +209,7 @@ $this->bd = Database::getInstance();
     </div>
     
     <div class="table-responsive mb-3">
-    <table class="table table-striped" id="table_enfermedades">
+    <table class="table table-striped" id="table_patologico">
     <thead>
     <tr>
     <th class="text-center align-middle" width="40px">#</th>
@@ -407,7 +407,7 @@ $this->bd = Database::getInstance();
 
     $result .= '<td class="text-start align-middle">';
     if($respuesta == 'Si'){
-    
+     
     if($preguntaEnf == 'Diabetes Mellitus'){
     $result .= '<select class="form-select detalle-enfermedad mb-3" onchange="editarEnfermedadV2('.$idRespuesta.', this, 2, \''.$idRol.'\')">
     <option value="" disabled selected>Selecciona una opción...</option>
@@ -427,7 +427,7 @@ $this->bd = Database::getInstance();
     }
     }
     $result .= '</td>
-    <td class="text-start align-middle"><input class="form-control especificar-enfermedad" type="number" onchange="editarEnfermedadV2('.$idRespuesta.', this, 3, \''.$idRol.'\')" value="'.$year.'" placeholder="Ingresa aquí el año de diagnóstico..." /></td>
+    <td class="text-start align-middle"><input class="form-control especificar-enfermedad" type="number" onchange="editarEnfermedadV2('.$idRespuesta.', this, 3, \''.$idRol.'\')" value="'.$year.'" placeholder="Ingresa aquí el año de diagnóstico..." '.($respuesta !== 'Si' ? 'disabled' : '').'></td>
     </tr>';
     $num++;
     }
@@ -461,39 +461,44 @@ $this->bd = Database::getInstance();
         
     }
     
-    public function editarCuestionarioSelectV1($idPaciente,$idRespuesta,$idTema){
-
-    // Si la respuesta es "NO", actualizamos la respuesta a 'NO' y las demás respuestas a vacío
-    $sql1 = "UPDATE pac_respuestas_paciente_modulo_5 SET respuesta = 'No'  WHERE id = :id_respuesta";
+    public function editarCuestionarioSelectV1($idPaciente, $idRespuesta, $idTema) {
+    // Actualizar la respuesta seleccionada a 'No'
+    $sql1 = "UPDATE pac_respuestas_paciente_modulo_5 SET respuesta = 'No' WHERE id = :id_respuesta";
     $stmt1 = $this->bd->prepare($sql1);
     $stmt1->bindParam(':id_respuesta', $idRespuesta);
     
-    $sql2 = "UPDATE pac_respuestas_paciente_modulo_5 SET respuesta = '' 
-    WHERE id_pregunta IN (SELECT id FROM pac_preguntas_modulo_3 WHERE id_tema = :id_tema) AND id_paciente = :id_paciente AND id != :id_respuesta";
+    // Vaciar respuestas de las demás preguntas del mismo módulo, excepto la que se respondió ('No')
+    $sql2 = "UPDATE pac_respuestas_paciente_modulo_5 
+    SET respuesta = '' WHERE id_pregunta IN (SELECT id FROM pac_preguntas_modulo_5 WHERE id_tema = :id_tema)
+    AND id_paciente = :id_pacienteAND id != :id_respuesta";
     $stmt2 = $this->bd->prepare($sql2);
     $stmt2->bindParam(':id_tema', $idTema);
     $stmt2->bindParam(':id_paciente', $idPaciente);
     $stmt2->bindParam(':id_respuesta', $idRespuesta);
     
+    // Iniciar transacción
     $this->bd->beginTransaction();
+    
     if ($stmt1->execute()) {
     if ($stmt2->execute()) {
-    $this->bd->commit(); // Confirmar cambios
-    return array('resultado' => 200, 'mensaje' => '¡Respuestas actualizadas exitosamente!');
-            
-    } else {
-    $this->bd->rollback(); // Deshacer cambios
-    return array('resultado' => 401, 'mensaje' => '¡Error al actualizar la respuesta en stmt2!');
-    }
+    // Opcional: logging de filas afectadas para pruebas
+    $filasAfectadas = $stmt2->rowCount();
+    error_log("Filas actualizadas (vacías) en stmt2: $filasAfectadas");
     
+    $this->bd->commit();
+    return array('resultado' => 200, 'mensaje' => '¡Respuestas actualizadas exitosamente!');
+        
     } else {
-    $this->bd->rollback(); // Deshacer cambios
-    return array('resultado' => 401, 'mensaje' => '¡Error al actualizar la respuesta en stmt1!');
+    $this->bd->rollback();
+    return array('resultado' => 401, 'mensaje' => '¡Error al vaciar las demás respuestas (stmt2)!');
     }
         
+    } else {
+    $this->bd->rollback();
+    return array('resultado' => 401, 'mensaje' => '¡Error al actualizar la respuesta seleccionada (stmt1)!');
     }
-
-
+    }
+    
     public function editarCuestionarioV1Modulo($data) {
     
     //---------- Verificamos si el tipo es "input" ----------
