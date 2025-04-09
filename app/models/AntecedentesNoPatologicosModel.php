@@ -182,7 +182,7 @@ $this->bd = Database::getInstance();
 
     // Mostrar el tipo de pregunta (select o input)
     if ($tipo == "select") {
-    $elementotd = '<select class="form-select" onchange="respuestaPreguntaSelect('.$idPaciente.','.$idRespuesta.', this, '.$idTema.', \''.$tipo.'\',\''.$idRol.'\')">
+    $elementotd = '<select class="form-select text-center" onchange="respuestaPreguntaSelect('.$idPaciente.','.$idRespuesta.', this, '.$idTema.', \''.$tipo.'\',\''.$idRol.'\')">
     <option value="" disabled selected>Selecciona una opción...</option>
     <option value="Si" ' . ($respuesta == 'Si' ? 'selected' : '') . '>Sí</option>
     <option value="No" ' . ($respuesta == 'No' ? 'selected' : '') . '>No</option>
@@ -191,7 +191,7 @@ $this->bd = Database::getInstance();
     } else {
 
     $deshabilitarInput = $this->validarFormato($idPaciente,$idTema);
-    $elementotd = '<input type="text" class="form-control" ' . $deshabilitarInput . ' value="' . ($respuesta == 0 ? '' : $respuesta) . '" placeholder="Ingresa aquí la respuesta..." onchange="respuestaPreguntaSelect('.$idPaciente.','.$idRespuesta.', this, '.$idTema.', \''.$tipo.'\',\''.$idRol.'\')">';
+    $elementotd = '<input type="text" class="form-control text-center" ' . $deshabilitarInput . ' value="' . ($respuesta == 0 ? '' : $respuesta) . '" placeholder="Ingresa aquí la respuesta..." onchange="respuestaPreguntaSelect('.$idPaciente.','.$idRespuesta.', this, '.$idTema.', \''.$tipo.'\',\''.$idRol.'\')">';
     }
     
     $result .= ' <tr> 

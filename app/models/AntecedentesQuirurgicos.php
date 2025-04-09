@@ -173,7 +173,7 @@ class AntecedentesQuirurgicos{
     </div>
 
     </div>
-    </div>
+    </div> 
 
     <div class="card-body pb-0">
     <div class="col-12">

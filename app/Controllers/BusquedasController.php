@@ -9,6 +9,7 @@ use App\Models\LaboratorioModel;
 use App\Models\AntecedenteFamiliarModel;
 use App\Models\AntecedentesNoPatologicosModel;
 use App\Models\AntecedentesQuirurgicos;
+use App\Models\AntecedentesPatologicosModel;
 
 use App\Models\PacienteModulosModelo;
 
@@ -79,6 +80,18 @@ class BusquedasController{
         $model = new AntecedentesQuirurgicos();
         echo $model->mostrarPreguntasM4($idPaciente,$idRol);
     }
+
+    public function contenidoPreguntasM5V1($idPaciente,$idRol,$idCuestionario){
+        $model = new AntecedentesPatologicosModel();
+        echo $model->mostrarPreguntasM5V1($idPaciente,$idRol,$idCuestionario);
+    }
+
+    public function contenidoPreguntasM5V2($idPaciente,$idRol){
+    $model = new AntecedentesPatologicosModel();
+    echo $model->mostrarPreguntasM5V2($idPaciente,$idRol);
+    }
+
+
 
     //---------- CONTENIDO COMENTARIOS ----------
     public function contenidoComentariosModulo($idPaciente,$idRol,$idModulo){

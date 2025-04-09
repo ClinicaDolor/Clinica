@@ -58,9 +58,9 @@ $this->bd = Database::getInstance();
     <thead>
     <tr>
     <th class="text-start align-middle" width="250px">Nombre de la enfermedad</th>
-    <th class="text-center align-middle" width="250px">Respuesta</th>
-    <th class="text-center align-middle" width="250px">Tipo</th>
-    <th class="text-center align-middle">Especificar enfermedad</th>
+    <th class="text-center align-middle" width="300px">¿Alguno de tus familiares ha sido diagnosticado con esta enfermedad?</th>
+    <th class="text-center align-middle" width="250px">Tipo de enfermedad</th>
+    <th class="text-center align-middle">¿Qué familiar padece esta enfermedad?</th>
     <th class="text-center align-middle" width="30px"><i data-feather="trash-2"></i></th>
 
     </tr>
@@ -84,7 +84,7 @@ $this->bd = Database::getInstance();
     </td>
 
     <td class="text-center align-middle">
-    <select class="form-select tipo-enfermedad" onchange="editarEnfermedad('.$idEnfermedad.', this, 2, \''.$idRol.'\')" 
+    <select class="form-select tipo-enfermedad text-center" onchange="editarEnfermedad('.$idEnfermedad.', this, 2, \''.$idRol.'\')" 
     ' . (in_array($enfermedad, $enfermedades_fijas) ? '' : 'disabled') . '>
     <option value="" disabled selected ' . ($detalle === '' ? 'selected' : '') . '>Selecciona una opción...</option>
     <option value="Si" ' . ($detalle == 'Si' ? 'selected' : '') . '>Sí</option>
@@ -95,7 +95,7 @@ $this->bd = Database::getInstance();
     <td class="text-center align-middle tipo-detalle">';
     if($enfermedad == "Diabetes Mellitus"){
 
-    $result.= '<select class="form-select detalle-enfermedad" onchange="editarEnfermedad('.$idEnfermedad.', this, 3, \''.$idRol.'\')" 
+    $result.= '<select class="form-select detalle-enfermedad text-center" onchange="editarEnfermedad('.$idEnfermedad.', this, 3, \''.$idRol.'\')" 
     ' . (($enfermedad == "Diabetes Mellitus" && $detalle == "Si") ? '' : 'disabled') . '>
     <option value="" disabled selected ' . ($tipo === '' ? 'selected' : '') . '>Selecciona una opción...</option>
     <option value="Tipo 1" ' . ($tipo === 'Tipo 1' ? 'selected' : '') . '>Tipo 1</option>
@@ -108,7 +108,7 @@ $this->bd = Database::getInstance();
 
     <td class="text-center align-middle">
     <input class="form-control especificar-enfermedad" onchange="editarEnfermedad('.$idEnfermedad.', this, 4, \''.$idRol.'\')" value="' . ($especificar ?? '') . '" 
-    placeholder="Especifica aquí la enfermedad..." ' . ($detalle == 'Si' ? '' : 'disabled') . '>
+    placeholder="Escribe aqui el familiar..." ' . ($detalle == 'Si' ? '' : 'disabled') . '>
     </td>
 
     <td class="text-start align-middle">
@@ -138,8 +138,8 @@ $this->bd = Database::getInstance();
     $result .= '
     <div class="text-secondary fw-bold mb-1">Nombre de la enfermedad:</div>
     <h4 class="mb-3">'.$enfermedad.'</h4>
-    <div class="text-secondary fw-bold mb-1">¿Alguno de tus familiares ha sido diagnosticado con esta enfermedad?</div>
-    <select class="form-select tipo-enfermedad mb-3" onchange="respuestaPregunta(this, '.$idEnfermedad.')">
+    <div class="text-secondary fw-bold mb-1">¿Alguno de tus familiares ha sido diagnosticado con esta enfermedad?:</div>
+    <select class="form-select tipo-enfermedad mb-3" onchange="editarEnfermedad('.$idEnfermedad.', this, 2, \''.$idRol.'\')">
     <option value="" disabled selected>Selecciona una opción...</option>
     <option value="Si" '.($detalle == 'Si' ? 'selected' : '').'>Sí</option>
     <option value="No" '.($detalle == 'No' ? 'selected' : '').'>No</option>
@@ -175,8 +175,8 @@ $this->bd = Database::getInstance();
     </div>
     <div>
 
-    <div class="text-secondary fw-bold mb-1">¿Cuál enfermedad?:</div>
-    <input class="form-control especificar-enfermedad" onchange="editarEnfermedad('.$idEnfermedad.', this, 4, \''.$idRol.'\')" value="'.$especificar.'" placeholder="Especifica aquí la enfermedad..." '.($detalle !== 'Si' ? 'disabled' : '').'>
+    <div class="text-secondary fw-bold mb-1">¿Qué familiar padece esta enfermedad?:</div>
+    <input class="form-control especificar-enfermedad" onchange="editarEnfermedad('.$idEnfermedad.', this, 4, \''.$idRol.'\')" value="'.$especificar.'" placeholder="Escribe aqui al familiar..." '.($detalle !== 'Si' ? 'disabled' : '').'>
     </div>';
     
     //----- Botones de navegación
