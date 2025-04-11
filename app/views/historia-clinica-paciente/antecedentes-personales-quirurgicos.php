@@ -31,7 +31,7 @@ $bd = Database::getInstance();
     contenidoPreguntas();
 
     });
- 
+  
     // ---------- CONTENIDO DE LAS PREGUNTAS ----------
     function contenidoPreguntas(idValor = 0) {
     const usuarioDiv = document.getElementById('main');
@@ -91,7 +91,7 @@ $bd = Database::getInstance();
     const preguntas = document.querySelectorAll('.pregunta-container');
     let activeIndex = -1;
 
-    $(".LoaderPage").show();
+    $(".LoaderPage").show(); 
     $(".LoaderPage").fadeOut(1000);
 
     preguntas.forEach((pregunta, index) => {

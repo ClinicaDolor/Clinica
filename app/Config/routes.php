@@ -60,13 +60,13 @@ return function(RouteCollector $r) {
         $r->addRoute('POST', '/paciente/editar-medicacion-actual', ['ModulosController', 'pacienteEditMedicamento']);
         $r->addRoute('POST', '/paciente/eliminar-medicacion-actual', ['ModulosController', 'pacienteDeleteMedicamento']);
 
-
+ 
         //----- 7. MEDICACION PARA EL DOLOR
         $r->addRoute('POST', '/paciente/editar-cuestionario-modulo7', ['ModulosController', 'pacienteEditarCuestionarioM7']);
 
 
         //----- 8. AGREGAR PROCEDIMIENTO DOLOR
-        $r->addRoute('POST', '/paciente/agregar-procedimiento-dolor', ['ModulosController', 'pacienteInsertProcedimientos']);
+        $r->addRoute('POST', '/paciente/agregar-procedimiento-dolor-modulo8', ['ModulosController', 'pacienteInsertProcedimientos']);
         $r->addRoute('POST', '/paciente/editar-procedimiento-dolor', ['ModulosController', 'pacienteEditProcedimiento']);
         $r->addRoute('POST', '/paciente/eliminar-procedimiento-dolor', ['ModulosController', 'pacienteDeleteProcedimiento']);
         
@@ -159,6 +159,7 @@ return function(RouteCollector $r) {
         $r->addRoute('GET', '/buscar/contenido-preguntasV2-modulo-5/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasM5V2']);
         $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-6/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasM6']);
         $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-7/{idPaciente}/{idRol}/{idCuestionario}', ['BusquedasController', 'contenidoPreguntasM7']);
+        $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-8/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasM8']);
 
         $r->addRoute('GET', '/buscar/contenido-comentarios-modulos/{idPaciente}/{idRol}/{idModulo}', ['BusquedasController', 'contenidoComentariosModulo']);
 

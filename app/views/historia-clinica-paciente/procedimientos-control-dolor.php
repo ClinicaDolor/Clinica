@@ -2,11 +2,9 @@
 use App\Config\Database;
 use App\Models\PacienteModulosModelo;
 $bd = Database::getInstance();
-
-
-
+ 
 ?>
-
+ 
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -21,10 +19,83 @@ $bd = Database::getInstance();
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="<?=RUTA_JS;?>loader.js"></script>
+   
+   <style>
+    /* Contenedor de preguntas visible inicialmente */
+    #preguntas-container { display: block; }
+    .pregunta-container { display: none; }
+    .pregunta-container.active { display: block; }
+    /* Sección de comentarios oculta inicialmente */
+    #tratamiento-container { display: none; }
+    .tratamiento-container { display: none; }
+    .tratamiento-container.active { display: block; }
+    </style>
 
     <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const seccionActual = localStorage.getItem("seccionActual");
+    
+    if (!seccionActual || seccionActual === "preguntas") {
+    contenidoPreguntas();
+    } else if (seccionActual === "tratamientos") {
+    //finalizarPreguntas();
+    }
+
+    });
+
+  
+    // ---------- CONTENIDO DE LAS PREGUNTAS ----------
+    function contenidoPreguntas(idValor = 0) {
+    const usuarioDiv = document.getElementById('main');
+    const idPaciente = usuarioDiv.getAttribute('data-paciente');
+    const idRol = usuarioDiv.getAttribute('data-rol');
+
+    fetch(`/buscar/contenido-preguntas-modulo-8/${idPaciente}/${idRol}`)
+    .then(response => response.text())
+    .then(data => {
+
+    const contenedor = document.getElementById('contePreguntas');
+    contenedor.innerHTML = data;
+    feather.replace();
+
+    // Reactivar el IntersectionObserver para las nuevas secciones
+    document.querySelectorAll('.sectionQuestion').forEach(section => {
+    observer.observe(section);
+    });
+
+    //cargarProgreso(idValor);
+    });
+    } 
+
+
+    //---------- CONTROL SERVER ----------
+    function gestionarControlDolor(url, parametros, callback) {
+    $(".LoaderPage").show();
+    fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(parametros)
+    }).then(res => res.json()).then(data => {
+    $(".LoaderPage").fadeOut(1000);
+    if (data.resultado) callback();
+    else document.getElementById('mensaje').textContent = 'Error: ' + data.mensaje;
+    });
+    }
+
+    //---------- EDITAR ENFERMEDADES DEL PACIENTE ----------
+    function agregarProcedimientosDolor(idPaciente, idRol) {
+    gestionarControlDolor(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/agregar-procedimiento-dolor-modulo8`, {
+    idPaciente,
+    idRol
+    }, 
+    () => contenidoPreguntas());
+    }
+
+
+
 
     </script>
+
     </head>
 
     <body>
@@ -57,11 +128,16 @@ $bd = Database::getInstance();
     
     <section class="section">
 
-    <div class="card">
-
-    <!---------- CONTENEDOR DE PREGUNTAS ---------->
+    <!---------- SECCION DE PROCEDIMIENTOS ---------->
     <div id="preguntas-container">
+    <div class="card">
     <div id="contePreguntas"></div>
+    </div>
+
+    <!---------- SECCION DE TRATAMIENTOS ---------->
+    <div id="tratamiento-container">
+    <div class="card">
+    <div id="conteTratamiento"></div>
     </div>
 
     </div>
@@ -82,5 +158,6 @@ $bd = Database::getInstance();
     <script src="<?=RUTA_JS;?>app.js"></script>    
     <script src="<?=RUTA_PUBLIC;?>libs/simple-datatables/simple-datatables.js"></script>
     <script src="<?=RUTA_JS;?>main.js"></script>
+    
     </body>
     </html>

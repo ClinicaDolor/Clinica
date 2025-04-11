@@ -11,8 +11,9 @@ use App\Models\AntecedentesNoPatologicosModel;
 use App\Models\AntecedentesQuirurgicos;
 use App\Models\AntecedentesPatologicosModel;
 use App\Models\MedicacionDolorModel;
-
 use App\Models\MedicacionActualModel;
+use App\Models\ProcedimientosDolorModel;
+
 use App\Models\PacienteModulosModelo;
 
 class BusquedasController{
@@ -103,8 +104,14 @@ class BusquedasController{
     $model = new MedicacionDolorModel();
     echo $model->mostrarPreguntasM7($idPaciente,$idRol,$idCuestionario);
     }
- 
 
+
+    public function contenidoPreguntasM8($idPaciente,$idRol){
+    $model = new ProcedimientosDolorModel();
+    echo $model->mostrarPreguntasM8($idPaciente,$idRol);
+    }
+    
+ 
     //---------- CONTENIDO COMENTARIOS ----------
     public function contenidoComentariosModulo($idPaciente,$idRol,$idModulo){
     $model = new PacienteModulosModelo();
