@@ -32,9 +32,9 @@
     </div>
         
         <div class="d-grid gap-2 mt-4">
-        <a class="btn btn-success btn-lg p-3" target="_blank" href="<?=RUTA_STORAGE;?>Programa-del-Curso.pdf" download >Descargar Programa del 7° Curso-Taller Bienal 2024 Manejo Integral del Dolor</a>
+        <a class="btn btn-success btn-lg p-3" target="_blank" href="descargar/web/Programa-del-Curso.pdf" download >Descargar Programa del 7° Curso-Taller Bienal 2024 Manejo Integral del Dolor</a>
         </div>
-    
+
        <iframe class="mt-4" src="<?=RUTA_STORAGE;?>web/Programa-del-Curso.pdf#toolbar=0&navpanes=0&scrollbar=0&zoom=50" type="application/pdf" width="100%" height="750px" ></iframe>
        
 	</div>

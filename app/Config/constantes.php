@@ -12,7 +12,7 @@ define("RUTA_IMAGES", RUTA_PUBLIC . "images/");
 define("RUTA_IMG_ICONOS", value: RUTA_IMAGES . "iconos/");
 define("RUTA_IMG_FONDO", RUTA_IMAGES . "fondo/");
 
-define("RUTA_STORAGE", RUTA_PUBLIC . "storage/");
+define("RUTA_STORAGE", SERVIDOR . "public/storage/");
 //--------------------------------------------------------------------------//
 
 define("LINK_HOME", SERVIDOR);
@@ -38,7 +38,7 @@ define("LINK_DOLOR_CANCER_ENDOSCOPIA_PALIATIVA", SERVIDOR . "dolor-cancer-endosc
 
 define("LINK_DOLOR_NEURALGIA_POSTHERPETICA", SERVIDOR . "neuralgia-postherpetica");
 
-define("LINK_PACIENTE_ACCESO", SERVIDOR . "paciente/acceso");
+define("LINK_PACIENTE_ACCESO", SERVIDOR . "historia-clinica");
 define("LINK_PACIENTE_CLINICA", SERVIDOR . "paciente/clinica");
 define("LINK_NUEVO_PACIENTE", SERVIDOR . "paciente/nuevo");
 define("LINK_FICHA_IDENTIFICACION_PACIENTE", SERVIDOR . "paciente/ficha-identificacion");

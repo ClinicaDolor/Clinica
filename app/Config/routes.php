@@ -145,6 +145,7 @@ return function(RouteCollector $r) {
         $r->addRoute('GET', '/buscar/laboratorio/{idLaboratorio}', ['BusquedasController', 'buscarLaboratorio']);
         $r->addRoute('GET', '/buscar/tabla-laboratorio/{idPaciente}/{referencia}', ['BusquedasController', 'tableLaboratorio']);
         $r->addRoute('GET', '/buscar/tabla-notas-subsecuentes/{idPaciente}/{referencia}', ['BusquedasController', 'tableNotasSubsecuentes']);
+        $r->addRoute('GET', '/buscar/web', ['WebController', 'buscarWeb']);
     
         //-----------------------------------------//
         //Ruta para crear las diferentes busquedas de los Modulos
