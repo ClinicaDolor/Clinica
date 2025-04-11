@@ -8,6 +8,7 @@ use App\Models\AntecedentesQuirurgicos;
 use App\Models\AntecedentesPatologicosModel;
 use App\Models\ProcedimientosDolorModel;
 use App\Models\MedicacionActualModel;
+use App\Models\MedicacionDolorModel;
 use App\Models\PacienteModulosModelo;
 use App\Models\PacienteModel;
 use App\Helpers\Sidebar;
@@ -286,7 +287,6 @@ class ModulosController extends BaseController {
     }
         
     }
-
     
    //----- 5. ANTECEDENTES PATOLOGICOS ----------
    public function pacienteEditarCuestionarioV1M5(){
@@ -415,6 +415,33 @@ class ModulosController extends BaseController {
     echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
     }
         
+    }
+
+
+    //----- 7. MEDICACION PARA CONTROLAR EL DOLOR  ----------
+    public function pacienteEditarCuestionarioM7(){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $idRol = $data['idRol'];  // Obtener el idRol
+    $idRol == "Paciente" ? $view = "historia-clinica" : $view = "clinica";
+                                
+    $authMiddleware = new AuthMiddleware($view);
+    $authMiddleware->authPermisos();
+    header('Content-Type: application/json');
+                    
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo HttpMethod::jsonResponse(405, false, "Método no permitido. Usa POST.");
+    return;
+    }
+                    
+    $model = new MedicacionDolorModel();
+    $resultModel = $model->editarCuestionarioM7Paciente($data);
+                    
+    if ($resultModel['resultado'] == 200) {
+    echo HttpMethod::jsonResponse(200,true,$resultModel['mensaje']);
+    } else {
+    echo HttpMethod::jsonResponse(401, false, $resultModel['mensaje']);
+    }
+                    
     }
 
     //---------- 8. PROCEFIMIENTOS PARA CONTROLAR EL DOLOR ----------

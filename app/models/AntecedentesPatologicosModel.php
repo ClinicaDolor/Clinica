@@ -153,7 +153,7 @@ $this->bd = Database::getInstance();
     } else {
     $result .= '<button class="btn btn-secondary" onclick="anteriorPregunta(' . $idTema . ')"><i data-feather="chevron-left"></i> Anterior</button>';
     }
-      
+    
     // Verificar si la respuesta está vacía para preguntas de tipo "select"
     if ($tipo == "select" && empty($respuesta)) {
     // Si la respuesta está vacía, no mostrar los botones "Siguiente" ni "Ir a siguiente sección"
