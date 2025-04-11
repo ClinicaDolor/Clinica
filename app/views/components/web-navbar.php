@@ -1,13 +1,12 @@
 <script type="text/javascript">
 $(document).ready(function () {
-var ruta = localStorage.getItem('URLSERVER');
   $("#search").keyup(function () {
     let searchText = $(this).val();
 
     if (searchText != "") {
       $.ajax({
-        url: ruta + "modelo/buscar/buscar-informacion.php",
-        method: "post",
+        url: "buscar/web",
+        method: "get",
         data: {
           query: searchText,
         },
@@ -21,6 +20,12 @@ var ruta = localStorage.getItem('URLSERVER');
   });
 
 });
+
+document.addEventListener("click", (e) => {
+  $("#show-list").html(""); 
+$("#search").val(""); 
+});
+
 function Limpiar(){
 $("#show-list").html(""); 
 $("#search").val(""); 
@@ -73,7 +78,7 @@ $("#search").val("");
 
       </header>
       
-<div>
+<div style="border-bottom: 3px solid #97C586;">
 <input type="text" class="form-control border-0 rounded-0 fs-4 fw-light bg-light" id="search" name="search" placeholder="Buscar..." autocomplete="off">
 </div>
 <div class="col-md-5" style="position: absolute;">

@@ -76,7 +76,7 @@ clinicadeldolor@tratamientosdeldolor.org
 
 
 <div class="fs-5 fw-light mt-2">
-El Departamento de Clínica del Dolor y Cuidados Paliativos del Hospital Ángeles Lomas está organizado por profesionales líderes altamente calificados de todas las especialidades que atienden a personas con dolor. <a href="<?=RUTA_ARCHIVOS;?>Aviso de privacidad.pdf">Aviso de Privacidad</a>
+El Departamento de Clínica del Dolor y Cuidados Paliativos del Hospital Ángeles Lomas está organizado por profesionales líderes altamente calificados de todas las especialidades que atienden a personas con dolor. <a href="descargar/web/Aviso de privacidad.pdf">Aviso de Privacidad</a>
 </div>
 
 </div>

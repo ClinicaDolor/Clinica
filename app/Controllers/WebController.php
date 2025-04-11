@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Models\BusquedasModel;
 
 class WebController extends BaseController{
 
@@ -109,5 +110,12 @@ class WebController extends BaseController{
         $this->view('/web/neuralgia-postherpetica.php', $data);
     }
 
+        public function buscarWeb(){
+
+            $query = $_GET['query'] ?? '';
+            $model = new BusquedasModel();
+            echo $model->getPaginaWeb($query);
+            
+        }
     
 }
