@@ -10,6 +10,8 @@ use App\Models\AntecedenteFamiliarModel;
 use App\Models\AntecedentesNoPatologicosModel;
 use App\Models\AntecedentesQuirurgicos;
 use App\Models\AntecedentesPatologicosModel;
+use App\Models\MedicacionDolorModel;
+
 use App\Models\MedicacionActualModel;
 use App\Models\PacienteModulosModelo;
 
@@ -97,10 +99,16 @@ class BusquedasController{
     }
     
 
+    public function contenidoPreguntasM7($idPaciente,$idRol,$idCuestionario){
+    $model = new MedicacionDolorModel();
+    echo $model->mostrarPreguntasM7($idPaciente,$idRol,$idCuestionario);
+    }
+ 
+
     //---------- CONTENIDO COMENTARIOS ----------
     public function contenidoComentariosModulo($idPaciente,$idRol,$idModulo){
-        $model = new PacienteModulosModelo();
-        echo $model->mostrarComentariosModulo($idPaciente,$idRol,$idModulo);
+    $model = new PacienteModulosModelo();
+    echo $model->mostrarComentariosModulo($idPaciente,$idRol,$idModulo);
     }
 
 
