@@ -11,9 +11,67 @@ class ProcedimientosDolorModel{
     
     }
 
+
+
+    //---------- MOSTRAR PREGUNTAS DEL MODULO 4 ----------/
+    public function mostrarPreguntasM8($idPaciente,$idRol){
+    $result = "";
+    $stmt = $this->bd->query("SELECT * FROM pac_procedimientos_dolor_modulo_8 WHERE id_paciente = '".$idPaciente."' ORDER BY id ASC");
+    $preguntas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    if($idRol == "Paciente"){
+
+    if (!empty($preguntas)) {
+
+    }else{
+  
+    $result .= '
+    <div class="card-header pb-0">
+    <div class="row">
+
+    <div id="seccion100" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-2">
+    <img src="'.RUTA_IMAGES.'/iconos/audio.png" onclick="readQuestion()" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion100">
+
+    <h8 class="text-primary fw-bold texto">
+    <b>Si usted ha tenido algun procedimiento para controlar el dolor, presione el botón verde para agregarlo. Si no ha sido sometido a ningun tipo de procedimiento, seleccione el boton de "Tratamientos":</b>
+    </h8>
+    </div>
+
+    <div class="col-12">
+    <div id="mensaje" class="text-center text-danger mt-2"></div>
+    </div>
+
+    </div>
+    </div>
+
+    <div class="card-body">
+    <div class="row">
+    <div class="col-12 text-center pb-0">
+    <img src="'.RUTA_IMAGES.'/iconos/agregar-icon.png" onclick="agregarProcedimientosDolor('.$idPaciente.',\''.$idRol.'\')" class="img-fluid btnLeer pointer" style="max-height: 90%;"></div>
+    </div> 
+    <div class="col-12 text-end">
+    <button class="btn btn-success" onclick="seccionTratamientos()">Tratamientos</button>
+    </div>
+    
+    </div>';
+    
+    }
+
+    }else{
+    //---------- Apartado del doctor ----------
+    }
+
+    return $result;
+    }
+
+
+
+
+
+
     public function agregarProcedimientosPaciente($data){
 
-    $sql = "INSERT INTO pac_procedimientos_dolor (
+    $sql = "INSERT INTO pac_procedimientos_dolor_modulo_8 (
     id_paciente
     ) VALUES (
     :id_paciente

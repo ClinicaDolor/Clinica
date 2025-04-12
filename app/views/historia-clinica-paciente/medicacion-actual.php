@@ -25,20 +25,21 @@ $bd = Database::getInstance();
     .pregunta-container { display: none; }
     .pregunta-container.active { display: block; }
     </style>
-
+   
     <script>
     document.addEventListener("DOMContentLoaded", function() {
     contenidoPreguntas();
 
-    });
-  
+    });   
+
+
     // ---------- CONTENIDO DE LAS PREGUNTAS ----------
     function contenidoPreguntas(idValor = 0) {
-    const usuarioDiv = document.getElementById('main');
+    const usuarioDiv = document.getElementById('main');  
     const idPaciente = usuarioDiv.getAttribute('data-paciente');
     const idRol = usuarioDiv.getAttribute('data-rol');
 
-    fetch(`/buscar/contenido-preguntas-modulo-4/${idPaciente}/${idRol}`)
+    fetch(`/buscar/contenido-preguntas-modulo-6/${idPaciente}/${idRol}`)
     .then(response => response.text())
     .then(data => {
 
@@ -78,7 +79,7 @@ $bd = Database::getInstance();
     // Activar la nueva pregunta
     preguntas[nuevoIndex].classList.add('active');
     // Mostrar el botón si es la última pregunta
-    document.getElementById('btnAgregarCirugia').style.display = nuevoIndex === preguntas.length - 1 ? 'block' : 'none';
+    document.getElementById('btnAgregarMedicamento').style.display = nuevoIndex === preguntas.length - 1 ? 'block' : 'none';
     }
 
     // Guardar el nuevo progreso
@@ -91,7 +92,7 @@ $bd = Database::getInstance();
     const preguntas = document.querySelectorAll('.pregunta-container');
     let activeIndex = -1;
 
-    $(".LoaderPage").show(); 
+    $(".LoaderPage").show();
     $(".LoaderPage").fadeOut(1000);
 
     preguntas.forEach((pregunta, index) => {
@@ -108,7 +109,7 @@ $bd = Database::getInstance();
     }
 
     // Ocultar el botón si no estamos en la última pregunta
-    document.getElementById('btnAgregarCirugia').style.display = 'none';
+    document.getElementById('btnAgregarMedicamento').style.display = 'none';
     }
 
     //---------- PREGUNTA SIGUIENTE ----------
@@ -134,14 +135,14 @@ $bd = Database::getInstance();
 
     // Mostrar el botón solo si se está en la última pregunta
     if (activeIndex + 1 === preguntas.length - 1) {
-    document.getElementById('btnAgregarCirugia').style.display = 'block';
+    document.getElementById('btnAgregarMedicamento').style.display = 'block';
     } else {
-    document.getElementById('btnAgregarCirugia').style.display = 'none';
+    document.getElementById('btnAgregarMedicamento').style.display = 'none';
     }
     }
 
     //---------- CONTROL SERVER ----------
-    function gestionarAntecedentesQuirurgicos(url, parametros, callback) {
+    function gestionarMedicacionActual(url, parametros, callback) {
     $(".LoaderPage").show();
     fetch(url, {
     method: 'POST',
@@ -155,32 +156,38 @@ $bd = Database::getInstance();
     } 
 
     //---------- AGREGAR CIRUGIA DEL PACIENTE ----------
-    function agregarCirugiaPaciente (idPaciente, idRol) {
-    gestionarAntecedentesQuirurgicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/agregar-cirugia-antecedentes`, {
+    function agregarMedicamentoPaciente(idPaciente, idRol) {
+    gestionarMedicacionActual(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/agregar-medicacion-actual`, {
     idPaciente,
     idRol
     }, 
     () => contenidoPreguntas(1));
     }
 
+
     //---------- EDITAR CIRUGIA DEL PACIENTE ----------
-    function editarCirugia(idCirugia, elemento, parametro, idRol) {
-    gestionarAntecedentesQuirurgicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/editar-cirugia-antecedentes`, {
-        idCirugia, 
-        detalle: elemento.value, 
-        edicion: parametro, 
-        idRol
+    function editarMedicamento(idMedicamento, elemento, parametro, idRol) {
+    gestionarMedicacionActual(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/editar-medicacion-actual`, {
+    idMedicamento, 
+    detalle: elemento.value, 
+    edicion: parametro, 
+    idRol
     }, () => contenidoPreguntas(0));
     }
+
     //---------- ELIMINAR CIRUGIA DEL PACIENTE ----------
-    function eliminarCirugiaPaciente(idQuirurgico, idRol) {
-    gestionarAntecedentesQuirurgicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/eliminar-cirugia-antecedentes`, { idQuirurgico, idRol }, () => contenidoPreguntas(1));
+    function eliminarMedicamentoPacientes(idMedicamento, idRol) {
+    gestionarMedicacionActual(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/eliminar-medicacion-actual`, { 
+    idMedicamento, idRol }, () => contenidoPreguntas(1));
     }
 
     //---------- FINALIZAR MODULO DEL PACIENTE----------
     function finalizarModuloPAC(idModulo, idPaciente) {
-    gestionarAntecedentesQuirurgicos('/historia-clinica/paciente/finalizar-modulo-paciente', { idModulo, idPaciente }, () => window.location.href = '/historia-clinica');
+    gestionarMedicacionActual('/historia-clinica/paciente/finalizar-modulo-paciente', { 
+    idModulo, idPaciente }, 
+    () => window.location.href = '/historia-clinica');
     }
+
     </script>
     </head>
 

@@ -352,7 +352,7 @@ foreach ($tratamientos as $idTratamiento) {
     $comentariosOP = $procedimientostb['comentarios'];
 
     ?>
-    <tr>
+    <tr> 
 
     <td class="text-start align-middle p-2">
     <?=$nombreProcedimiento ?? ''?> 
