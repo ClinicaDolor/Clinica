@@ -18,6 +18,17 @@ $bd = Database::getInstance();
     <link rel="stylesheet" href="<?=RUTA_CSS;?>app.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="<?=RUTA_JS;?>loader.js"></script>
+
+    <style>
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .resizable {
+            transition: all 0.3s ease-in-out; /* Suaviza el cambio de tamaño */
+        }
+    </style>
+    
     <script>
 
     window.addEventListener("pageshow", () => {
@@ -49,6 +60,7 @@ $bd = Database::getInstance();
 
                 const resultsContainer = document.getElementById('conteNotasSubsecuentes');
                 resultsContainer.innerHTML = data;
+                feather.replace();
 
                 const tabla = document.querySelector("#tableNotasSubsecuentes");
                 if (tabla) {
@@ -60,12 +72,12 @@ $bd = Database::getInstance();
                         columns: [
                         {
                             select: 0, sort: "desc"
-                        }
+                        },
+                        { select: [2], sortable: false },
                         ]
                     });
                 }       
                 
-                feather.replace();
         });
 
     }
@@ -127,7 +139,7 @@ $bd = Database::getInstance();
                         searchable: true,
                         fixedHeight: true,
                         perPageSelect: false,
-                        searchable: false,
+                        searchable: true,
                         columns: [
                         {
                             select: 0, sort: "desc"
@@ -187,6 +199,7 @@ $bd = Database::getInstance();
         function DetalleLaboratorio(idLaboratorio){
             window.location.href = '/clinica/laboratorio/' + idLaboratorio;
         }
+
     </script>
 
 
@@ -203,6 +216,10 @@ $bd = Database::getInstance();
     <?php include_once __DIR__ . '/../components/search-bar-doctor.php';?>
             
     <div class="main-content container-fluid">
+    
+    <button id="toggleButton" class="btn icon btn-light text-dark float-end" onclick="toggleSize()">
+    <i id="toggleIcon" data-feather="columns"></i>
+    </button>
 
     <div class="page-title">
     <h3><?=$data['title'];?></h3>
@@ -210,7 +227,7 @@ $bd = Database::getInstance();
 
     <div class="row mt-4">
 
-    <div class="col-12 col-sm-6">
+    <div class="col-12 col-sm-6 resizable">
     <div class="card">
         
     <div class="card-header">
@@ -358,7 +375,7 @@ $bd = Database::getInstance();
 
     </div>
     <!-- Inicio Clinica -->
-    <div class="col-12 col-sm-6">
+    <div class="col-12 col-sm-6 resizable">
     
     <div class="card">
         <div class="card-header">
@@ -424,11 +441,8 @@ $bd = Database::getInstance();
     </div>
     <!-- Fin Clinica -->
 
-    <div class="col-12">   
-    
-    </div>
 
-    <div class="col-12">
+    <div class="col-12 resizable">
                     <!-- Card Modulos --->
                     <div class="card">
                     

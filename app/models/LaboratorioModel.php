@@ -100,7 +100,7 @@ class LaboratorioModel{
 
     }
 
-    public function insertArchivo($idPaciente,$contenidoLaboratorio,$fileName, $fileData, $fileSize, $fileExtension, $referencia){
+    public function insertArchivo($idPaciente,$contenidoLaboratorio,$fileName, $fileData, $fileSize, $fileExtension, $referencia, $titulo){
 
         $uploadDir = __DIR__ . '../../../public/storage/laboratorio/';
         
@@ -111,8 +111,8 @@ class LaboratorioModel{
         $filePath = $uploadDir . basename($fileName);
         if (move_uploaded_file($fileData, $filePath)) {
 
-            $query = "INSERT INTO laboratorio (id_paciente, nombre, ruta, tipo, tamano, descripcion, codigo_referencia) 
-                  VALUES (:id_paciente, :nombre, :ruta, :tipo, :tamano, :descripcion, :codigo_referencia)";
+            $query = "INSERT INTO laboratorio (id_paciente, nombre, ruta, tipo, tamano, titulo, descripcion, codigo_referencia) 
+                  VALUES (:id_paciente, :nombre, :ruta, :tipo, :tamano, :titulo, :descripcion, :codigo_referencia)";
             $stmt = $this->bd->prepare($query);     
 
             $datos = [
@@ -120,7 +120,8 @@ class LaboratorioModel{
                 ':nombre' => basename($fileName), 
                 ':ruta' => 'laboratorio', 
                 ':tipo' => $fileExtension, 
-                ':tamano' => $fileSize, 
+                ':tamano' => $fileSize,
+                ':titulo' => $titulo, 
                 ':descripcion' => $contenidoLaboratorio,
                 ':codigo_referencia' => $referencia
                 ];
@@ -143,11 +144,10 @@ class LaboratorioModel{
 
         $result = '';
  
-        $sql = "SELECT id, fecha_hora, nombre, ruta, tipo, descripcion FROM laboratorio WHERE id = :id ORDER BY id DESC LIMIT 1";
+        $sql = "SELECT id, fecha_hora, nombre, ruta, tipo, titulo, descripcion FROM laboratorio WHERE id = :id ORDER BY id DESC LIMIT 1";
         $stmt = $this->bd->prepare($sql);
         $stmt->execute([':id' => $idLaboratorio]);
  
-
         if ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 
             $fecha = (new \DateTime($data['fecha_hora']))->format('d/m/Y');
@@ -157,6 +157,9 @@ class LaboratorioModel{
             <div>
             <label class="text-primary"><small>Fecha: </small></label> <label class="fs-5">' . $fecha . '</label>, <label class="text-primary"><small>Hora: </small></label> <label class="fs-5">'. $hora .'</label>
             </div>
+
+            <label class="text-primary mt-3"><small>Titulo: </small></label>
+            <div class="fs-5">'.$data['titulo'].'</div>
 
             <label class="text-primary mt-3"><small>Descripción: </small></label>
             <div class="fs-5">'.$data['descripcion'].'</div>';
@@ -182,6 +185,7 @@ class LaboratorioModel{
             <tr>
                 <th class="text-center">#</th>
                 <th>Fecha y Hora</th>
+                <th>Titulo</th>
             </tr>
         </thead>
         <tbody>';
@@ -192,6 +196,7 @@ class LaboratorioModel{
             $result .= '<tr onclick="DetalleLaboratorio('.$data_laboratorio['id'].')">
                 <td class="text-center">'.$data_laboratorio['id'].'</td>
                 <td>'.$fecha_hora.'</td>
+                <td>'.$data_laboratorio['titulo'].'</td>
             </tr>';
             endforeach;  
     $result .= '</tbody>

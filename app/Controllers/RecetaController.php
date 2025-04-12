@@ -35,7 +35,7 @@ class RecetaController extends BaseController{
 
         $motivo_atencion = $paciente->getMotivoAtencion();
 
-        $sidebarController->configureSidebar('DOCTOR', 'clinica-receta', $sidebar, $idReceta);
+        $sidebarController->configureSidebar('DOCTOR', 'clinica-receta', $sidebar, $idReceta,$modelNota->getIdPaciente());
         $sidebar->setActivarItem('Receta');
         $sidebarHtml = $sidebar->render();
 

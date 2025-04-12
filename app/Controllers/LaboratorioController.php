@@ -36,7 +36,7 @@ class LaboratorioController extends BaseController{
 
         $motivo_atencion = $paciente->getMotivoAtencion();
 
-        $sidebarController->configureSidebar('DOCTOR', 'clinica-laboratorio', $sidebar, $idLaboratorio);
+        $sidebarController->configureSidebar('DOCTOR', 'clinica-laboratorio', $sidebar, $idLaboratorio, $model->getIdPaciente());
         $sidebar->setActivarItem('Laboratorio');
         $sidebarHtml = $sidebar->render();
 

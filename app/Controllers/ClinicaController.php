@@ -10,6 +10,7 @@ use App\Helpers\CalculadoraEdad;
 use App\Models\NotaSubsecuenteModel;
 use App\Controllers\SidebarController;
 use App\Models\LaboratorioModel;
+use App\Models\RecetaModel;
 
 class ClinicaController extends BaseController{
 
@@ -213,7 +214,7 @@ class ClinicaController extends BaseController{
 
         $referencia = uniqid('', true);
         
-        $data = ['title' => 'Paciente', 
+        $data = ['title' => 'Expediente', 
         'idPaciente' => $idPaciente,
         'fecha_alta' => $fechaAlta, 
         'nombre_paciente' => $nombreCompleto, 
@@ -380,10 +381,16 @@ class ClinicaController extends BaseController{
     }
 
     public function pacienteNotaSubsecuente($idPaciente,$referencia){
-    $authMiddleware = new AuthMiddleware('clinica');
-    $paciente = new PacienteModel($idPaciente);
-    $sidebar = new Sidebar();
-    $sidebarController = new SidebarController();
+        $authMiddleware = new AuthMiddleware('clinica');
+        $paciente = new PacienteModel($idPaciente);
+        $sidebar = new Sidebar();
+        $sidebarController = new SidebarController();
+        $nota = new NotaSubsecuenteModel();
+        $id_nota_subsecuente = $nota->codigoReferencia($idPaciente, $referencia);
+        $nota->NotaSubsecuente($id_nota_subsecuente);
+        $receta = new RecetaModel();
+        $idReceta = $receta->idRecetaReferencia($idPaciente,$referencia);
+        $receta->receta($idReceta);
 
         $authMiddleware->authPermisos();        
         $fechaAlta = $paciente->getFechaAlta();
@@ -405,8 +412,9 @@ class ClinicaController extends BaseController{
         $sidebar->setActivarItem('Paciente Notas');
         $sidebarHtml = $sidebar->render();
 
+        $title = ($id_nota_subsecuente == 0)? 'Nueva Nota Subsecuente' : 'Editar Nota Subsecuente';
                 
-        $data = ['title' => 'Notas Subsecuentes', 
+        $data = ['title' => $title, 
         'idPaciente' => $idPaciente,
         'fecha_alta' => $fechaAlta, 
         'nombre_paciente' => $nombreCompleto, 
@@ -420,8 +428,25 @@ class ClinicaController extends BaseController{
         'email' => $email,
         'telefono' => $telefono,
         'celular' => $celular, 
-        'referencia' => $referencia,  
+        'referencia' => $referencia,
+        'id_nota_subsecuente' => $id_nota_subsecuente,  
 
+        'fecha_hora' => $nota->getFechaHora(),
+        'ta' => $nota->getTa(),
+        'frec_cardiaca' => $nota->getFrecCardiaca(),
+        'pulso' => $nota->getPulso(),
+        'spo2' => $nota->getSpo2(),
+        'fio2' => $nota->getFio2(),
+        'ecog' => $nota->getEcog(),
+        'karnovsky' => $nota->getKarnovsky(),
+        'peso' => $nota->getPeso(),
+        'talla' => $nota->getTalla(),
+        'contenido' => $nota->getContenido(),
+
+        'idreceta' => $idReceta,
+        'diagnostico' => $receta->getDiagnostico(),
+        'medicamento' => $receta->getMedicamento(),
+            
         'sidebar' => $sidebarHtml];
         $this->view('/clinica/pacientes-nota-subsecuente.php', $data);
     }
@@ -439,7 +464,13 @@ class ClinicaController extends BaseController{
 
         $model = new NotaSubsecuenteModel();
         $data = json_decode(file_get_contents('php://input'), true);
-        $resultModel = $model->insertNotaSubsecuente($data);
+
+        if($data['idNota'] == 0){
+            $resultModel = $model->insertNotaSubsecuente($data);
+        }else{
+            $resultModel = $model->editarNotaSubsecuente($data);   
+        }
+        
 
             if ($resultModel['resultado'] == 200) {
                 echo HttpMethod::jsonResponse(200,true,$resultModel['mensaje']);
@@ -517,7 +548,7 @@ class ClinicaController extends BaseController{
             $fileExtension = strtolower(end($fileParts));
 
             $model = new LaboratorioModel();
-            $resultModel = $model->insertArchivo($_POST['idPaciente'],$_POST['contenidoLaboratorio'],$fileName, $fileTmpName, $fileSize, $fileExtension,$_POST['referencia']);
+            $resultModel = $model->insertArchivo($_POST['idPaciente'],$_POST['contenidoLaboratorio'],$fileName, $fileTmpName, $fileSize, $fileExtension,$_POST['referencia'],$_POST['titulo']);
 
             if ($resultModel['resultado'] == 200) {
                 echo HttpMethod::jsonResponse(200, true,$resultModel['mensaje']);
