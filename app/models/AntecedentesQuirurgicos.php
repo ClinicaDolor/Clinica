@@ -13,7 +13,6 @@ class AntecedentesQuirurgicos{
     }
 
     //---------- MOSTRAR PREGUNTAS DEL MODULO 4 ----------/
-
     public function mostrarPreguntasM4($idPaciente,$idRol){
     $result = "";
 
@@ -88,7 +87,7 @@ class AntecedentesQuirurgicos{
     <div class="text-secondary fw-bold mb-1">Observaciones:</div>
     <input type="text" onchange="editarCirugia('.$idCirugia.', this, 3, \''.$idRol.'\')" class="form-control " value="'.$observaciones.'" placeholder="Escribe aquí tus observaciones...">
     </div>
-
+ 
     <div class="col-12">
     <div class="mt-3 d-flex justify-content-between">';
 
@@ -122,7 +121,7 @@ class AntecedentesQuirurgicos{
     <img src="'.RUTA_IMAGES.'/iconos/audio.png" onclick="readQuestion()" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion100">
 
     <h8 class="text-primary fw-bold texto">
-    <b>Si ha tenido alguna cirugía, presione el botón verde para agregarla. Si no ha sido sometido a ninguna intervención quirúrgica, seleccione el boton de "Finalizar":</b>
+    <b>Si usted ha tenido alguna cirugía, presione el botón verde para agregarla. Si no ha sido sometido a ninguna intervención quirúrgica, seleccione el boton de "Finalizar":</b>
     </h8>
     </div>
 

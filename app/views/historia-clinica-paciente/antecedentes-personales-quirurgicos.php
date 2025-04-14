@@ -30,8 +30,8 @@ $bd = Database::getInstance();
     document.addEventListener("DOMContentLoaded", function() {
     contenidoPreguntas();
 
-    });
- 
+    }); 
+  
     // ---------- CONTENIDO DE LAS PREGUNTAS ----------
     function contenidoPreguntas(idValor = 0) {
     const usuarioDiv = document.getElementById('main');
@@ -91,7 +91,7 @@ $bd = Database::getInstance();
     const preguntas = document.querySelectorAll('.pregunta-container');
     let activeIndex = -1;
 
-    $(".LoaderPage").show();
+    $(".LoaderPage").show(); 
     $(".LoaderPage").fadeOut(1000);
 
     preguntas.forEach((pregunta, index) => {
@@ -166,20 +166,22 @@ $bd = Database::getInstance();
     //---------- EDITAR CIRUGIA DEL PACIENTE ----------
     function editarCirugia(idCirugia, elemento, parametro, idRol) {
     gestionarAntecedentesQuirurgicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/editar-cirugia-antecedentes`, {
-        idCirugia, 
-        detalle: elemento.value, 
-        edicion: parametro, 
-        idRol
+    idCirugia, 
+    detalle: elemento.value, 
+    edicion: parametro, 
+    idRol
     }, () => contenidoPreguntas(0));
     }
     //---------- ELIMINAR CIRUGIA DEL PACIENTE ----------
     function eliminarCirugiaPaciente(idQuirurgico, idRol) {
-    gestionarAntecedentesQuirurgicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/eliminar-cirugia-antecedentes`, { idQuirurgico, idRol }, () => contenidoPreguntas(1));
+    gestionarAntecedentesQuirurgicos(`/${idRol === "Paciente" ? "historia-clinica" : "clinica"}/paciente/eliminar-cirugia-antecedentes`, 
+    { idQuirurgico, idRol }, () => contenidoPreguntas(1));
     }
 
     //---------- FINALIZAR MODULO DEL PACIENTE----------
     function finalizarModuloPAC(idModulo, idPaciente) {
-    gestionarAntecedentesQuirurgicos('/historia-clinica/paciente/finalizar-modulo-paciente', { idModulo, idPaciente }, () => window.location.href = '/historia-clinica');
+    gestionarAntecedentesQuirurgicos('/historia-clinica/paciente/finalizar-modulo-paciente', { idModulo, idPaciente }, 
+    () => window.location.href = '/historia-clinica');
     }
     </script>
     </head>
