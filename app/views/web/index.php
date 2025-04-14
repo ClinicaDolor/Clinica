@@ -22,7 +22,7 @@
 <style type="text/css">
 	    
 body {
-background: url(assets/images/fondo/fondo-hospital.jpg) no-repeat center center fixed;
+background: url(assets/images/fondo/fondo-hospital-angeles.jpg) no-repeat center center fixed;
 background-blend-mode:  hard-light;
 background-size: cover;
 -moz-background-size: cover;
@@ -308,7 +308,7 @@ El dolor crónico se considerad una enfermedad que se genero por cambios en el s
       </div>
 
       <div class="card-body" align="center">
-      <img src="<?=RUTA_IMG_ICONOS;?>dolor1.png" class="mb-3">
+      <img src="<?=RUTA_IMG_ICONOS;?>dolor1.png" class="mb-3" >
 
       <p class="truncate-multiline text-secondary fs-5 fw-light" align="justify">
       Más de la mitad de pacientes con cáncer tiene dolor desde el inicio de su padecimiento y hasta un 95 % de personas que fallecen por cáncer tendrán dolor severo al final de sus días 
@@ -324,7 +324,7 @@ El dolor crónico se considerad una enfermedad que se genero por cambios en el s
     </div>
   </div>
 
-<div class="col-12 col-md-3 mb-4">              
+  <div class="col-12 col-md-3 mb-4">              
   <div class="card shadow card border-0">
     <div class="card-content">
         
