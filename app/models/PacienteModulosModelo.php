@@ -98,9 +98,6 @@ class PacienteModulosModelo{
     }
 
 
-   
-
-
     //---------- FINALIZAR MODULO ----------
     public function botonFinalizarModulo($idModulo, $idPaciente, $idRol){
     $result = '';

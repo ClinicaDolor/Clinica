@@ -105,13 +105,16 @@ class BusquedasController{
     echo $model->mostrarPreguntasM7($idPaciente,$idRol,$idCuestionario);
     }
 
-
     public function contenidoPreguntasM8($idPaciente,$idRol){
     $model = new ProcedimientosDolorModel();
     echo $model->mostrarPreguntasM8($idPaciente,$idRol);
     }
-    
- 
+
+    public function contenidoPreguntasM8V2($idPaciente,$idRol){
+    $model = new ProcedimientosDolorModel();
+    echo $model->mostrarPreguntasM8V2($idPaciente,$idRol);
+    }
+
     //---------- CONTENIDO COMENTARIOS ----------
     public function contenidoComentariosModulo($idPaciente,$idRol,$idModulo){
     $model = new PacienteModulosModelo();

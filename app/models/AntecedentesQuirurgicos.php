@@ -13,7 +13,6 @@ class AntecedentesQuirurgicos{
     }
 
     //---------- MOSTRAR PREGUNTAS DEL MODULO 4 ----------/
-
     public function mostrarPreguntasM4($idPaciente,$idRol){
     $result = "";
 
@@ -88,7 +87,7 @@ class AntecedentesQuirurgicos{
     <div class="text-secondary fw-bold mb-1">Observaciones:</div>
     <input type="text" onchange="editarCirugia('.$idCirugia.', this, 3, \''.$idRol.'\')" class="form-control " value="'.$observaciones.'" placeholder="Escribe aquí tus observaciones...">
     </div>
-
+ 
     <div class="col-12">
     <div class="mt-3 d-flex justify-content-between">';
 
