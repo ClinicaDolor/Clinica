@@ -81,10 +81,13 @@ class SidebarController {
     ],
 
     //---------- MODULOS DE HISTORIA CLINICA ----------
-   'antecedentes-familiares' => [
+    'ficha-identificiacion' => [
+    ['titulo' => 'Ficha de identificación del paciente', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ],
+   
+    'antecedentes-familiares' => [
     ['titulo' => 'Antecedentes familiares', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ],
-
 
     'antecedentes-personales-no-patologicos' => [
     ['titulo' => 'Antecedentes Personales No Patologicos', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
@@ -118,6 +121,12 @@ class SidebarController {
 
     'PACIENTE' => [
     'historia-clinica' => [],
+
+    //---------- MODULOS DE HISTORIA CLINICA ----------
+    'ficha-identificiacion' => [
+    ['titulo' => 'Ficha de identificación del paciente', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ],
+
 
     'antecedentes-familiares' => [
     ['titulo' => 'Antecedentes familiares', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
