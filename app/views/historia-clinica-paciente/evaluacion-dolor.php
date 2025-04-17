@@ -28,9 +28,15 @@ echo $model->cuestionarioModulo9($data['idPaciente']);
     <script>
     document.addEventListener("DOMContentLoaded", function() {
     const seccionActual = localStorage.getItem("seccionActual");
+    
+    if (!seccionActual || seccionActual === "frente") {
     contenidoFrente();
+    } else if (seccionActual === "espalda") {
     contenidoEspalda();
+    }else if(seccionActual === "cuestionario"){
     contenidoCuestionario();
+    }
+
     });
 
     function contenidoFrente() {
@@ -292,6 +298,39 @@ echo $model->cuestionarioModulo9($data['idPaciente']);
 
     }
 
+    //---------- ESPALDA ----------
+    function seccionEspalda(){
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+    document.getElementById("conteFrente").style.display = "none";
+    document.getElementById("conteEspalda").style.display = "block";
+    document.getElementById("preguntas-container").style.display = "none";
+    localStorage.setItem("seccionActual", "espalda");
+    contenidoEspalda();
+    }
+
+    //---------- ESPALDA ----------
+    function seccionFrente(){
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+    document.getElementById("conteFrente").style.display = "block";
+    document.getElementById("conteEspalda").style.display = "none";
+    document.getElementById("preguntas-container").style.display = "none";
+    localStorage.setItem("seccionActual", "frente");
+    contenidoFrente();
+    }
+
+    //---------- ESPALDA ----------
+    function seccionCuestionario(){
+    $(".LoaderPage").show();
+    $(".LoaderPage").fadeOut(1000);
+    document.getElementById("conteFrente").style.display = "none";
+    document.getElementById("conteEspalda").style.display = "none";
+    document.getElementById("preguntas-container").style.display = "block";
+    localStorage.setItem("seccionActual", "cuestionario");
+    contenidoCuestionario();
+    }
+
     //---------- CONTROL SERVER ----------
     function gestionarEvaluacionDolor(url, parametros, callback, refresh = 0) {
     if(refresh == 1){
@@ -321,6 +360,11 @@ echo $model->cuestionarioModulo9($data['idPaciente']);
     },  () => contenidoCuestionario(),
     1);
     } 
+    //---------- FINALIZAR MODULO DEL PACIENTE----------
+    function finalizarModuloPAC(idModulo, idPaciente) {
+    gestionarEvaluacionDolor('/historia-clinica/paciente/finalizar-modulo-paciente', { idModulo, idPaciente }, () => window.location.href = '/historia-clinica');
+    }
+
     </script>
     </head>
 
@@ -356,27 +400,15 @@ echo $model->cuestionarioModulo9($data['idPaciente']);
     
     <section class="section">
     <div class="card">
-    <div class="card-header">
-    <h8 class="text-primary fw-bold texto">
-    <b >A continuación, debera de indicar las zonas donde siente malestar utilizando los siguientes colores:</b>
-    Rojo: Área con Dolor, Amarillo</span>: Área Dormida y con Dolor, Verde: Área con Molestia al tacto y roce de la ropa, 
-    Azul: Área sin Sensibilidad y sin Dolor, Morado : Área con Punzadas y Calambres.
-    <br>
-    Evite marcar la zona con una "X". En su lugar, cúbrala por completo utilizando el color que corresponda.
-    </h8>
-    </div>
-    <div class="card-body pb-1">
-    <div class="row">
-    <div id="conteFrente" class="col-xl-6 col-lg-6 col-md-12 col-sm-12"></div>
-    <div id="conteEspalda" class="col-xl-6 col-lg-6 col-md-12 col-sm-12"></div>
-    </div>
-    </div>
+
+    <div id="conteFrente"></div>
+    <div id="conteEspalda"></div>
+
+    <div id="preguntas-container">
+        <div id="contePreguntas"></div>
     </div>
 
-    <div class="card">
-    <div id="contePreguntas"></div>
     </div>
-
     </section>
  
     </div>

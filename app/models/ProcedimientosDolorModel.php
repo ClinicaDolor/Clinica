@@ -10,7 +10,7 @@ class ProcedimientosDolorModel{
     $this->bd = Database::getInstance();
     
     }
-
+ 
     //---------- OBTENER DATOS DEL MODULO ----------//
     public function obtenerPreguntasModulos(){
     $stmt = $this->bd->query("SELECT id FROM pac_tratamientos_dolor_modulo_8 ORDER BY id ASC");
@@ -37,7 +37,6 @@ class ProcedimientosDolorModel{
     $stmt_insert->execute(params: [$idEnfermedad, $idPaciente]);
     }
     }
-
 
     //---------- MOSTRAR PREGUNTAS DEL MODULO 8 ----------/
     public function mostrarPreguntasM8($idPaciente,$idRol){
@@ -139,7 +138,6 @@ class ProcedimientosDolorModel{
     endforeach;
     $result .= '</div>';
  
-
     }else{
   
     $result .= '

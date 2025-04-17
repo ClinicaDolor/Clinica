@@ -204,6 +204,19 @@ footer{padding:0rem 1.5rem}
   background-size: 250px 250px; /* Cambia el tamaño de la imagen */
 }
 
+#painFrente {
+  width: 100%;        /* Ocupa todo el ancho disponible */
+  height: auto;       /* Mantiene proporción */
+  display: block;
+  }
+
+  #painEspalda {
+  width: 100%;        /* Ocupa todo el ancho disponible */
+  height: auto;       /* Mantiene proporción */
+  display: block;
+  }
+
+  canvas { border: 1px solid #000; cursor: crosshair; }
 
 @media screen and (max-width:767px){
     #main{margin-left:0}

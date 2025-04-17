@@ -8,7 +8,6 @@ $preguntas_fijas = $model->obtenerPreguntasModulos();
 foreach ($preguntas_fijas as $preg) {
 echo $model->procedimientosModulo8($data['idPaciente'], $preg);
 }
-
 ?>
  
     <!DOCTYPE html>
