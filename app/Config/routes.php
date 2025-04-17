@@ -69,9 +69,18 @@ return function(RouteCollector $r) {
         $r->addRoute('POST', '/paciente/agregar-procedimiento-dolor-modulo8', ['ModulosController', 'pacienteInsertProcedimientos']);
         $r->addRoute('POST', '/paciente/editar-procedimiento-dolor-modulo8', ['ModulosController', 'pacienteEditProcedimiento']);
         $r->addRoute('POST', '/paciente/eliminar-procedimiento-dolor-modulo8', ['ModulosController', 'pacienteDeleteProcedimiento']);
-        
         $r->addRoute('POST', '/paciente/editar-tratamiento-dolor-modulo8', ['ModulosController', 'pacienteEditTratamiento']);
 
+        //----- 9. EVALUACION DEL DOLOR
+        $r->addRoute('POST', '/paciente/editar-img-frente-modulo9', ['ModulosController', 'pacienteEditImgED1']);
+        $r->addRoute('POST', '/paciente/eliminar-img-frente-modulo9', ['ModulosController', 'pacienteDeleteImgED1']);
+ 
+        $r->addRoute('POST', '/paciente/editar-img-espalda-modulo9', ['ModulosController', 'pacienteEditImgED2']);
+        $r->addRoute('POST', '/paciente/eliminar-img-espalda-modulo9', ['ModulosController', 'pacienteDeleteImgED2']);
+
+        $r->addRoute('POST', '/paciente/editar-evaluacion-dolor-modulo9', ['ModulosController', 'pacienteEditEvaluacion']);
+
+ 
         //----- COMENTARIOS MODULOS
         $r->addRoute('POST', '/paciente/agregar-comentario-modulo', ['ModulosController', 'pacienteComentarioModulo']);
         $r->addRoute('POST', '/paciente/eliminar-comentario-modulo', ['ModulosController', 'pacienteDeleteComentario']);
@@ -162,6 +171,9 @@ return function(RouteCollector $r) {
         $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-7/{idPaciente}/{idRol}/{idCuestionario}', ['BusquedasController', 'contenidoPreguntasM7']);
         $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-8/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasM8']);
         $r->addRoute('GET', '/buscar/contenido-preguntas-tratamiento-modulo-8/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasM8V2']);
+        $r->addRoute('GET', '/buscar/contenido-evaluacion-frente-modulo-9/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasM9']);
+        $r->addRoute('GET', '/buscar/contenido-evaluacion-espalda-modulo-9/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasM9V2']);
+        $r->addRoute('GET', '/buscar/contenido-preguntas-modulo-9/{idPaciente}/{idRol}', ['BusquedasController', 'contenidoPreguntasM9V3']);
 
         $r->addRoute('GET', '/buscar/contenido-comentarios-modulos/{idPaciente}/{idRol}/{idModulo}', ['BusquedasController', 'contenidoComentariosModulo']);
 

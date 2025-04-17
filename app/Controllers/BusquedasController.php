@@ -13,6 +13,7 @@ use App\Models\AntecedentesPatologicosModel;
 use App\Models\MedicacionDolorModel;
 use App\Models\MedicacionActualModel;
 use App\Models\ProcedimientosDolorModel;
+use App\Models\EvaluacionDolorModel;
 
 use App\Models\PacienteModulosModelo;
 
@@ -114,6 +115,21 @@ class BusquedasController{
     $model = new ProcedimientosDolorModel();
     echo $model->mostrarPreguntasM8V2($idPaciente,$idRol);
     }
+
+    public function contenidoPreguntasM9($idPaciente,$idRol){
+    $model = new EvaluacionDolorModel();
+    echo $model->mostrarPreguntasFrenteM9($idPaciente,$idRol);
+    }
+
+    public function contenidoPreguntasM9V2($idPaciente,$idRol){
+    $model = new EvaluacionDolorModel();
+    echo $model->mostrarPreguntasEspaldaM9($idPaciente,$idRol);
+    }
+ 
+    public function contenidoPreguntasM9V3($idPaciente,$idRol){
+    $model = new EvaluacionDolorModel();
+    echo $model->mostrarPreguntasM9($idPaciente,$idRol);
+    }   
 
     //---------- CONTENIDO COMENTARIOS ----------
     public function contenidoComentariosModulo($idPaciente,$idRol,$idModulo){

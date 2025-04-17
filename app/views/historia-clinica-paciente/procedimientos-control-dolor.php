@@ -26,7 +26,7 @@ echo $model->procedimientosModulo8($data['idPaciente'], $preg);
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="<?=RUTA_JS;?>loader.js"></script>
    
-   <style>
+    <style>
     /* Contenedor de preguntas visible inicialmente */
     #preguntas-container { display: block; }
     .pregunta-container { display: none; }

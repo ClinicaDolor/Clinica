@@ -108,6 +108,10 @@ class SidebarController {
 
     'medicacion-actual' => [
     ['titulo' => 'Medicación Actual', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ],
+
+    'evaluacion-dolor' => [
+    ['titulo' => 'Evaluación del dolor', 'url' => SERVIDOR . 'clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ]
 
     ],
@@ -137,6 +141,10 @@ class SidebarController {
 
     'medicacion-actual' => [
     ['titulo' => 'Medicación Actual', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
+    ],
+
+    'evaluacion-dolor' => [
+    ['titulo' => 'Evaluación del dolor', 'url' => SERVIDOR . 'historia-clinica/'.$view.'/paciente/'.$id, 'icono' => 'file-text']
     ]
     
     ]
