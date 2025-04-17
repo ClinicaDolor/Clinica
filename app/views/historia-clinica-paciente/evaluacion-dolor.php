@@ -81,7 +81,7 @@ echo $model->cuestionarioModulo9($data['idPaciente']);
     function draw(e) {
     if (!painting) return;
 
-    ctx.lineWidth = 10;
+    ctx.lineWidth = 25;
     ctx.lineCap = 'round';
     ctx.strokeStyle = colorPicker.value;
 
@@ -199,7 +199,7 @@ echo $model->cuestionarioModulo9($data['idPaciente']);
     function draw2(e) {
     if (!painting2) return;
 
-    ctxEspalda.lineWidth = 10;
+    ctxEspalda.lineWidth = 25;
     ctxEspalda.lineCap = 'round';
     ctxEspalda.strokeStyle = colorPicker.value; 
 
@@ -359,8 +359,7 @@ echo $model->cuestionarioModulo9($data['idPaciente']);
     idRol
     },  () => contenidoCuestionario(),
     1);
-    }
-
+    } 
     //---------- FINALIZAR MODULO DEL PACIENTE----------
     function finalizarModuloPAC(idModulo, idPaciente) {
     gestionarEvaluacionDolor('/historia-clinica/paciente/finalizar-modulo-paciente', { idModulo, idPaciente }, () => window.location.href = '/historia-clinica');

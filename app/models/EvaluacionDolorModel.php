@@ -100,9 +100,48 @@ class EvaluacionDolorModel{
     $result .= '</div>';
 
     }else{
-    //---------- Doctor
-    }
 
+    $result .= '<div class="card-header pb-0">
+    <p class="text-primary fw-bold">
+    <b>A continuación, deberás responder las siguientes preguntas con base en la evaluación de dolor previamente realizada.</b>
+    Por favor, asegúrate de responder con la mayor claridad y detalle posible para facilitar una mejor comprensión de tu malestar.
+    </p>
+    </div>';
+       
+    $result .= '<div class="card-body">';
+    $result .= '<div class="col-12">
+    <div class="text-secondary fw-bold mb-1">¿Tiene dolor actualmente?:</div>
+    <select class="form-select mb-3" onchange="editarEvaluacionDolor('.$idEvaluacion.', this, 1, \''.$idRol.'\')">
+    <option value="" disabled selected>Selecciona una opción...</option>
+    <option value="Si" ' . ($dolor == 'Si' ? 'selected' : '') . '>Si</option>
+    <option value="No" ' . ($dolor == 'No' ? 'selected' : '') . '>No</option>
+    </select>
+    </div>';
+
+    $result .= '
+    <div class="col-12">
+    <div class="text-secondary fw-bold mb-1">¿Desde hace cuánto tiempo tiene dolor?:</div>
+    <input type="text" onchange="editarEvaluacionDolor('.$idEvaluacion.', this, 2, \''.$idRol.'\')" class="form-control mb-3" value="'.$tiempo_dolor.'"
+    '.(($dolor == 'Si') ? '' : 'disabled').' placeholder="Ingresa aquí tu respuesta...">
+    </div>';
+
+    $result .= '
+    <div class="col-12">
+    <div class="text-secondary fw-bold mb-1">Describa cómo inició el dolor, características y todo lo relacionado al dolor:</div>
+    <textarea class="form-control mb-3" rows="6" onchange="editarEvaluacionDolor('.$idEvaluacion.', this, 3, \''.$idRol.'\')" 
+    '.(($dolor == 'Si') ? '' : 'disabled').' placeholder="Ingresa aquí tu respuesta...">'.$descripcion.'</textarea>
+    </div>';
+
+    $result .= '
+    <div class="col-12">
+    <div class="text-secondary fw-bold mb-1">¿Se ha incrementado el dolor o permanece igual desde el inicio?:</div>
+    <input type="text" onchange="editarEvaluacionDolor('.$idEvaluacion.', this, 4, \''.$idRol.'\')" class="form-control mb-3" value="'.$incremento.'"
+    '.(($dolor == 'Si') ? '' : 'disabled').' placeholder="Ingresa aquí tu respuesta...">
+    </div>';
+ 
+    $result .= '</div>';
+
+    }
 
     return $result;
     }
@@ -110,6 +149,7 @@ class EvaluacionDolorModel{
     public function mostrarPreguntasFrenteM9($idPaciente, $idRol){
     $result = '';
 
+    if($idRol == "Paciente"){
     $result .= '<div class="card-header pb-0">
     <div id="seccion1" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-4">
     <img src="'.RUTA_IMAGES.'/iconos/audio.png" onclick="readQuestion()" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion1">
@@ -124,14 +164,14 @@ class EvaluacionDolorModel{
     </div>
     </div>';
 
+    $result .= '<div class="card-body">';
+    }
 
-    $result .= '
-    <div class="card-body">
-    <div class="row">
+    $result .= '<div class="row">
     <div class="col-12"><h8 class="text-success fw-bold texto">Imagen de frente</h8></div>
     
-    <div class="col-10 col-sm-8">    
-    <select class="form-select mt-1 mb-3" id="colorFrente">
+    <div class="col-xl-8 col-lg-8 col-md-6 col-sm-12">    
+    <select class="form-select mt-1 mb-2" id="colorFrente">
     <option value="#FFFFFF">Selecciona una color...</option>
     <option value="#ff0000">🟥 Dolor (Rojo)</option>
     <option value="#0000ff">🟦 Adormecido (Azul)</option>
@@ -141,18 +181,23 @@ class EvaluacionDolorModel{
     </select>
     </div>
 
-    <div class="col-2 col-sm-4"> 
-    <button class="btn btn-danger float-end" onclick="cleanFrenteImg()">Limpiar <i data-feather="trash-2"></i></button>
+    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12"> 
+    <button class="btn btn-danger float-end mb-2" onclick="cleanFrenteImg()">Limpiar <i data-feather="trash-2"></i></button>
     </div>
 
-    <div class="col-12 mb-3"><canvas id="painFrente" width="1200px" height="1800px"></canvas></div>
-    
-    <div class="col-12">
+    <div class="col-12 mt-2 mb-3"><canvas id="painFrente" width="1200px" height="1800px"></canvas></div>';
+   
+    if($idRol == "Paciente"){
+    $result .= '<div class="col-12">
     <button class="btn btn-success float-end" onclick="seccionEspalda()">Imagen de Espalda <i data-feather="chevron-right"></i></button>
-    </div>
-    </div>
     </div>';
+    }
 
+    $result .= '</div>';
+
+    if($idRol == "Paciente"){
+    $result .= '</div>';
+    }
 
     return $result;
     }
@@ -161,6 +206,7 @@ class EvaluacionDolorModel{
     public function mostrarPreguntasEspaldaM9($idPaciente, $idRol){
     $result = '';
     
+    if($idRol == "Paciente"){
     $result .= '<div class="card-header pb-0">
     <div id="seccion1" data-autoplay="false" class="col-12 col-md-11 d-flex align-items-center sectionQuestion mb-4">
     <img src="'.RUTA_IMAGES.'/iconos/audio.png" onclick="readQuestion()" class="img-fluid btnLeer pointer" style="max-height: 30px; margin-right: 10px;" data-target="seccion1">
@@ -174,14 +220,14 @@ class EvaluacionDolorModel{
     </h8>
     </div>
     </div>';
+    $result .= '<div class="card-body">';
+    }
 
-    $result .= '
-    <div class="card-body">
-    <div class="row">
+    $result .= '<div class="row">
     <div class="col-12"><h8 class="text-success fw-bold texto">Imagen de espalda</h8></div>
         
-    <div class="col-10 col-sm-8">    
-    <select class="form-select mt-1 mb-3" id="colorEspalda">
+    <div class="col-xl-8 col-lg-8 col-md-6 col-sm-12">    
+    <select class="form-select mt-1 mb-2" id="colorEspalda">
     <option value="#FFFFFF">Selecciona una color...</option>
     <option value="#ff0000">🟥 Dolor (Rojo)</option>
     <option value="#0000ff">🟦 Adormecido (Azul)</option>
@@ -191,22 +237,28 @@ class EvaluacionDolorModel{
     </select>
     </div>
     
-    <div class="col-2 col-sm-4"> 
-    <button class="btn btn-danger float-end" onclick="cleanEspaldaImg()">Limpiar <i data-feather="trash-2"></i></button>
+    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">    
+    <button class="btn btn-danger float-end mb-2" onclick="cleanEspaldaImg()">Limpiar <i data-feather="trash-2"></i></button>
     </div>
     
-    <div class="col-12 mb-3"><canvas id="painEspalda" width="1200px" height="1800px"></canvas></div>
+    <div class="col-12 mt-2 mb-3"><canvas id="painEspalda" width="1200px" height="1800px"></canvas></div>';
         
-    <div class="col-6">
+    if($idRol == "Paciente"){
+    $result .= '<div class="col-6">
     <button class="btn btn-success" onclick="seccionFrente()"><i data-feather="chevron-left"></i> Imagen de Frente </button>
     </div>
 
     <div class="col-6">
     <button class="btn btn-success float-end" onclick="seccionCuestionario()">Cuestionario <i data-feather="chevron-right"></i></button>
-    </div>
-    </div>
     </div>';
-    
+    }
+
+    $result .= '</div>';
+
+    if($idRol == "Paciente"){
+    $result .= '</div>';
+    }
+
     return $result;
     }
 
