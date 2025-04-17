@@ -10,7 +10,7 @@ class ProcedimientosDolorModel{
     $this->bd = Database::getInstance();
     
     }
- 
+
     //---------- OBTENER DATOS DEL MODULO ----------//
     public function obtenerPreguntasModulos(){
     $stmt = $this->bd->query("SELECT id FROM pac_tratamientos_dolor_modulo_8 ORDER BY id ASC");
@@ -115,7 +115,7 @@ class ProcedimientosDolorModel{
     <option value="Tuve efectos adversos" ' . ($resultados == 'Tuve efectos adversos' ? 'selected' : '') . '>Tuve efectos adversos</option>
     </select>
     </div>';
-
+ 
     $result .= '<div class="col-12">
     <div class="mt-3 d-flex justify-content-between">';
 
