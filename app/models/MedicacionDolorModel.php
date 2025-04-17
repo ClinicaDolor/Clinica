@@ -67,7 +67,6 @@ class MedicacionDolorModel{
     public function mostrarPreguntasM7($idPaciente, $idRol, $idTema){
     $result = '';
         
-
     $stmt = $this->bd->query("SELECT 
     pac_respuestas_paciente_modulo_7.id AS idRespuesta, 
     pac_temas_modulo_7.tema,

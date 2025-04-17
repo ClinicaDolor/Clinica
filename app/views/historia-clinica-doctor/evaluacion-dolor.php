@@ -75,7 +75,7 @@ echo $model->cuestionarioModulo9($data['idPaciente']);
     function draw(e) {
     if (!painting) return;
 
-    ctx.lineWidth = ;
+    ctx.lineWidth = 25;
     ctx.lineCap = 'round';
     ctx.strokeStyle = colorPicker.value;
 
@@ -193,7 +193,7 @@ echo $model->cuestionarioModulo9($data['idPaciente']);
     function draw2(e) {
     if (!painting2) return;
 
-    ctxEspalda.lineWidth = ;
+    ctxEspalda.lineWidth = 25;
     ctxEspalda.lineCap = 'round';
     ctxEspalda.strokeStyle = colorPicker.value; 
 

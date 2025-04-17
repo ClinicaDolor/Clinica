@@ -1,7 +1,8 @@
 <?php 
 use App\Config\Database;
+use App\Models\PacienteModulosModelo;
 $bd = Database::getInstance();
-
+$model = new PacienteModulosModelo();
 ?>
 
     <!DOCTYPE html>
@@ -477,12 +478,30 @@ $bd = Database::getInstance();
                             <td><b><?=$registro['nombre']?></b></td>
                             <td>
 
-                            <div class="progress bg-light rounded-pill" style="height: 15px;">
-                            <div class="progress-bar bg-success rounded-pill text-white fw-bold" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
-                            </div>
+                            <?php
+    if($registro['id'] == 1){
+    echo $model->porcentajeModulo1($data['idPaciente']);
+    }else if($registro['id'] == 2){
+    echo $model->porcentajeModulo2($data['idPaciente']);
+    }else if($registro['id'] == 3){
+    echo $model->porcentajeModulo3($data['idPaciente']);
+    }else if($registro['id'] == 4){
+    echo $model->porcentajeModulo4($data['idPaciente']);
+    }else if($registro['id'] == 5){
+    echo $model->porcentajeModulo5($data['idPaciente']);
+    } else if($registro['id'] == 6){
+    echo $model->porcentajeModulo6($data['idPaciente']);
+    } else if($registro['id'] == 7){
+    echo $model->porcentajeModulo7($data['idPaciente']);
+    } else if($registro['id'] == 8){
+    echo $model->porcentajeModulo8($data['idPaciente']);
+    } else if($registro['id'] == 9){
+    echo $model->porcentajeModulo9($data['idPaciente']);
+    }
+    ?>
 
                             </td>
-                            <td class="text-center"><a href="<?=$registro['url'].$data['idPaciente']?>"><i data-feather="edit" width="20"></i></a></td>
+    <td class="text-center"><a href="<?=SERVIDOR?>clinica/<?=$registro['url']?>/paciente/<?= $data['idPaciente']?>"><i data-feather="edit" width="20"></i></a></td>
                             <td class="text-center"><a href=""><i data-feather="download-cloud" width="20"></i></a></td>
                             </tr>
                             <?php endforeach; ?>

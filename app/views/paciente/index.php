@@ -1,8 +1,9 @@
 <?php 
 use App\Config\Database;
+use App\Models\PacienteModulosModelo;
+
 $bd = Database::getInstance();
-
-
+$model = new PacienteModulosModelo();
 ?>
 
     <!DOCTYPE html>
@@ -116,11 +117,33 @@ $bd = Database::getInstance();
 
     <div class="col-12">
     <h6 class="fw-bold text-secondary mt-4">Porcentaje de cumplimiento:</h6>
-            
-    <div class="progress bg-light rounded-pill" style="height: 15px;">
-    <div class="progress-bar bg-success rounded-pill text-white fw-bold text-center" 
-    role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"> 50% </div>
-    </div>
+       
+    <?php
+   if($modulo['id'] == 1){
+   echo $model->porcentajeModulo1($id_paciente);
+   }else if($modulo['id'] == 2){
+   echo $model->porcentajeModulo2($id_paciente);
+   }else if($modulo['id'] == 3){
+   echo $model->porcentajeModulo3($id_paciente);
+   }else if($modulo['id'] == 4){
+   echo $model->porcentajeModulo4($id_paciente);
+   }else if($modulo['id'] == 5){
+   echo $model->porcentajeModulo5($id_paciente);
+   } else if($modulo['id'] == 6){
+   echo $model->porcentajeModulo6($id_paciente);
+   } else if($modulo['id'] == 7){
+   echo $model->porcentajeModulo7($id_paciente);
+   } else if($modulo['id'] == 8){
+   echo $model->porcentajeModulo8($id_paciente);
+   } else if($modulo['id'] == 9){
+   echo $model->porcentajeModulo9($id_paciente);
+   }
+  
+
+   ?> 
+   
+
+
     </div>
 
     </div>
