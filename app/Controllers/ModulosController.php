@@ -74,13 +74,56 @@ class ModulosController extends BaseController {
     $sidebar->setActivarItem($elementoModulo);
     $sidebarHtml = $sidebar->render();
     
-    $data = ['title' => $elementoModulo, 
-    'idPaciente' => $idPaciente, 
-    'nombre' => $paciente->getNombreCompleto(), 
-    'sexo' => $paciente->getSexo(),
-    'idRol' => $rolUsuario, 
-    'sidebar' => $sidebarHtml
-    ];
+    if($modulo == "ficha-identificiacion"){
+
+        $data = ['title' => $elementoModulo, 
+        'idPaciente' => $idPaciente, 
+        'nombre' => $paciente->getNombreCompleto(), 
+        'sexo' => $paciente->getSexo(),
+    
+        'fecha_nacimiento' => $paciente->getFechaNacimiento(),
+        'edad' => $paciente->getEdad(),
+        'estado_civil' => $paciente->getEstadoCivil(),
+        'curp' => $paciente->getCurp(),  
+        'lugar_origen' => $paciente->getLugarOrigen(),
+        'lugar_residencia' => $paciente->getLugarResidencia(),
+        'ocupacion' => $paciente->getOcupacion(),
+        'num_hijos' => $paciente->getNumHijos(),
+        'edad_hijos' => $paciente->getEdadHijos(),
+        'quien_recomienda' => $paciente->getRecomienda(),
+        'redes_sociales' => $paciente->getRedesSociales(),
+        'motivo_atencion' => $paciente->getMotivoAtencion(),
+        'calle' => $paciente->getCalle(),
+        'num_interior' => $paciente->getNumInterior(),
+        'num_exterior' => $paciente->getNumExterior(),
+        'colonia' => $paciente->getColonia(),
+        'delegacion' => $paciente->getDelegacion(),
+        'cp' => $paciente->getCp(),
+        'municipio' => $paciente->getMunicipio(),
+        'distancia' => $paciente->getDistancia(),
+        'email' => $paciente->getEmail(),
+        'telefono' => $paciente->getTelefono(),
+        'celular' => $paciente->getCelular(),  
+        'cuidador' => $paciente->getCuidador(),  
+        'cuidador_telefono' => $paciente->getCuidadorTelefono(),  
+        'res_nombre' => $paciente->getResNombre(), 
+        'res_telefono' => $paciente->getResTelefono(),  
+    
+        'idRol' => $rolUsuario, 
+        'sidebar' => $sidebarHtml
+        ];
+    
+        }else{
+    
+        $data = ['title' => $elementoModulo, 
+        'idPaciente' => $idPaciente, 
+        'nombre' => $paciente->getNombreCompleto(), 
+        'sexo' => $paciente->getSexo(),
+        'idRol' => $rolUsuario, 
+        'sidebar' => $sidebarHtml
+        ];
+    
+        }
     
     $this->view("/historia-clinica-doctor/$modulo.php", $data);
     }
@@ -101,6 +144,47 @@ class ModulosController extends BaseController {
     $sidebar->setActivarItem($elementoModulo);
     $sidebarHtml = $sidebar->render();
 
+    if($modulo == "ficha-identificiacion"){
+
+    $data = ['title' => $elementoModulo, 
+    'idPaciente' => $idPaciente, 
+    'nombre' => $paciente->getNombreCompleto(), 
+    'sexo' => $paciente->getSexo(),
+
+    'fecha_nacimiento' => $paciente->getFechaNacimiento(),
+    'edad' => $paciente->getEdad(),
+    'estado_civil' => $paciente->getEstadoCivil(),
+    'curp' => $paciente->getCurp(),  
+    'lugar_origen' => $paciente->getLugarOrigen(),
+    'lugar_residencia' => $paciente->getLugarResidencia(),
+    'ocupacion' => $paciente->getOcupacion(),
+    'num_hijos' => $paciente->getNumHijos(),
+    'edad_hijos' => $paciente->getEdadHijos(),
+    'quien_recomienda' => $paciente->getRecomienda(),
+    'redes_sociales' => $paciente->getRedesSociales(),
+    'motivo_atencion' => $paciente->getMotivoAtencion(),
+    'calle' => $paciente->getCalle(),
+    'num_interior' => $paciente->getNumInterior(),
+    'num_exterior' => $paciente->getNumExterior(),
+    'colonia' => $paciente->getColonia(),
+    'delegacion' => $paciente->getDelegacion(),
+    'cp' => $paciente->getCp(),
+    'municipio' => $paciente->getMunicipio(),
+    'distancia' => $paciente->getDistancia(),
+    'email' => $paciente->getEmail(),
+    'telefono' => $paciente->getTelefono(),
+    'celular' => $paciente->getCelular(),  
+    'cuidador' => $paciente->getCuidador(),  
+    'cuidador_telefono' => $paciente->getCuidadorTelefono(),  
+    'res_nombre' => $paciente->getResNombre(), 
+    'res_telefono' => $paciente->getResTelefono(),  
+
+    'idRol' => $rolUsuario, 
+    'sidebar' => $sidebarHtml
+    ];
+
+    }else{
+
     $data = ['title' => $elementoModulo, 
     'idPaciente' => $idPaciente, 
     'nombre' => $paciente->getNombreCompleto(), 
@@ -108,6 +192,8 @@ class ModulosController extends BaseController {
     'idRol' => $rolUsuario, 
     'sidebar' => $sidebarHtml
     ];
+
+    }
 
     $this->view("/historia-clinica-paciente/$modulo.php", $data);
     }

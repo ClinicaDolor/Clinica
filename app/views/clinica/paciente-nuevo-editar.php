@@ -1,7 +1,7 @@
 <?php 
 use App\Config\Database;
 $bd = Database::getInstance();
-?>
+?>  
 
     <!DOCTYPE html>
     <html lang="en">
@@ -121,28 +121,26 @@ $bd = Database::getInstance();
     <div class="main-content container-fluid">
     <div class="page-title"><h3><?=$data['title'];?></h3></div>
             
-    <section class="section mt-4">
-              
+    <section class="section mt-4">      
     <div class="card">
     <div class="card-body">
-
     <div class="row">
 
-    <div class="col-12 col-sm-6">
-    <label class="mb-1 mt-1" for="NombreCompleto">* Nombre completo:</label>
+    <div class="col-12 col-sm-6 mb-3">
+    <h8 class="text-primary fw-bold texto">* Nombre completo:</h8>
     <input type="text" class="form-control" id="NombreCompleto" value="<?=$data['nombre_paciente'] ?? ''?>">
     </div>
 
-    <div class="col-12 col-sm-3">
-    <label class="mb-1 mt-1" for="Edad">* Edad:</label>
+    <div class="col-12 col-sm-3 mb-3">
+    <h8 class="text-primary fw-bold texto">* Edad:</h8>
     <div class="input-group">
     <input type="number" class="form-control" min="0" id="Edad" value="<?=$data['edad'] ?? ''?>">
     <span class="input-group-text">años</span>
     </div>
     </div>
 
-    <div class="col-12 col-sm-3">
-    <label class="mb-1 mt-1" for="Sexo">* Sexo:</label>
+    <div class="col-12 col-sm-3 mb-3">
+    <h8 class="text-primary fw-bold texto">* Sexo:</h8>
     <select class="form-select" id="Sexo">
     <option value="<?=$data['sexo'] ?? ''?>"><?php if(isset($data['sexo'])){ echo ($data['sexo'] == 'M')? 'Masculino': 'Femenino';}else{echo 'Seleccione una opción...';} ?></option>
     <option value="M">Masculino</option>
@@ -150,8 +148,8 @@ $bd = Database::getInstance();
     </select>
     </div>
 
-    <div class="col-12 col-sm-4">
-    <label class="mb-1 mt-3" for="EstadoCivil">* Estado civil:</label>
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">* Estado civil:</h8>
     <select class="form-select" id="EstadoCivil">
     <option value="<?=$data['estado_civil'] ?? ''?>"><?php if(isset($data['estado_civil'])){ echo $data['estado_civil'];}else{echo 'Seleccione una opción';} ?></option>
     <option value="Soltero(a)">Soltero(a)</option>
@@ -160,176 +158,172 @@ $bd = Database::getInstance();
     </select>
     </div>
 
-    <div class="col-12 col-sm-4">
-    <label class="mb-1 mt-3" for="FeNacimiento">* Fecha de nacimiento:</label>
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">* Fecha de nacimiento:</h8>
     <input type="date" class="form-control" id="FeNacimiento" value="<?=$data['fecha_nacimiento'] ?? ''?>">
     </div>
 
-    <div class="col-12 col-sm-4">
-    <label class="mb-1 mt-3" for="CURP">* CURP:</label>
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">* CURP:</h8>
     <input type="text" class="form-control" id="CURP" onkeyup="mayus(this);" value="<?=$data['curp'] ?? ''?>">
     </div>
 
-    <div class="col-12 col-sm-4">
-    <label class="mb-1 mt-3" for="LuOrigen">* Lugar de Origen:</label>
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">* Lugar de Origen:</h8>
     <input type="text" class="form-control" id="LuOrigen" value="<?=$data['lugar_origen'] ?? ''?>">
     </div>
-
-    <div class="col-12 col-sm-4">
-    <label class="mb-1 mt-3" for="LuResidencia">* Lugar de residencia:</label>
+    
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">* Lugar de Residencia:</h8>
     <input type="text" class="form-control" id="LuResidencia" value="<?=$data['lugar_residencia'] ?? '' ?>">
     </div>
-
-    <div class="col-12 col-sm-4">
-    <label class="mb-1 mt-3" for="Ocupacion">* Ocupación:</label>
+    
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">* Ocupación:</h8>
     <input type="text" class="form-control" id="Ocupacion" value="<?=$data['ocupacion'] ?? '' ?>">
     </div>
 
-    <div class="col-12 col-sm-4">
-    <label class="mb-1 mt-3" for="NumHijos">* Número de hijos:</label>
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">* Número de hijos:</h8>
     <input type="text" class="form-control" id="NumHijos" value="<?=$data['num_hijos'] ?? '' ?>">
     </div>
 
-    <div class="col-12 col-sm-4">
-    <label class="mb-1 mt-3" for="EdadHijos">* Edad de sus hijos:</label>
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">* Edad de sus hijos:</h8>
     <input type="text" class="form-control" id="EdadHijos" value="<?=$data['edad_hijos'] ?? '' ?>">
     </div>
 
+    <div class="col-12 mb-3">
+    <hr>
+    <p class="text-success fw-bold texto">¿Quien lo recomienda? O porque medio se entero de la Clinica del Dolor y Cuidados Paliativos?:</p>
     </div>
 
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">Persona que lo recomendo:</h8>
+    <input type="text" class="form-control" id="personaRecomienda" value="<?=$data['quien_recomienda'] ?? '' ?>"> 
+    </div>
+
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">Redes sociales:</h8>
+    <select class="form-select" id="RedesSociales">
+    <option value="<?=$data['redes_sociales'] ?? ''?>"><?php if(isset($data['redes_sociales'])){ echo $data['redes_sociales'];}else{echo 'Seleccione una opción...';} ?></option>
+    <option>Facebook</option>
+    <option>Pagina web</option>
+    <option>Otro</option>
+    </select>
+    </div>
+
+    <div class="col-12 mb-3">
     <hr>
+    <h8 class="text-primary fw-bold texto">* Motivo por el que solicita atención en la Clinica de Dolor y Cuidados Paliativos:</h8>
+    <textarea class="form-control" id="motivoAtencionClinica"><?=$data['motivo_atencion'] ?? '' ?></textarea>
+    </div>
 
-    <label>¿Quien lo recomienda? O porque medio se entero de la Clinica del Dolor y Cuidados Paliativos?:</label>
+    <div class="col-12 mb-3">
+    <hr>
+    <p class="text-success fw-bold texto">Dirección actual</p>
+    </div>
 
-            <div class="row">
-                <div class="col-12 col-sm-4">
-                    <label class="mb-1 mt-3" for="personaRecomienda">Persona que lo recomendo:</label>
-                    <input type="text" class="form-control" id="personaRecomienda" value="<?=$data['quien_recomienda'] ?? '' ?>"> 
-                </div>
+    <div class="col-12 col-sm-8 mb-3">
+    <h8 class="text-primary fw-bold texto">Calle:</h8>
+    <input type="text" class="form-control" id="DACalle" value="<?=$data['calle'] ?? '' ?>">
+    </div>
 
-                <div class="col-12 col-sm-4">
-                    <label class="mb-1 mt-3" for="RedesSociales">Redes sociales:</label>
-                    <select class="form-select" id="RedesSociales">
-                    <option value="<?=$data['redes_sociales'] ?? ''?>"><?php if(isset($data['redes_sociales'])){ echo $data['redes_sociales'];}else{echo 'Seleccione una opción...';} ?></option>
-                        <option>Facebook</option>
-                        <option>Pagina web</option>
-                        <option>Otro</option>
-                    </select>
-                </div>
-            </div>
+    <div class="col-12 col-sm-2 mb-3">
+    <h8 class="text-primary fw-bold texto">Numero Interior:</h8>
+    <input type="text" class="form-control" id="DANI" value="<?=$data['num_interior'] ?? '' ?>">
+    </div>
 
-            <div></div>
+    <div class="col-12 col-sm-2 mb-3">
+    <h8 class="text-primary fw-bold texto">Numero Exterior:</h8>
+    <input type="text" class="form-control" id="DANE" value="<?=$data['num_exterior'] ?? '' ?>">
+    </div>
 
-            <hr>
+    <div class="col-12 col-sm-5 mb-3">
+    <h8 class="text-primary fw-bold texto">Colonia:</h8>
+    <input type="text" class="form-control" id="DAColonia" value="<?=$data['colonia'] ?? '' ?>">
+    </div>
 
-            <div class="">
-            <label class="mb-1" for="motivoAtencionClinica">* Motivo por el que solicita atención en la Clinica de Dolor y Cuidados Paliativos:</label>
-            <textarea class="form-control" id="motivoAtencionClinica"><?=$data['motivo_atencion'] ?? '' ?></textarea>
-            </div>
+    <div class="col-12 col-sm-5 mb-3">
+    <h8 class="text-primary fw-bold texto">Delegación:</h8>
+    <input type="text" class="form-control" id="DADelegacion" value="<?=$data['delegacion'] ?? '' ?>">
+    </div>
 
-            <div class="text-success mt-4">Dirección actual</div>
+    <div class="col-12 col-sm-2 mb-3">
+    <h8 class="text-primary fw-bold texto">Código postal:</h8>
+    <input type="text" class="form-control" id="DACP" value="<?=$data['cp'] ?? '' ?>">
+    </div>
 
-            <div class="row mt-3">
-            <div class="col-12 col-sm-8">
-                <div class="mb-1">Calle:</div>
-                <input type="text" class="form-control" id="DACalle" value="<?=$data['calle'] ?? '' ?>">
-            </div>
-            <div class="col-12 col-sm-2">
-                <div class="mb-1 mt-1">Numero Interior:</div>
-                <input type="text" class="form-control" id="DANI" value="<?=$data['num_interior'] ?? '' ?>">
-            </div>
-            <div class="col-12 col-sm-2">
-                <div class="mb-1 mt-1">Numero Exterior:</div>
-                <input type="text" class="form-control" id="DANE" value="<?=$data['num_exterior'] ?? '' ?>">
-            </div>
-            
-            <div class="col-12 col-sm-5">
-                <div class="mb-1 mt-3">Colonia:</div>
-                <input type="text" class="form-control" id="DAColonia" value="<?=$data['colonia'] ?? '' ?>">
-            </div>
-            <div class="col-12 col-sm-5">
-                <div class="mb-1 mt-3">Delegación:</div>
-                <input type="text" class="form-control" id="DADelegacion" value="<?=$data['delegacion'] ?? '' ?>">
-            </div>
-            <div class="col-12 col-sm-2">
-                <div class="mb-1 mt-3">Código postal:</div>
-                <input type="text" class="form-control" id="DACP" value="<?=$data['cp'] ?? '' ?>">
-            </div>
-            
-            <div class="col-12 col-sm-5">
-                <div class="mb-1 mt-3">Municipio:</div>
-                <input type="text" class="form-control" id="DAMunicipio" value="<?=$data['municipio'] ?? '' ?>">
-            </div>
-    
-        <div class="col-12 col-sm-5">
-            <label class="mb-1 mt-3" for="Distancia">Distancia de casa a Clínica del Dolor Hospital Ángeles Lomas:</label>
-            <div class="input-group">
-            <input type="text" class="form-control" id="Distancia" value="<?=$data['distancia'] ?? '' ?>">
-            <span class="input-group-text"> (Minutos / Horas)</span>
-            </div>
-        </div>
-   
-            </div>
+    <div class="col-12 col-sm-6 mb-3">
+    <h8 class="text-primary fw-bold texto">Municipio:</h8>
+    <input type="text" class="form-control" id="DAMunicipio" value="<?=$data['municipio'] ?? '' ?>">
+    </div>
 
-            <div class="text-success mt-4">Contacto:</div>
+    <div class="col-12 col-sm-6 mb-3">
+    <h8 class="text-primary fw-bold texto">Distancia de casa a Clínica del Dolor Hospital Ángeles Lomas:</h8>
+    <div class="input-group">
+    <input type="text" class="form-control" id="Distancia" value="<?=$data['distancia'] ?? '' ?>">
+    <span class="input-group-text"> (Minutos / Horas)</span>
+    </div>
+    </div>
 
-            <div class="row mt-3">
-            <div class="col-12 col-sm-4">
-                <div class="mb-1 mt-1">Correo electrónico:</div>
-                <input type="text" class="form-control" id="Email" value="<?=$data['email'] ?? ''?>">
-            </div>
-            <div class="col-12 col-sm-4">
-                <div class="mb-1 mt-1">Teléfono de casa:</div>
-                <input type="number" class="form-control" id="Telefono" value="<?=$data['telefono'] ?? ''?>">
-            </div>
-            <div class="col-12 col-sm-4">
-                <div class="mb-1 mt-1">Celular:</div>
-            <input type="number" class="form-control" id="Celular" value="<?=$data['celular'] ?? ''?>">
-            </div>
-            </div>
+    <div class="col-12 mb-3">
+    <hr>
+    <p class="text-success fw-bold texto">Contacto</p>
+    </div>
 
-            <div class="row mt-3">
-            <div class="col-12 col-sm-3">
-                <div class="mb-1 mt-1">¿Tiene cuidador(a)?</div>
-                <select class="form-control" id="Cuidador">
-                <option value="<?php if(isset($data['cuidador'])){ echo ($data['cuidador'])? 'Si': 'No';}else{echo '';} ?>"><?php if(isset($data['cuidador'])){ echo ($data['cuidador'])? 'Si': 'No';}else{echo 'Seleccione una opción...';} ?></option>
-                <option value="Si">Si</option>
-                <option value="No">No</option>
-                </select>
-            </div>
-            <div class="col-12 col-sm-5">
-                <div class="mb-1 mt-1">Nombre:</div>
-                <input type="text" class="form-control" id="CuiNombre" value="<?=$data['cuidador'] ?? '' ?>">
-            </div>
-            <div class="col-12 col-sm-4">
-                <div class="mb-1 mt-1">Teléfono:</div>
-                <input type="number" class="form-control" id="CuiTelefono" value="<?=$data['cuidador_telefono'] ?? '' ?>">
-            </div>
-            </div>
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">Correo electrónico:</h8>
+    <input type="text" class="form-control" id="Email" value="<?=$data['email'] ?? ''?>">
+    </div>
 
-            <div class="row mt-3">
-            <div class="col-12 col-sm-4">
-                <div class="mb-1 mt-1">Nombre del familiar responsable:</div>
-                <input type="text" class="form-control" id="ResNombre" value="<?=$data['res_nombre'] ?? '' ?>">
-            </div>
-            <div class="col-12 col-sm-4">
-                <div class="mb-1 mt-1">Teléfono:</div>
-                <input type="number" class="form-control" id="ResTelefono" value="<?=$data['res_telefono'] ?? '' ?>">
-            </div>
-            </div>
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">Teléfono de casa:</h8>
+    <input type="number" class="form-control" id="Telefono" value="<?=$data['telefono'] ?? ''?>">
+    </div>
 
-            <div class="text-end mt-3">
-            <button class="btn btn-success fs-5" onclick="GuardarPaciente(<?=$data['idPaciente'];?>)"><?=$data['titulo_boton'];?> <i data-feather="chevron-right"></i></button>
-            </div>
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">Celular:</h8>
+    <input type="number" class="form-control" id="Celular" value="<?=$data['celular'] ?? ''?>">
+    </div>
 
-            <div class="text-center fs-5 text-danger" id="mensaje"></div>
-                
-                </div>
-            </div>
+    <div class="col-12 col-sm-3 mb-3">
+    <h8 class="text-primary fw-bold texto">¿Tiene cuidador(a)?:</h8>
+    <select class="form-control" id="Cuidador">
+    <option value="<?php if(isset($data['cuidador'])){ echo ($data['cuidador'])? 'Si': 'No';}else{echo '';} ?>"><?php if(isset($data['cuidador'])){ echo ($data['cuidador'])? 'Si': 'No';}else{echo 'Seleccione una opción...';} ?></option>
+    <option value="Si">Si</option>
+    <option value="No">No</option>
+    </select>
+    </div>
 
+    <div class="col-12 col-sm-5 mb-3">
+    <h8 class="text-primary fw-bold texto">Nombre:</h8>
+    <input type="text" class="form-control" id="CuiNombre" value="<?=$data['cuidador'] ?? '' ?>">
+    </div>
 
-            </section>
-        </div>
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">Teléfono:</h8>
+    <input type="number" class="form-control" id="CuiTelefono" value="<?=$data['cuidador_telefono'] ?? '' ?>">
+    </div>
+
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">Nombre del familiar responsable:</h8>
+    <input type="text" class="form-control" id="ResNombre" value="<?=$data['res_nombre'] ?? '' ?>">
+    </div>
+
+    <div class="col-12 col-sm-4 mb-3">
+    <h8 class="text-primary fw-bold texto">Teléfono:</h8>
+    <input type="number" class="form-control" id="ResTelefono" value="<?=$data['res_telefono'] ?? '' ?>">
+    </div>
+
+    <div class="col-12 text-end">
+    <button class="btn btn-success" onclick="GuardarPaciente(<?=$data['idPaciente'];?>)"><?=$data['titulo_boton'];?> <i data-feather="chevron-right"></i></button>
+    </div>
+
+    </div>
+    </div>
+    </section>
+    </div>
 
     <!----- FOOTER ---------->
     <?php include_once __DIR__ . '/../components/footer-mvsd.php';?>
